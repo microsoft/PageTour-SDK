@@ -1,0 +1,8 @@
+{
+  "packages": [
+    "apps/*"
+  ],
+  "version": "3.11.0",
+  "npmClient": "npm",
+  "hoist": true
+}

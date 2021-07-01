@@ -1,0 +1,69 @@
+<div class="pagetour container col-xs-12" draggable="true">
+  <div id="authoringDock" class="select-element-modal" role="dialog" aria-describedby="choose-element-title">
+    <div class="select-element-content">
+      <div class="row-16 chooseElement">
+        <div class="pull-right chooseElement">
+          <button
+            id="close-btn"
+            class="icon-holder-36-close-with-margin chooseElement"
+            title="Close"
+            aria-label="Close Add step dialog"
+          >
+            <i class="icon-static icon-close chooseElement"></i>
+          </button>
+        </div>
+        <h1 class="font-subtitle" id="choose-element-title">Add Step - Choose an element</span>
+      </div>
+      <p id="addsteppara" class="font-para row-16 chooseElement">
+        Navigate to the area of the desired element. Press the "Choose" button then hover or tab over the page to
+        highlight an element you would like to choose. Click on the element to choose it. You can drag to move this
+        window beforehand if you need to.
+      </p>
+      <div class="row-16 chooseElement">
+        <button
+          id="choose-element-btn"
+          class="btn btn-primary pagetour-btn--primary footer-btn"
+          title="Choose Element"
+          aria-label="Choose element from screen"
+        >
+          Choose
+        </button>
+        <span id="choose-element-text" class="small"></span>
+      </div>
+      <div class="row-17 ignoreElementKey">
+        <input id="ignore-element-key-chkbox" title="Check" type="checkbox" aria-label="Select to ignore element id" />
+        <label for="ignore-element-key-chkbox" id="ignore-element-key-chkbox-lbl">Ignore element id</label>
+      </div>
+      <div class="row-17 ignoreStepIfNextStepElementFound">
+        <input
+          id="ignoreStep-IfNextStepElementFound-chkbox"
+          title="Check"
+          type="checkbox"
+          aria-label="Select to play this step if next step element not found"
+        />
+        <label for="ignoreStep-IfNextStepElementFound-chkbox" id="ignoreStep-IfNextStepElementFound-lbl">
+          Ignore if next step is valid
+        </label>
+      </div>
+      <div class="actions chooseElement pull-right">
+        <button
+          class="btn btn-block footer-btn pagetour-btn--secondary"
+          id="cancel-choose-element-btn"
+          title="Cancel"
+          aria-label="cancel and Close Add Step dialog"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn btn-primary pagetour-btn--primary footer-btn"
+          id="select-element-next-btn"
+          disabled
+          title="Next to step details"
+          aria-label="Move to step details dialog"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+import { Tutorial } from './tutorial'
+import { PageContext } from './pagecontext'
+import { Tags } from './tags'
+
+interface NavigatorOptions {
+  navigateToContext?: (context: PageContext) => void
+  getStartPageUrl?: (startUrl: string) => string
+  getCurrentPageContext?: (pageContext: PageContext) => PageContext
+  callbackBeforeTourStep?: (tour: Tutorial) => void
+  callbackAfterTourStep?: (tour: Tutorial) => void
+  callbackBeforeTourStart?: (tour: Tutorial) => void
+  callbackOnTourStart?: (tour: Tutorial) => void
+  callbackAfterTourEnd?: (tour: Tutorial) => void
+  callbackOnTourStepFailure?: (tour: Tutorial, failedStepIndex: number, stepErrorMessage: string) => void
+  callbackOnAuthoringStart?: () => void
+  callbackOnAuthoringEnd?: () => void
+  callbackOnTourSaved?: (tour: Tutorial) => void
+  callbackOnTourSavedFailed?: (errorMessage: string) => void
+  callbackOnTourExported?: (tour: Tutorial) => void
+  callbackOnTourDeleted?: (tour: Tutorial) => void
+  callbackForTags?: () => Promise<Tags>
+}
+
+export { NavigatorOptions }
