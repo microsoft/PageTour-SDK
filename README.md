@@ -1,33 +1,172 @@
-# Project
+ # PageTour SDK
+[![CodeQL](https://github.com/microsoft/PageTour-SDK/actions/workflows/codeql-analysis.yml/badge.svg?branch=main&event=push)](https://github.com/microsoft/PageTour-SDK/actions/workflows/codeql-analysis.yml) 
+  
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+## Overview
 
-As the maintainer of this project, please make a few updates:
+  
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+One often wants to tell users how to use certain features on our web-app, or highlight new features introduced in the application. Writing code for guided tutorials within` the website can require additional engineering effort and time.
 
-## Contributing
+  
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+We came up with the idea of PageTour SDK to solve this problem.
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+PageTour is a lightweight, Typescript SDK, distributed as an NPM package. The SDK can be consumed in angular, react, typescript and plain JavaScript webapps. PageTour provides web developers, an intuitive UI to author guided tours for their web apps. Tours can also be shared through generated URLs.
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+  
 
-## Trademarks
+PageTour SDK is easy to use and customize through a variety of options.
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+  
+
+## Installation
+
+  
+  
+
+### PageTour SDK
+
+  
+
+npm install pagetour-sdk
+
+  
+
+### Repository package
+
+PageTour SDK requires a repository object for initialization. One can either use one of the two available repository packages, or write a new custom repository class by implementing IPageTourRepository interface. (Insert link)
+
+  
+
+Install the repository package as per the requirement:
+
+**1. Install the HttpRepository package**: This package is meant for development and production use. For production use, a custom API needs to be implemented for storing and retrieving PageTours. HttpRepository makes network calls to the provided API.
+
+  
+
+npm install pagetour-sdk.http
+
+**2. Install the LocalStorageRepository package**: This package is meant for quickly checking out PageTour in your application and doing a POC.
+
+  
+
+npm install pagetour-sdk.local
+
+  
+
+> Note: This package only persists the data in browser local storage. It is meant for only trying out the SDK and should not be used otherwise.
+
+  
+  
+  
+
+## Usage
+
+### Import the library
+
+  
+
+import { PageTour } from 'pagetour-sdk';
+
+...
+
+const options = {};
+
+### Import and initialize the available repository or implement the IPageTourRepository
+
+**1. LocalStorageRepository**
+
+  
+
+import { LocalStorageRepository } from 'pagetour-sdk.local';
+
+...
+
+this.repository = new LocalStorageRespository();
+
+**2. HttpRepository**
+
+  
+
+import { HttpRepository } from 'pagetour-sdk.http';
+
+...
+
+/**
+
+HttpRepository takes a configuration object containing
+
+baseUrl of the API to be called for storing and retrieving tours.
+
+Additionlly getEndpoint, putEndpoint, postEndpoint and deleteEnedpoints
+
+can be provided.
+
+*/
+
+import { HttpRepository } from 'pagetour-sdk.http';
+
+...
+
+this.repository = new HttpRepository({baseUr:'https://api-baseUrl.com/'});
+
+**3. Implement the interface**: Refer the docs for implementing the interface.
+
+  
+
+### Initialize PageTour and get the instance
+
+  
+
+Pagetour.init(this.repository, options);
+
+this.pagetour = PageTour.GetInstance();
+
+### Install and import bootstrap
+
+Pagetour uses bootstrap. [Install](https://www.npmjs.com/package/bootstrap) it if not already installed. Import it in the global stylesheet.
+
+  
+
+@import '~bootstrap/dist/css/bootstrap.css';
+
+  
+
+### Import css in the global stylesheet
+
+  
+
+@import '~pagetour-sdk/dist/css/pagetour.css';
+
+  
+
+### Open PageTour manager on button click
+
+Add a button in the UI to open the PageTour manager.
+
+const OpenManagerButton = document.getElementById('manage-tours');
+
+OpenManagerButton.onClick = Pagetour.GetInstance().openPageTourManageDialog();
+
+  
+
+## Sample App
+
+Location:
+
+1. Clone the repo
+
+2. got to PageTour-SDK/sample run `npm install` and then `npm run start`
+
+3. Browse to http://localhost:4200
+
+## Documentation
+
+[See GitHub Wiki.](https://github.com/microsoft/PageTour-SDK/wiki)
+
+ ## Development Environment Setup
+ The repository is a Lerna Monorepo. Learn more about  Lerna [here](https://github.com/lerna/lerna).
+ 1. Instal Node Version >=10.16.0
+ 2. Clone the repository and run `npm install` inside the root directory
+ 3. Run `npm run build` in the root to concurrently build all the packages inside the 'apps' folder.
