@@ -943,7 +943,7 @@ class PageTourPlay {
       document.body.appendChild(el)
     }
     window.setTimeout(function() {
-      document.getElementById(id).innerHTML = text
+      document.getElementById(id).innerText = text
     }, 100)
 
     window.setTimeout(function() {

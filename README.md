@@ -51,7 +51,7 @@ npm install pagetour-sdk.http
 
   
 
-npm install pagetour-sdk.local
+npm install pagetour-sdk.localrepository
 
   
 
@@ -79,7 +79,7 @@ const options = {};
 
   
 
-import { LocalStorageRepository } from 'pagetour-sdk.local';
+import { LocalStorageRepository } from 'pagetour-sdk.localrepository';
 
 ...
 
