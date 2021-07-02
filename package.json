@@ -19,8 +19,6 @@
     "npm": ">=5.2.0"
   },
   "devDependencies": {
-    "lerna": "^4.0.0",
-    "pagetour-sdk":"file:apps/pagetour-sdk",
-    "pagetour-sdk.local": "file:apps/pagetourrepository.localstorage"
+    "lerna": "^4.0.0"
   }
 }
