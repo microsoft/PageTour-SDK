@@ -1,6 +1,6 @@
 import { IPagetourRepository, Tutorial } from 'pagetour-sdk'
-import { TutorialSearchFilter } from 'pagetour-sdk/dist/types/models/tutorialSearchFilter';
-import { IRepositoryConfiguration } from 'pagetour-sdk/dist/types/Repository/IRepositoryConfiguration';
+import { TutorialSearchFilter } from 'pagetour-sdk/dist/types/models/tutorialsearchfilter';
+import { IRepositoryConfiguration } from 'pagetour-sdk/dist/types/repository/irepositoryconfiguration';
 
 class HttpRepository implements IPagetourRepository {
     private isRepoInitialized: boolean
