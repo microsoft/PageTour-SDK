@@ -1,0 +1,164 @@
+<div id="add-tour-modal" class="pagetour" role="dialog" aria-describedby="tutorial-modal-title">
+  <div class="tour-dialog">
+    <div class="tour-modal">
+      <form id="add-tour-form" method="">
+        <div class="tour-content">
+          <div class="row margin-bottom-24 display-block">
+            <div class="pull-right">
+              <button
+                title="Close"
+                id="add-tour-modal-close"
+                type="button"
+                class="icon-holder-36-close-with-margin"
+                aria-label="Close Add Tour dialog"
+              >
+                <i class="pagetour__icon icon-close"></i>
+              </button>
+            </div>
+            <h1 class="font-subtitle-alt" id="tutorial-modal-title">Add Tour</h1>
+          </div>
+          <div class="row margin-bottom-24">
+            <div class="col-lg-3 col-sm-6">
+              <label class="margin-bottom-12 font-body" for="tour-title">Title of Tour (*):</label>
+              <textarea
+                class="textarea"
+                id="tour-title"
+                type="text"
+                title="Title of Tour"
+                required
+                placeholder="Enter title of tour"
+                maxlength="74"
+              ></textarea>
+              <span class="textarea-error aria-live="assertive" id="tour-title-error">
+                Tour Title is Required.
+              </span>
+              <span aria-live="assertive" class="textarea-character-limit pull-right" id="tour-title-character-limit">
+                74 characters remaining.
+              </span>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+              <label class="margin-bottom-12 font-body" for="tour-description">Description (*):</label>
+              <textarea
+                class="textarea"
+                id="tour-description"
+                type="text"
+                title="Description of Tour"
+                required
+                placeholder="Enter description of tour"
+                maxlength="100"
+              ></textarea>
+              <span class="textarea-error" aria-live="assertive" id="tour-description-error">
+                Tour Description is Required.
+              </span>
+              <span  aria-live="assertive" class="textarea-character-limit pull-right" id="tour-description-character-limit">
+                100 characters remaining.
+              </span>
+            </div>
+            <div class="col-lg-2 col-sm-6">
+              <label class="margin-bottom-12 font-body" for="tour-activeon">Active on:</label>
+              <input
+                class="form-control date-picker-box input-44"
+                id="tour-activeon"
+                datetime-picker="MM/dd/yy"
+                placeholder="MM/DD/YY"
+                min="getDate()"
+                type="date"
+              />
+              <span class="textarea-error" id="tour-activeon-error">Active On Date is Required.</span>
+            </div>
+            <div class="col-lg-2 col-sm-6">
+              <label class="margin-bottom-12 font-body" for="tour-expireson">Expires on:</label>
+              <input
+                class="form-control date-picker-box"
+                id="tour-expireson"
+                datetime-picker="MM/dd/yy"
+                placeholder="MM/DD/YY"
+                min="getDate()"
+                type="date"
+              />
+              <span class="textarea-error" id="tour-expireson-error">Expires on Date is Required.</span>
+            </div>
+            <div class="col-lg-2 col-sm-6">
+              <label class="margin-bottom-12 font-body" for="tour-tags">Tags:</label>
+              <textarea
+                class="textarea"
+                id="tour-tags"
+                type="text"
+                title="Tags with Tour"
+                aria-required="true"
+                placeholder="Enter tags (Eg: Tag1,Tag2)"
+                maxlength="74"
+              ></textarea>
+              <span aria-live="assertive" class="textarea-character-limit pull-right" id="tour-tags-character-limit">
+                74 characters remaining.
+              </span>
+            </div>
+          </div>
+          <div class="row margin-bottom-24">
+            <div class="col-lg-12 col-sm-12 button-col">
+              <label class="autoPlayLabel">
+                <input type="checkbox" id="isAutoPlayEnabled" />
+                Auto play enabled
+              </label>
+              <button class="cell-button-action" id="add-step-btn" title="Add step to tour" type="button">
+                <i class="pagetour__icon icon-plus icon-inline"></i>
+                Add Step
+              </button>
+              <button class="cell-button-action" id="cover-page-btn" title="Add Cover Page to tour" type="button">
+                <i class="pagetour__icon icon-plus icon-inline"></i>
+                Add Cover Page
+              </button>
+              <button class="cell-button-action" id="preview-tour-step-btn" disabled title="Preview tour" type="button">
+                <i class="pagetour__icon icon-play icon-inline"></i>
+                Preview tour
+              </button>
+            </div>
+          </div>
+          <div class="row margin-bottom-24">
+            <div class="scrollable">
+              <table class="add-pagetour-table" summary="Table of steps with options to reorder, Edit and Delete steps">
+                <thead>
+                  <tr>
+                    <th class="expander-column-header">Expand or collapse Step message</th>
+                    <th class="step-column-header">Step</th>
+                    <th class="step-type-column-header">Type</th>
+                    <th class="desc-column-header">Message</th>
+                    <th class="reorder-column-header">Reorder</th>
+                    <th class="button-column-header">Edit</th>
+                    <th class="button-column-header">Delete</th>
+                  </tr>
+                </thead>
+                <tbody id="tour-steps-table-body" class="font-caption-alt"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+              <div class="pull-right" style="padding-right: 1em;">
+              <button
+                class="pagetour-btn--secondary footer-btn"
+                id="add-tour-modal-cancel-btn"
+                title="Cancel"
+                aria-label="cancel and close Add Tour dialog"
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                class="pagetour-btn--primary footer-btn"
+                id="save-tour-modal-btn"
+                title="Save"
+                disabled
+                aria-label="Save page tour"
+                type="submit"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

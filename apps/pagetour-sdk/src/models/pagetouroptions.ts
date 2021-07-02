@@ -3,7 +3,7 @@ import { TokenProviderOptions } from './tokenprovideroptions'
 import { UserInfoOptions } from './userinfooptions'
 import { PageTourTheme } from './pagetourtheme'
 import { Tags } from './tags'
-import { UserActionProvider } from './UserActionProvider'
+import { UserActionProvider } from './useractionprovider'
 
 interface PageTourOptions {
   tokenProvider?: TokenProviderOptions
