@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { PageTour, Tutorial, IPagetourRepository } from 'pagetour-sdk'
 import { MatSnackBar } from '@angular/material'
 import { Router, NavigationEnd, NavigationStart } from '@angular/router'
+import { LocalStorageRepository } from 'pagetour-sdk.localrepository'
 
 @Component({
   selector: 'app-root',
@@ -19,15 +20,15 @@ export class AppComponent implements OnInit {
 
   constructor(private snackBar: MatSnackBar, private router: Router) {}
   ngOnInit(): void {
-    PageTour.GetInstance();
+    this.repository = new LocalStorageRepository()
+    this.repository.InitializeRepository()
 
     this.pageTourInit()
   }
 
   private pageTourInit = () => {
-    // PageTour.init(this.repository, {
-      
-    // });
+    PageTour.init(this.repository, {    
+    });
 
     
   }
