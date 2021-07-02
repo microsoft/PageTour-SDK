@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { PageTour, Tutorial, IPagetourRepository } from 'pagetour-sdk'
-import { HttpRepository } from 'pagetour-sdk.httprepository'
+import { HttpRepository } from 'pagetour-httprepository'
 import { MatSnackBar } from '@angular/material'
 import { Router, NavigationEnd, NavigationStart } from '@angular/router'
 
