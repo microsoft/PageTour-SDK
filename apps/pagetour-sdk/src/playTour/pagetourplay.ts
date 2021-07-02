@@ -413,7 +413,7 @@ class PageTourPlay {
         this.addTourOutline(element)
         this.scrollIntoView(element)
         this.ApplyTheme(stepCount)
-        this.srSpeak(`${this.tour.title}dialog`, 'assertive', 'dialog')
+        this.srSpeak(`${this.tour.title} dialog`, 'assertive', 'dialog')
         let tourBoxElement: HTMLElement = document.getElementById('pagetour-tourBox')
         DomUtils.manageTabbing(tourBoxElement)
         if (opts.navigator.callbackAfterTourStep != null) {
@@ -807,13 +807,13 @@ class PageTourPlay {
       DomUtils.show(this.dock)
       let coverPageTitleElement = document.getElementById('cover-page-title')
       let titleContentElement = document.createElement('p')
-      titleContentElement.innerHTML = title
+      titleContentElement.innerText = title
       titleContentElement.setAttribute('role', 'heading')
       titleContentElement.setAttribute('aria-level', '1')
       coverPageTitleElement.appendChild(titleContentElement)
       let coverPageContentElement = document.getElementById('cover-page-body-content')
       let contentElement = document.createElement('div')
-      contentElement.innerHTML = content
+      contentElement.innerText = content
       coverPageContentElement.appendChild(contentElement)
     } else {
       this.modal.style.display = 'block'
