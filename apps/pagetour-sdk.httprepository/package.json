@@ -1,5 +1,5 @@
 {
-  "name": "pagetour-httprepository",
+  "name": "pagetour-sdk.httprepository",
   "version": "0.0.1",
   "description": "Local storage repository plugin for pagetour sdk",
   "author": {
@@ -21,7 +21,7 @@
     "type": "git",
     "url": "https://github.com/microsoft/PageTour-SDK"
   },
-  "main": "dist/HttpRepository.js",
+  "main": "dist/httprepository.js",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
