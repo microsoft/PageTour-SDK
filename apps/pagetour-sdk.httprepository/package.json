@@ -1,5 +1,5 @@
 {
-  "name": "pagetour-sdk.httprepository",
+  "name": "pagetour-httprepository",
   "version": "0.0.1",
   "description": "Local storage repository plugin for pagetour sdk",
   "author": {
