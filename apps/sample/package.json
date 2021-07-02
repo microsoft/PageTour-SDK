@@ -22,7 +22,7 @@
     "@angular/router": "7.2.0",
     "pagetour-sdk": "^0.0.1",
     "pagetour-sdk.localrepository":"^0.0.1",
-    "pagetour-sdk.httprepository":"^0.0.1",
+    "pagetour-httprepository":"^0.0.1",
     "core-js": "2.5.4",
     "jquery": "^3.5.0",
     "popper.js": "^1.14.7",
