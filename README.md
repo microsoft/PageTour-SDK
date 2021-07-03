@@ -1,5 +1,5 @@
  # PageTour SDK
-[![CodeQL](https://github.com/microsoft/PageTour-SDK/actions/workflows/codeql-analysis.yml/badge.svg?branch=main&event=push)](https://github.com/microsoft/PageTour-SDK/actions/workflows/codeql-analysis.yml) 
+[![Build Status](https://microsoftit.visualstudio.com/OneITVSO/_apis/build/status/Compliant/Core%20Services%20Engineering%20and%20Operations/Corporate%20Functions%20Engineering/Professional%20Services/Foundational%20PS%20Services/Field%20Experience%20Platform/PS-FPSS-FExP-GitHub-PageTour-SDK?branchName=main)](https://microsoftit.visualstudio.com/OneITVSO/_build/latest?definitionId=34466&branchName=main) [![Gated Build](https://github.com/microsoft/PageTour-SDK/actions/workflows/gated-build.yml/badge.svg?branch=main)](https://github.com/microsoft/PageTour-SDK/actions/workflows/gated-build.yml) [![CodeQL](https://github.com/microsoft/PageTour-SDK/actions/workflows/codeql-analysis.yml/badge.svg?branch=main&event=push)](https://github.com/microsoft/PageTour-SDK/actions/workflows/codeql-analysis.yml) 
   
 
 ## Overview
