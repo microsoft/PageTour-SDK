@@ -1,5 +1,6 @@
 trigger:
 - main
+
 jobs:
   - job: Build SDK
     displayName: Build SDK
