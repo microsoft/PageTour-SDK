@@ -1,4 +1,4 @@
-import { PageTourPlay } from '../playTour/pagetourplay'
+import { PageTourPlay } from '../playtour/pagetourplay'
 import * as stepModalTemplate from './step-detail-modal.html'
 import * as chooseElementTemplate from './chose-element-modal.html'
 import * as addTourModalTemplate from './add-tour-modal.html'
@@ -8,9 +8,9 @@ import { ConfigStore } from '../common/configstore'
 import { debounce } from 'debounce'
 import { PageContext } from '../models/pagecontext'
 import unique from 'unique-selector'
-import { RunTourAction } from '../models/RunTourAction'
+import { RunTourAction } from '../models/runtouraction'
 import { Step } from '../models/step'
-import { DataStore } from '../common/DataStore'
+import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 
 declare const $: any

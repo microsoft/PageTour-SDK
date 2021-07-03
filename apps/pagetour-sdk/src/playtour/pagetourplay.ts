@@ -2,14 +2,14 @@ import { ConfigStore } from '../common/configstore'
 import * as tourBoxHtml from './tour-box.html'
 import { DomUtils } from '../common/domutils'
 import * as viewCoverPageModalTemplate from './view-cover-page-modal.html'
-import { RunTourAction } from '../models/RunTourAction'
-import { StepAction } from '../models/stepAction'
+import { RunTourAction } from '../models/runtouraction'
+import { StepAction } from '../models/stepaction'
 import Popper, { Placement } from 'popper.js'
 import { Tutorial } from '../pagetour'
 import { PageContext } from '../models/pagecontext'
 import { Step } from '../models/step'
 import { PageTourTheme } from '../models/pagetourtheme'
-import { DataStore } from '../common/DataStore'
+import { DataStore } from '../common/datastore'
 
 declare const $: any
 class PageTourPlay {
@@ -413,7 +413,7 @@ class PageTourPlay {
         this.addTourOutline(element)
         this.scrollIntoView(element)
         this.ApplyTheme(stepCount)
-        this.srSpeak(`${this.tour.title}dialog`, 'assertive', 'dialog')
+        this.srSpeak(`${this.tour.title} dialog`, 'assertive', 'dialog')
         let tourBoxElement: HTMLElement = document.getElementById('pagetour-tourBox')
         DomUtils.manageTabbing(tourBoxElement)
         if (opts.navigator.callbackAfterTourStep != null) {
@@ -807,13 +807,13 @@ class PageTourPlay {
       DomUtils.show(this.dock)
       let coverPageTitleElement = document.getElementById('cover-page-title')
       let titleContentElement = document.createElement('p')
-      titleContentElement.innerHTML = title
+      titleContentElement.innerText = title
       titleContentElement.setAttribute('role', 'heading')
       titleContentElement.setAttribute('aria-level', '1')
       coverPageTitleElement.appendChild(titleContentElement)
       let coverPageContentElement = document.getElementById('cover-page-body-content')
       let contentElement = document.createElement('div')
-      contentElement.innerHTML = content
+      contentElement.innerText = content
       coverPageContentElement.appendChild(contentElement)
     } else {
       this.modal.style.display = 'block'

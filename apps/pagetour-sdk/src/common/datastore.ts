@@ -1,7 +1,7 @@
 import { PageContext } from '../models/pagecontext'
 import { Tutorial } from '../models/tutorial'
-import { TutorialSearchFilter } from '../models/tutorialSearchFilter'
-import { IPagetourRepository } from '../Repository/IPagetourRepository'
+import { TutorialSearchFilter } from '../models/tutorialsearchfilter'
+import { IPagetourRepository } from '../repository/ipagetourrepository'
 import { ConfigStore } from './configstore'
 
 class DataStore {

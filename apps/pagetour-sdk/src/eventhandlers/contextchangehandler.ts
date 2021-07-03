@@ -1,6 +1,6 @@
-import { EventHandler } from './eventHandler'
+import { EventHandler } from './eventhandler'
 import { PageTour } from '../pagetour'
-import { PageTourManager } from '../manageTours/pagetourManager'
+import { PageTourManager } from '../managetours/pagetourmanager'
 import { ConfigStore } from '../common/configstore'
 
 class ContextChangeHandler implements EventHandler {

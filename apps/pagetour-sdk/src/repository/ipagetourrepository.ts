@@ -1,7 +1,7 @@
 import { Tutorial } from '../models/tutorial'
-import { TutorialSearchFilter } from '../models/tutorialSearchFilter'
+import { TutorialSearchFilter } from '../models/tutorialsearchfilter'
 import { UserActions } from '../models/useractions'
-import { IRepositoryConfiguration } from './IRepositoryConfiguration'
+import { IRepositoryConfiguration } from './irepositoryconfiguration'
 
 interface IPagetourRepository {
   isInitialized(): Promise<boolean>

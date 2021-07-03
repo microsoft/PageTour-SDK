@@ -1,5 +1,5 @@
-import { PageTourAuthor } from '../authoringTour/pagetourauthor'
-import { PageTourPlay } from '../playTour/pagetourplay'
+import { PageTourAuthor } from '../authoringtour/pagetourauthor'
+import { PageTourPlay } from '../playtour/pagetourplay'
 import * as allToursModal from './all-tours-modal.html'
 import * as popupModal from './popup-modal.html'
 import { DomUtils } from '../common/domutils'
@@ -7,9 +7,9 @@ import { Tutorial } from '../models/tutorial'
 import { AuthorizationService } from '../common/authorizationservice'
 import { ConfigStore } from '../common/configstore'
 import { PageContext } from '../models/pagecontext'
-import { RunTourAction } from '../models/RunTourAction'
+import { RunTourAction } from '../models/runtouraction'
 import { PageTourTheme } from '../models/pagetourtheme'
-import { DataStore } from '../common/DataStore'
+import { DataStore } from '../common/datastore'
 
 declare const navigator: any
 class PageTourManager {
