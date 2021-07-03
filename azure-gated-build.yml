@@ -2,7 +2,7 @@ trigger:
 - main
 
 jobs:
-  - job: Build SDK
+  - job: BuildSDK
     displayName: Build SDK
     pool:
       vmImage: ubuntu-latest
