@@ -1,3 +1,4 @@
+
  # PageTour SDK
 [![Build Status](https://microsoftit.visualstudio.com/OneITVSO/_apis/build/status/Compliant/Core%20Services%20Engineering%20and%20Operations/Corporate%20Functions%20Engineering/Professional%20Services/Foundational%20PS%20Services/Field%20Experience%20Platform/PS-FPSS-FExP-GitHub-PageTour-SDK?branchName=main)](https://microsoftit.visualstudio.com/OneITVSO/_build/latest?definitionId=34466&branchName=main) [![Gated Build](https://github.com/microsoft/PageTour-SDK/actions/workflows/gated-build.yml/badge.svg?branch=main)](https://github.com/microsoft/PageTour-SDK/actions/workflows/gated-build.yml) [![CodeQL](https://github.com/microsoft/PageTour-SDK/actions/workflows/codeql-analysis.yml/badge.svg?branch=main&event=push)](https://github.com/microsoft/PageTour-SDK/actions/workflows/codeql-analysis.yml) 
   
@@ -29,7 +30,7 @@ PageTour SDK is easy to use and customize through a variety of options.
 
   
 
-npm install pagetour-sdk
+    npm install pagetour-sdk
 
   
 
@@ -45,13 +46,13 @@ Install the repository package as per the requirement:
 
   
 
-npm install pagetour-sdk.http
+    npm install pagetour-sdk.http
 
 **2. Install the LocalStorageRepository package**: This package is meant for quickly checking out PageTour in your application and doing a POC.
 
   
 
-npm install pagetour-sdk.localrepository
+    npm install pagetour-sdk.localrepository
 
   
 
@@ -67,11 +68,9 @@ npm install pagetour-sdk.localrepository
 
   
 
-import { PageTour } from 'pagetour-sdk';
-
-...
-
-const options = {};
+    import { PageTour } from 'pagetour-sdk';
+    ...
+    const options = {};
 
 ### Import and initialize the available repository or implement the IPageTourRepository
 
@@ -79,37 +78,26 @@ const options = {};
 
   
 
-import { LocalStorageRepository } from 'pagetour-sdk.localrepository';
-
-...
-
-this.repository = new LocalStorageRespository();
+    import { LocalStorageRepository } from 'pagetour-sdk.localrepository';
+    ...
+    this.repository = new LocalStorageRespository();
 
 **2. HttpRepository**
 
   
 
-import { HttpRepository } from 'pagetour-sdk.http';
-
-...
-
-/**
-
-HttpRepository takes a configuration object containing
-
-baseUrl of the API to be called for storing and retrieving tours.
-
-Additionlly getEndpoint, putEndpoint, postEndpoint and deleteEnedpoints
-
-can be provided.
-
-*/
-
-import { HttpRepository } from 'pagetour-sdk.http';
-
-...
-
-this.repository = new HttpRepository({baseUr:'https://api-baseUrl.com/'});
+    import { HttpRepository } from 'pagetour-sdk.http';
+    
+    ...
+    /**
+    HttpRepository takes a configuration object containing
+    baseUrl of the API to be called for storing and retrieving tours.
+    Additionlly getEndpoint, putEndpoint, postEndpoint and deleteEnedpoints
+    can be provided.
+    */
+    import { HttpRepository } from 'pagetour-sdk.http';
+    ...
+    this.repository = new HttpRepository({baseUr:'https://api-baseUrl.com/'});
 
 **3. Implement the interface**: Refer the docs for implementing the interface.
 
@@ -119,9 +107,8 @@ this.repository = new HttpRepository({baseUr:'https://api-baseUrl.com/'});
 
   
 
-Pagetour.init(this.repository, options);
-
-this.pagetour = PageTour.GetInstance();
+    Pagetour.init(this.repository, options);
+    this.pagetour = PageTour.GetInstance();
 
 ### Install and import bootstrap
 
@@ -129,7 +116,7 @@ Pagetour uses bootstrap. [Install](https://www.npmjs.com/package/bootstrap) it i
 
   
 
-@import '~bootstrap/dist/css/bootstrap.css';
+    @import '~bootstrap/dist/css/bootstrap.css';
 
   
 
@@ -137,7 +124,7 @@ Pagetour uses bootstrap. [Install](https://www.npmjs.com/package/bootstrap) it i
 
   
 
-@import '~pagetour-sdk/dist/css/pagetour.css';
+    @import '~pagetour-sdk/dist/css/pagetour.css';
 
   
 
@@ -145,9 +132,8 @@ Pagetour uses bootstrap. [Install](https://www.npmjs.com/package/bootstrap) it i
 
 Add a button in the UI to open the PageTour manager.
 
-const OpenManagerButton = document.getElementById('manage-tours');
-
-OpenManagerButton.onClick = Pagetour.GetInstance().openPageTourManageDialog();
+    const OpenManagerButton = document.getElementById('manage-tours');
+    OpenManagerButton.onClick = Pagetour.GetInstance().openPageTourManageDialog();
 
   
 
@@ -170,3 +156,5 @@ Location:
  1. Instal Node Version >=10.16.0
  2. Clone the repository and run `npm install` inside the root directory
  3. Run `npm run build` in the root to concurrently build all the packages inside the 'apps' folder.
+
+
