@@ -1,6 +1,6 @@
 {
   "name": "pagetour-sdk.sample",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -20,9 +20,9 @@
     "@angular/platform-browser": "7.2.0",
     "@angular/platform-browser-dynamic": "7.2.0",
     "@angular/router": "7.2.0",
-    "pagetour-sdk": "^0.0.1",
-    "pagetour-sdk.localrepository":"^0.0.1",
-    "pagetour-sdk.httprepository":"^0.0.1",
+    "pagetour-sdk": "^1.0.0",
+    "pagetour-sdk.localrepository":"^1.0.0",
+    "pagetour-sdk.httprepository":"^1.0.0",
     "core-js": "2.5.4",
     "jquery": "^3.5.0",
     "popper.js": "^1.14.7",
