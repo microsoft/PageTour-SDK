@@ -1,4 +1,6 @@
  # pagetour-sdk.localrepository
+![npm](https://img.shields.io/npm/v/pagetour-sdk.localrepository)
+
 This is the local storage plugin for pagetour-sdk.
 
 ## Install

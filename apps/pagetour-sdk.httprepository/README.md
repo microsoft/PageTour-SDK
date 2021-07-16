@@ -1,4 +1,5 @@
 # pagetour-sdk.httprepository
+![npm](https://img.shields.io/npm/v/pagetour-sdk.httprepository)
 
 This is the Http plugin for pagetour-sdk.
 
