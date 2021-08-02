@@ -139,7 +139,7 @@ Location:
 
 1. Clone the repo
 
-2. got to PageTour-SDK/sample run `npm install` and then `npm run start`
+2. go to PageTour-SDK/apps/sample and run `npm install` and then `npm run start`
 
 3. Browse to http://localhost:4200
 
