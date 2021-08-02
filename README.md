@@ -143,6 +143,29 @@ Location:
 
 3. Browse to http://localhost:4200
 
+# Authoring Tours
+Once installed, the authoring experience allows tours to be created within the web apps.
+Steps:
+1. Open the Author Tour Dialog. Enter the basic details of the tour like Name, Description, Expiration date. Then click the 'Add Step' button.
+
+![Author Tour Dialog](assets/openAuthorDialog.gif)
+
+2. The choose element modal pops up. It is a draggable elemnt allowing author to interact with the web page before making the selection. Click on choose and the select the element on the page to be highlighted.
+
+![Choose Element](assets/chooseElement.gif)
+
+3. Click on Next to open the Step Details dialog. Enter the step details like the event type, position of the tour box relative to the html element, message to be displayed to the user and so on. [Find more details here.](https://github.com/microsoft/PageTour-SDK/wiki/Authoring-Tours)
+
+![Step Details Dialog](assets/stepDetails.gif)
+
+4. Similarly add more steps to the tour. Preview the tour or click on save to save the created tour.
+
+![Save Tour](assets/saveTour.gif)
+
+5. Run the Tour!
+
+![Run Tour](assets/runTour.gif)
+
 ## Documentation
 
 [See GitHub Wiki.](https://github.com/microsoft/PageTour-SDK/wiki)
