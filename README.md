@@ -145,12 +145,12 @@ Location:
 
 # Authoring Tours
 Once installed, the authoring experience allows tours to be created within the web apps.
-Steps:
-1. Open the Author Tour Dialog. Enter the basic details of the tour like Name, Description, Expiration date. Then click the 'Add Step' button.
+Follow the below steps:
+1. Open the Author Tour Dialog. Enter the basic details of the tour like Name, Description etc. Then click the 'Add Step' button.
 
 ![Author Tour Dialog](assets/openAuthorDialog.gif)
 
-2. The choose element modal pops up. It is a draggable elemnt allowing author to interact with the web page before making the selection. Click on choose and the select the element on the page to be highlighted.
+2. The choose element modal pops up. It is a draggable element allowing author to interact with the web page before making the selection. Click on choose and the select the element on the page to be highlighted.
 
 ![Choose Element](assets/chooseElement.gif)
 
