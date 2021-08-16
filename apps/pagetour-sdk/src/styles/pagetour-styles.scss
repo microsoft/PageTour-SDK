@@ -213,6 +213,7 @@ $input-text-focus-outline: 1px dotted black;
   .step-dialog {
     @extend .tour-modal;
     width: 100%;
+    margin-left: 0;
   }
 
   /* Modal Content */
