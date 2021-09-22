@@ -26,7 +26,7 @@ class DataStore {
     let contextParam = {} as PageContext
     const opts = this.configStore.Options
     if ((pageContext === undefined || pageContext === null) && opts.navigator && opts.navigator.getCurrentPageContext) {
-      pageContext = this.getPageContext()
+      pageContext = opts.navigator.getCurrentPageContext();
       contextParam.state = pageContext.state
       contextParam.url = pageContext.url
     } else {
@@ -119,7 +119,7 @@ class DataStore {
     retVal.url = pageContext
 
     if (opts.navigator && opts.navigator.getCurrentPageContext) {
-      retVal = opts.navigator.getCurrentPageContext(retVal)
+      retVal = opts.navigator.getCurrentPageContext()
     }
 
     if (retVal == null) {
