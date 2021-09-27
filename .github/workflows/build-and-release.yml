@@ -17,7 +17,15 @@ jobs:
         with:
           node-version: '12.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: Publish
-        run: npm run publish-ci
+      - name: Publish SDK
+        run: cd apps/pagetour-sdk && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish LocalStorage
+        run: cd apps/pagetour-sdk.localrepository && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish SDK
+        run: cd apps/pagetour-sdk.httprepository && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
