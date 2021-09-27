@@ -16,7 +16,7 @@
     "bump-version-patch": "lerna version patch --yes --no-push --no-commit-hooks",
     "bump-version-minor": "lerna version minor --yes --exact --no-push --no-commit-hooks",
     "bump-version-major": "lerna version major --yes --exact --no-push --no-commit-hooks",
-    "publish-ci": "lerna publish from-package --yes --ignore-scripts"
+    "publish-ci": "lerna publish from-package --contents dist --yes --ignore-scripts"
   },
   "engines": {
     "node": ">=8.0.0",
