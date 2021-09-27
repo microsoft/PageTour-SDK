@@ -32,7 +32,6 @@
     "watch:webpack": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack --config webpack.config.ts --env.development --watch",
     "watch:esm": "tsc --target es2015 --outDir dist/esm --watch",
     "watch": "concurrently \"npm:watch:webpack\" \"npm:watch:esm\"",
-    "publishpackage": "npm publish",
     "clean": "rimraf node_modules",
     "test": "echo \"Error: no test specified\" && exit 0"
   },

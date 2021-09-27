@@ -26,8 +26,7 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "watch": "tsc --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "publishpackage": "npm publish"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": ["dist/*"],
   "license": "MIT",
