@@ -1143,6 +1143,9 @@ class PageTourAuthor {
     let headerElement: HTMLSelectElement = document.getElementById('input-announcement-header-text') as HTMLSelectElement
     let bodyElement: HTMLSelectElement = document.getElementById('announcement-page-content') as HTMLSelectElement
     let pageContext = this.getPageContext()
+    if(this.tour == null)
+      this.tour = {}
+    this.tour.tourtype = 'announcement'
     
     let newStep: any = {}
     newStep.headerText = headerElement.value;
