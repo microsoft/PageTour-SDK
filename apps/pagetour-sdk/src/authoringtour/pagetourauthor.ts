@@ -273,7 +273,7 @@ class PageTourAuthor {
       }
     }
 
-    if (this.tour == null) {
+    if (this.tour == null || this.tour.id == null) {
       pagetourJson.createdon = currentDate.toUTCString()
       pagetourJson.createdby = this.getCurrentUser()
       try {
