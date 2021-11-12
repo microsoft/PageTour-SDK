@@ -47,6 +47,8 @@ interface Tutorial extends BaseEntity {
   createdby: string
 
   lastmodifiedby: string
+
+  tourtype: string
 }
 
 export { Tutorial }

@@ -18,7 +18,23 @@
             <h1 class="font-subtitle-alt" id="tutorial-modal-title">Add Tour</h1>
           </div>
           <div class="row margin-bottom-24">
-            <div class="col-lg-3 col-sm-6">
+            <div class="col-lg-2 col-sm-6">
+              <label class="margin-bottom-12 font-body" for="tour-title">Tour Type (*):</label>
+              <select
+                  class="select-box font-body"
+                  id="tour-type"
+                  aria-required="true"
+                  title="Tour type"
+                  aria-label="Tour type"
+                  style="height: 44px;"
+                  required
+                >
+                  <option value="pagetour" selected="selected">Page Tour</option>
+                  <option value="announcement">Announcement</option>
+                  <option value="smarttip">Smart Tip</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-sm-6">
               <label class="margin-bottom-12 font-body" for="tour-title">Title of Tour (*):</label>
               <textarea
                 class="textarea"
@@ -29,14 +45,14 @@
                 placeholder="Enter title of tour"
                 maxlength="74"
               ></textarea>
-              <span class="textarea-error aria-live="assertive" id="tour-title-error">
+              <span class="textarea-error" aria-live="assertive" id="tour-title-error">
                 Tour Title is Required.
               </span>
               <span aria-live="assertive" class="textarea-character-limit pull-right" id="tour-title-character-limit">
                 74 characters remaining.
               </span>
             </div>
-            <div class="col-lg-3 col-sm-6">
+            <div class="col-lg-2 col-sm-6">
               <label class="margin-bottom-12 font-body" for="tour-description">Description (*):</label>
               <textarea
                 class="textarea"
@@ -100,6 +116,10 @@
                 <input type="checkbox" id="isAutoPlayEnabled" />
                 Auto play enabled
               </label>
+              <button class="cell-button-action" id="add-announcement-btn" title="Add Announcement Step" type="button">
+                <i class="pagetour__icon icon-plus icon-inline"></i>
+                Add Announcement Page
+              </button>
               <button class="cell-button-action" id="add-step-btn" title="Add step to tour" type="button">
                 <i class="pagetour__icon icon-plus icon-inline"></i>
                 Add Step
@@ -108,9 +128,9 @@
                 <i class="pagetour__icon icon-plus icon-inline"></i>
                 Add Cover Page
               </button>
-              <button class="cell-button-action" id="preview-tour-step-btn" disabled title="Preview tour" type="button">
+              <button class="cell-button-action" id="preview-tour-step-btn" disabled title="Preview" type="button">
                 <i class="pagetour__icon icon-play icon-inline"></i>
-                Preview tour
+                Preview
               </button>
             </div>
           </div>
@@ -121,7 +141,7 @@
                   <tr>
                     <th class="expander-column-header">Expand or collapse Step message</th>
                     <th class="step-column-header">Step</th>
-                    <th class="step-type-column-header">Type</th>
+                    <th id="step-tourtype-header" class="step-type-column-header">Type</th>
                     <th class="desc-column-header">Message</th>
                     <th class="reorder-column-header">Reorder</th>
                     <th class="button-column-header">Edit</th>

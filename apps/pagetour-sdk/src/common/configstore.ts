@@ -28,7 +28,7 @@ class ConfigStore {
         }
       },
       getCurrentPageContext: (): PageContext => {
-        let context: PageContext
+        let context: PageContext = { state: '', url: ''};
         const pageUrl = window.location.href
           .replace(window.location.host, '')
           .replace(window.location.protocol + '//', '')

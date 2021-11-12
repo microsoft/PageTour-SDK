@@ -570,6 +570,7 @@ class PageTourManager {
       let tr = document.createElement('tr')
 
       let tdExpander = document.createElement('td')
+      let tdTourType = document.createElement('td')
       let tdTitle = document.createElement('td')
       let tdDescription = document.createElement('td')
       let tdStartPageName = document.createElement('td')
@@ -582,6 +583,10 @@ class PageTourManager {
 
       let expander = this.getButton('expander', tour)
       let title = this.getTextElement('title', tour)
+      let tourtype = null;
+      if(!tour.tourtype || tour.tourtype == '')
+        tour.tourtype = "pagetour";
+      tourtype = this.getTextElement('tourtype', tour)
       let author=null;
       if(tour.lastmodifiedby!=null&&tour.lastmodifiedby!='')
         author = this.getTextElement('lastmodifiedby', tour)
@@ -595,6 +600,7 @@ class PageTourManager {
       let tourPlay = this.getButton('play', tour)
 
       tdExpander.setAttribute('class', 'expander-column')
+      tdTourType.setAttribute('class', 'title-column')
       tdTitle.setAttribute('class', 'title-column')
       tdStartPageName.setAttribute('class', 'title-column')
       tdDate.setAttribute('class', 'date-column')
@@ -606,6 +612,7 @@ class PageTourManager {
 
       tdExpander.appendChild(expander)
       tdTitle.appendChild(title)
+      tdTourType.appendChild(tourtype)
       if(author!=null)
         tdTitle.appendChild(author)
       tdDescription.appendChild(description)
@@ -629,6 +636,7 @@ class PageTourManager {
       tdPlay.appendChild(tourPlay)
 
       tr.appendChild(tdExpander)
+      tr.appendChild(tdTourType)
       tr.appendChild(tdTitle)
       tr.appendChild(tdDescription)
       tr.appendChild(tdStartPageName)
@@ -668,6 +676,7 @@ class PageTourManager {
       tags: string
       startpageurl: string
       lastmodifiedby: string
+      tourtype: string
     },
   ) => {
     let msgElement = document.createElement('div')
@@ -688,6 +697,10 @@ class PageTourManager {
         msgElement.appendChild(document.createTextNode('Author: ' + tour.lastmodifiedby))
         msgElement.setAttribute('id', 'tour-lastmodifiedby_' + tour.id)
         msgElement.classList.add('author-desc')
+        break
+      case 'tourtype':
+        msgElement.appendChild(document.createTextNode(tour.tourtype))
+        msgElement.setAttribute('id', 'tour-type_' + tour.id)
         break
     }
     msgElement.classList.add('message-desc')
@@ -833,7 +846,8 @@ class PageTourManager {
 
   private editTour = (tourId: any) => {
     this.hideManagePageTourModal()
-    this.pagetourAuthor.EditTour(this.getTourbyId(tourId))
+    let tour = this.getTourbyId(tourId);
+    this.pagetourAuthor.EditTour(tour);
   }
 
   private exportTour = async (id: any) => {

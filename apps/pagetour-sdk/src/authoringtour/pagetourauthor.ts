@@ -3,6 +3,7 @@ import * as stepModalTemplate from './step-detail-modal.html'
 import * as chooseElementTemplate from './chose-element-modal.html'
 import * as addTourModalTemplate from './add-tour-modal.html'
 import * as createCoverPageModalTemplate from './create-cover-page-modal.html'
+import * as createAnnouncementModalTemplate from './add-announcement-page-modal.html'
 import { DomUtils } from '../common/domutils'
 import { ConfigStore } from '../common/configstore'
 import { debounce } from 'debounce'
@@ -34,6 +35,8 @@ class PageTourAuthor {
   private addTourModalTemplateFn: any = addTourModalTemplate
   private createCoverPageTemplateFn: any = createCoverPageModalTemplate
 
+  private createAnnouncementTemplateFn: any = createAnnouncementModalTemplate
+
   // Debounce Functions
   private bodyMouseMoveFunction: any
 
@@ -60,12 +63,14 @@ class PageTourAuthor {
     let addTourDialogCloseBtn = document.getElementById('add-tour-modal-close')
     addTourDialogCloseBtn.setAttribute('aria-label', 'Close Edit Tour dialog')
     document.getElementById('add-tour-modal-cancel-btn').setAttribute('aria-label', 'cancel and close Edit Tour dialog')
-
+    document.getElementById('tour-type').setAttribute('disabled', 'true')
     this.tour = objTour
     this.loadTour()
     this.validateTourInputs()
     this.resetIsTourPlaying()
+    this.tourTypeChanged()
   }
+
 
   /// Deletes Tour
   public DeleteTour = async (tourId: any) => {
@@ -108,11 +113,12 @@ class PageTourAuthor {
     document.getElementById('tour-tags').onkeyup = this.checkTourTags
     document.getElementById('cover-page-btn').onclick = this.createCoverPageModal
     document.getElementById('add-step-btn').onclick = this.createChooseElementModal
+    document.getElementById('add-announcement-btn').onclick = this.addAnnouncementPage
     document.getElementById('preview-tour-step-btn').onclick = this.previewTour
     document.getElementById('add-tour-modal-close').onclick = this.closeAddTourModal
     document.getElementById('add-tour-modal-cancel-btn').onclick = this.closeAddTourModal
     document.getElementById('save-tour-modal-btn').onclick = this.saveTour
-
+    document.getElementById('tour-type').onchange = this.tourTypeChanged
     this.resetIsTourPlaying()
   }
 
@@ -212,6 +218,8 @@ class PageTourAuthor {
     let tourExpiresOnBox: HTMLInputElement = document.getElementById('tour-expireson') as HTMLInputElement
     let isTourAutoPlayEnabledFlag: HTMLInputElement = document.getElementById('isAutoPlayEnabled') as HTMLInputElement
     let tags: HTMLTextAreaElement = document.getElementById('tour-tags') as HTMLTextAreaElement
+    let tourTypeElement = document.getElementById('tour-type') as HTMLSelectElement
+    let tourType = tourTypeElement.value;
     let tourTitle = tourTitleBox.value
     let tourDescription = tourDescriptionBox.value
     let tourActiveOn = new Date(tourActiveOnBox.value).toUTCString()
@@ -256,6 +264,7 @@ class PageTourAuthor {
       lastmodifiedon: currentDate.toUTCString(),
       lastmodifiedby: this.getCurrentUser(),
       tags: tagsArray,
+      tourtype: tourType
     }
 
     if (this.configStore.Options.appInfo) {
@@ -298,6 +307,22 @@ class PageTourAuthor {
     this.closeAddTourModal()
   }
 
+  private tourTypeChanged = () => {
+    let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
+    var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
+    if(tourtype == "announcement"){
+      document.getElementById("add-announcement-btn").style.display = 'inline'
+      document.getElementById("add-step-btn").style.display = 'none'
+      document.getElementById("cover-page-btn").style.display = 'none'
+    }
+    else {
+      document.getElementById("add-announcement-btn").style.display = 'none'
+      document.getElementById("add-step-btn").style.display = 'inline'
+      document.getElementById("cover-page-btn").style.display = 'inline'
+    }
+
+  }
+
   /// Validates Add/Edit Tour dialog inputs.
   private validateTourInputs = () => {
     /// Validates the input boxes
@@ -332,6 +357,7 @@ class PageTourAuthor {
     ;(document.getElementById('tour-activeon') as HTMLInputElement).value = this.tour.activeon.split('T')[0]
     ;(document.getElementById('tour-expireson') as HTMLInputElement).value = this.tour.expireson.split('T')[0]
     ;(document.getElementById('isAutoPlayEnabled') as HTMLInputElement).checked = this.tour.isautoplayenabled
+    ;(document.getElementById('tour-type') as HTMLSelectElement).value = this.tour.tourtype
     this.stepList = this.tour.steps
 
     if (this.tour.coverPage) {
@@ -363,7 +389,10 @@ class PageTourAuthor {
       tour.description = (document.getElementById('tour-description') as HTMLTextAreaElement).value
       tour.coverPage.location = this.tourCoverPageLocation
       tour.coverPage.content = this.tourCoverPageContent
-      this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
+      if(this.tour.tourtype == "announcement")
+      this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
+      else
+        this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
     }
   }
 
@@ -383,6 +412,7 @@ class PageTourAuthor {
       let tdexpander = document.createElement('td')
       let tdStepCount = document.createElement('td')
       let tdStepType = document.createElement('td')
+      let tdStepHeader = document.createElement('td')
       let tdStepMessage = document.createElement('td')
       let tdStepMoveup = document.createElement('td')
       let tdStepEdit = document.createElement('td')
@@ -390,6 +420,7 @@ class PageTourAuthor {
       let expander = this.getButton('expander', i)
       let stepCount = document.createTextNode((i + 1).toString())
       let stepType = document.createTextNode(this.stepList[i].type)
+      let stepHeaderText = document.createTextNode(this.stepList[i].headerText)
       let stepMessage = this.getStepMessageElement(i)
       let stepMoveup = this.getButton('moveup', i)
       let stepMovedown = this.getButton('movedown', i)
@@ -412,14 +443,23 @@ class PageTourAuthor {
       tdStepMoveup.appendChild(stepMovedown)
       tdStepEdit.appendChild(stepEdit)
       tdStepDelete.appendChild(stepDelete)
+      tdStepHeader.appendChild(stepHeaderText)
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      tr.appendChild(tdStepType)
+      if(this.tour.tourtype == 'announcement') {
+        document.getElementById("step-tourtype-header").innerText = 'Header Text'
+        tr.appendChild(tdStepHeader)
+      }
+      else {
+        document.getElementById("step-tourtype-header").innerText = 'Type'
+        tr.appendChild(tdStepType)
+      }
       tr.appendChild(tdStepMessage)
       tr.appendChild(tdStepMoveup)
       tr.appendChild(tdStepEdit)
       tr.appendChild(tdStepDelete)
+
 
       tourStepsTableBody.appendChild(tr)
     }
@@ -583,7 +623,20 @@ class PageTourAuthor {
   }
   /// This is a method to edit a step in a tour
   private editStep = (index: any) => {
-    this.editStepIndex = index
+    this.editStepIndex = index;
+    let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
+    var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
+    switch(tourtype) {
+      case "announcement":
+        this.editAnnouncementStep();
+        break;
+      case "pagetour":
+        this.editTourStep();
+        break;
+    }
+  }
+
+  private editTourStep() {
     this.createChooseElementModal()
     document.getElementById('choose-element-title').innerText = 'Edit Step - Choose an element'
     document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
@@ -602,6 +655,20 @@ class PageTourAuthor {
           this.toggleChooseElement(this.chooseState.Chosen, editingStep)
         }
       }
+    }
+  }
+
+  private editAnnouncementStep() {
+    this.addAnnouncementPage()
+    document.getElementById('announcement-page-modal-title').innerText = 'Edit Announcement Step'
+    document.getElementById('announcement-page-close-btn').setAttribute('aria-label', 'Close Edit Announcement step dialog')
+    document.getElementById('cancel-announcement-page-btn').setAttribute('aria-label', 'Cancel and Close Edit Announcement Step dialog')
+    event.preventDefault()
+    event.stopPropagation()
+    if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
+      const editingStep = this.stepList[this.editStepIndex]
+      document.getElementById('input-announcement-header-text').setAttribute("value",editingStep.headerText);
+      document.getElementById('announcement-page-content').innerText = editingStep.message;
     }
   }
 
@@ -956,6 +1023,32 @@ class PageTourAuthor {
     saveCoverPageElement.onclick = this.saveCoverPage
   }
 
+  private addAnnouncementPage = () => {
+    this.hideAddTourModal()
+    let announcementPageModal = document.getElementById('announcementPageDock')
+    if (!announcementPageModal) {
+      const chooseElementDock = this.createAnnouncementTemplateFn()
+      let dock = DomUtils.appendToBody(chooseElementDock)
+      this.updateModalTitle()
+      DomUtils.show(dock)
+    } else {
+      announcementPageModal.style.display = 'block'
+    }
+    announcementPageModal = document.getElementById('announcement-page-modal')
+    announcementPageModal.style.display = 'block'
+    let announcementPageForm = document.getElementById('announcement-page-form')
+    DomUtils.manageTabbing(announcementPageForm)
+
+    const closeBtn = document.getElementById('announcement-page-close-btn')
+    closeBtn.onclick = this.closeAnnouncementPageModal
+
+    const cancelChooseElement = document.getElementById('cancel-announcement-page-btn')
+    cancelChooseElement.onclick = this.closeAnnouncementPageModal
+
+    const saveAnnouncementPageElement = document.getElementById('save-announcement-page-btn')
+    saveAnnouncementPageElement.onclick = this.saveAnnouncementPage
+  }
+
   /// Validates input in CoverPage Position Select Box
   private checkCoverPagePosition = () => {
     const coverPagePositionElement = document.getElementById('cover-location-select') as HTMLSelectElement
@@ -1032,6 +1125,38 @@ class PageTourAuthor {
   }
 
   /*#EndRegion: Closes Cover page dialog methods*/
+
+  private closeAnnouncementPageModal = () => {
+    let announcementPageModal = document.getElementById('announcement-page-modal')
+    announcementPageModal.parentNode.removeChild(announcementPageModal)
+    this.unHideAddTourModal()
+    this.populateSteps() /// Populates steps in Add Tour Dialogue.
+  }
+
+  private saveAnnouncementPage = () => {
+    this.getAnnouncementPageDetails()
+    this.populateSteps()
+    this.closeAnnouncementPageModal()
+  }
+
+  private getAnnouncementPageDetails = () => {
+    let headerElement: HTMLSelectElement = document.getElementById('input-announcement-header-text') as HTMLSelectElement
+    let bodyElement: HTMLSelectElement = document.getElementById('announcement-page-content') as HTMLSelectElement
+    let pageContext = this.getPageContext()
+    
+    let newStep: any = {}
+    newStep.headerText = headerElement.value;
+    newStep.message = bodyElement.value;
+    newStep.pagecontext = pageContext.url
+    newStep.pagestatename = pageContext.state
+
+    if (this.editStepIndex !== -1) {
+      this.stepList[this.editStepIndex] = newStep
+      this.editStepIndex = -1
+    } else {
+      this.stepList.push(newStep)
+    }
+  }
 
   /*# BeginRegion:Step Details Record Box methods*/
 

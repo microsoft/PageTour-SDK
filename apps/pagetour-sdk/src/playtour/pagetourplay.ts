@@ -1,5 +1,6 @@
 import { ConfigStore } from '../common/configstore'
 import * as tourBoxHtml from './tour-box.html'
+import * as AnnouncementBoxHtml from './announcement-page.html'
 import { DomUtils } from '../common/domutils'
 import * as viewCoverPageModalTemplate from './view-cover-page-modal.html'
 import { RunTourAction } from '../models/runtouraction'
@@ -28,6 +29,8 @@ class PageTourPlay {
 
   // Template Functions
   private tourBoxHtmlFn: any = tourBoxHtml
+
+  private announcementBoxFn: any = AnnouncementBoxHtml
   private viewCoverPageTemplateFn: any = viewCoverPageModalTemplate
   public isTourPlaying: boolean
 
@@ -42,7 +45,19 @@ class PageTourPlay {
     try {
       const tour = await this.dataStore.GetTourById(tourId)
       this.autoPlayTest = autoPlayTest
-      this.runTour(tour, action, startInterval, null, autoPlayTest)
+
+      switch(tour.tourtype){ 
+        case "announcement":
+          this.runAnnouncement(tour, action, startInterval, null, autoPlayTest)
+          break;
+        case "smarttip":
+          this.runSmartTip(tour, action, startInterval, null, autoPlayTest)
+          break;
+        case "pagetour":
+        case "default":
+          this.runTour(tour, action, startInterval, null, autoPlayTest)
+          break;
+      }
     } catch (err) {
       throw new Error(err as string)
     }
@@ -74,6 +89,136 @@ class PageTourPlay {
         startInterval,
         autoPlayTest,
       )
+    }
+  }
+
+  public runSmartTip = (
+    objTour: Tutorial,
+    action: RunTourAction,
+    startInterval: any,
+    callback: any = null,
+    autoPlayTest: boolean = false,
+  ) => {
+    objTour.steps.forEach((element,i) => {
+      let selectedElement = document.querySelector(element.selector);
+      // let img = document.createElement('img');
+      // img.src = 'https://fxpsitstoragenew.z13.web.core.windows.net/effective-thinking-concept-solution-bulb-260nw-1165554163.jpg';
+      // img.title = element.message;
+      // img.height = 40;
+      // img.width = 40;
+      // //img.setAttribute("data-tooltip", element.message);
+      // selectedElement.appendChild(img);
+      // selectedElement.insertBefore(img, selectedElement.nextSibling);
+
+      let div = document.createElement('div');
+      div.className = "hrw-hint";
+      div.addEventListener("mouseover", function() {
+        let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
+        availableSmartTips.forEach((tips) => {
+          tips.className = "triangle-border top";
+        });
+        console.log(availableSmartTips);
+        let smartTip = document.getElementById("smarttip_" + objTour.id + "_" + i)
+        smartTip.className = "triangle-border top active"
+      });
+      div.innerHTML = "<a href='#' role='button' class='smarttip hrw-focusable' aria-label='Smart tip'><div class='smarttip-bubble'></div><div class='smarttip-bubble-out'></div></a><div id=smarttip_" + objTour.id + "_" + i +"  class='triangle-border top'><div>"+ element.message +"</div>";
+      selectedElement.appendChild(div);
+    });
+  }
+
+  public runAnnouncement = (
+    objTour: Tutorial,
+    action: RunTourAction,
+    startInterval: any,
+    callback: any = null,
+    autoPlayTest: boolean = false,
+  ) => {
+    // if (this.isTourPlaying) {
+    //   return
+    // }
+    // this.isTourPlaying = true
+    this.tour = objTour
+    this.LaunchAnnouncement(this.tour,action, startInterval, callback, autoPlayTest)(
+      objTour,
+      action,
+      callback,
+      startInterval,
+      autoPlayTest,
+    );
+  }
+
+  private LaunchAnnouncement = (
+    tour: Tutorial,
+    action: RunTourAction,
+    startInterval: any,
+    callback: any = null,
+    autoPlayTest: boolean = false,
+  ) => {
+    let self = this
+    return function(
+      tour: Tutorial,
+      action: RunTourAction,
+      startInterval: any,
+      callback: any = null,
+      autoPlayTest: boolean = false,
+    ) {
+      const opts = self.configStore.Options
+      if (opts.navigator.callbackBeforeTourStart != null) {
+        opts.navigator.callbackBeforeTourStart(self.tour)
+      }
+
+      self.initializeAnnouncement(tour)
+
+      let retVal = {} as PageContext
+      retVal.state = tour.steps[0].pagestatename
+      retVal.url = tour.steps[0].pagecontext
+
+      self.navigateToStart(retVal)
+
+      if (autoPlayTest === true) {
+        const opts = self.configStore.Options
+        if (opts.navigator.callbackOnTourStart != null) {
+          opts.navigator.callbackOnTourStart(self.tour)
+        }
+        let tourEndsWithCoverPage = tour.coverPage && tour.coverPage.location.toLowerCase() === 'end'
+        self.executeNextStep(tour, action, 0, 0, tourEndsWithCoverPage, callback, startInterval)
+        setInterval(() => {
+          self.goToNextStep(StepAction.Next, tour, action, callback, startInterval)
+          if (self.currentStep === self.totalSteps - 1) {
+            clearInterval()
+          }
+        }, startInterval)
+      } else {
+        setTimeout(() => {
+          const opts = self.configStore.Options
+          if (opts.navigator.callbackOnTourStart != null) {
+            opts.navigator.callbackOnTourStart(self.tour)
+          }
+
+          self.executeAnnouncementNextStep(tour, action, 0, 0, callback, startInterval)
+
+          const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
+          if (nextButton) {
+            nextButton.addEventListener('click', () => {
+              self.goToAnnouncementNextStep(StepAction.Next, tour, action, callback, startInterval)
+            })
+          }
+
+          const previousButton: HTMLButtonElement = document.querySelector('#anno-previous-step')
+          if (previousButton) {
+            previousButton.addEventListener('click', () => {
+              self.goToAnnouncementNextStep(StepAction.Previous, tour, action, callback, startInterval)
+            })
+          }
+
+          const exitButton: HTMLButtonElement = document.querySelector('#anno-exit-step')
+          if (exitButton) {
+            exitButton.addEventListener('click', () => {
+              self.goToAnnouncementNextStep(StepAction.Exit, tour, action, callback, startInterval)
+            })
+          }
+        }, startInterval)
+      }
     }
   }
 
@@ -238,6 +383,80 @@ class PageTourPlay {
     }
   }
 
+  private goToAnnouncementNextStep = (
+    stepAction: StepAction,
+    tour: Tutorial,
+    action: RunTourAction,
+    callback: any,
+    startInterval: any,
+    autoPlayTest: boolean = false,
+  ) => {
+    const self = this
+    const opts = self.configStore.Options
+    // self.ApplyTheme(self.currentStep)
+    if (stepAction === StepAction.Next) {
+      const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
+      nextButton.classList.add('loadingNextStep')
+      nextButton.disabled = true
+
+      if (self.currentStep === this.totalSteps - 1) {
+        self.isTourPlaying = false
+      }
+      let element = document.querySelector(self.getElementSelector(self.currentStep))
+      let stepType = self.tour.steps[self.currentStep].type
+      self.executeAction(tour, stepType, element, self.currentStep)
+      if (self.currentStep === self.totalSteps - 1) {
+        self.removeTether()
+        if (callback != null) callback()
+
+        if (self.currentStep === this.totalSteps - 1) {
+          if (opts.navigator.callbackAfterTourEnd != null) {
+            opts.navigator.callbackAfterTourEnd(tour)
+          }
+        }
+      } else {
+        let prevStep = tour.steps[self.currentStep]
+        self.currentStep = self.currentStep + 1
+        let newStep = tour.steps[self.currentStep]
+        let delay = self.getDelayBeforeNextStep(prevStep, newStep)
+
+        setTimeout(() => {
+          self.executeAnnouncementNextStep(tour, action, self.currentStep, 0, callback, startInterval)
+        }, delay)
+      }
+      self.cleanupAction(element)
+    } else if (stepAction === StepAction.Exit) {
+      let element = document.querySelector(self.getElementSelector(self.currentStep))
+      self.cleanupAction(element)
+      self.removeTether()
+      if (callback != null) callback()
+      if (opts.navigator.callbackAfterTourEnd != null) {
+        opts.navigator.callbackAfterTourEnd(self.tour)
+      }
+      self.isTourPlaying = false
+    } else if (stepAction === StepAction.Previous) {
+      const previousButton: HTMLButtonElement = document.querySelector('#anno-previous-step')
+      previousButton.classList.add('loadingNextStep')
+      previousButton.disabled = true
+
+      if (self.currentStep === 0) {
+        return
+      }
+      let element = document.querySelector(self.getElementSelector(self.currentStep))
+      let stepType = self.tour.steps[self.currentStep].type
+      // self.executeAction(tour, stepType, element, self.currentStep)
+      let prevStep = self.currentStep === 1 ? tour.steps[0] : tour.steps[self.currentStep - 2]
+      self.currentStep = self.currentStep - 1
+      let newStep = tour.steps[self.currentStep]
+      let delay = self.getDelayBeforeNextStep(prevStep, newStep)
+
+      setTimeout(() => {
+        self.executeAnnouncementNextStep(tour, action, self.currentStep, 0, callback, startInterval)
+      }, delay)
+      self.cleanupAction(element)
+    }
+  }
+
   private getDelayBeforeNextStep = (currentStepObj: Step, nextStep: Step) => {
     let currentStepPageState = currentStepObj.pagestatename
     let nextStepPageState = nextStep.pagestatename
@@ -264,6 +483,12 @@ class PageTourPlay {
     this.setupTourBox(tour)
   }
 
+  private initializeAnnouncement = (tour: any) => {
+    this.totalSteps = tour.steps.length
+    this.currentStep = 0
+    this.setupAnnouncementBox(tour)
+  }
+
   private navigateToStart = (pageContext: PageContext) => {
     if (!pageContext) {
       return
@@ -279,6 +504,12 @@ class PageTourPlay {
   private setupTourBox = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.tourBoxHtmlFn())
+    this.tourBox.style.zIndex = '20000'
+  }
+
+  private setupAnnouncementBox = (tour: any) => {
+    this.totalSteps = tour.steps.length
+    this.tourBox = DomUtils.appendToBody(this.announcementBoxFn())
     this.tourBox.style.zIndex = '20000'
   }
 
@@ -439,6 +670,129 @@ class PageTourPlay {
         }, this.delay)
       }
     }
+  }
+
+
+  private executeAnnouncementNextStep = (
+    tour: Tutorial,
+    action: RunTourAction,
+    stepCount: number,
+    retryCount = 0,
+    callback: any,
+    startInterval: any,
+  ) => {
+    const opts = this.configStore.Options
+    if (
+      retryCount > this.maxRetryCount
+    ) {
+      let self = this
+      self.isTourPlaying = false
+
+      if (action === RunTourAction.Play) {
+        // on any failure disable auto play of that tour
+        self.updateUserActions(tour, 'Completed', stepCount.toString(), 'Failed after retry')
+      }
+      let stepErrorMsg: string = null
+      if (opts.navigator.callbackOnTourStepFailure != null) {
+        if (
+          tour.steps != null &&
+          tour.steps.length >= stepCount &&
+          tour.steps[stepCount] != null &&
+          tour.steps[stepCount].errormessage != null &&
+          tour.steps[stepCount].errormessage !== 'undefined' &&
+          tour.steps[stepCount].errormessage !== '' &&
+          tour.steps[stepCount].errormessage !== ' '
+        ) {
+          stepErrorMsg = tour.steps[stepCount].errormessage
+        }
+        opts.navigator.callbackOnTourStepFailure(self.tour, stepCount, stepErrorMsg)
+      }
+      self.removeTether()
+      return
+    }
+
+    let currentStep = tour.steps[stepCount]
+    let nextStepWillBe: Step
+    if (stepCount + 1 < tour.steps.length) {
+      nextStepWillBe = tour.steps[stepCount + 1]
+    }
+
+      const previoustButton: HTMLButtonElement = document.querySelector('#anno-previous-step')
+      const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
+
+      previoustButton.hidden = false
+      previoustButton.disabled = false
+      nextButton.hidden = false
+      nextButton.disabled = false
+      if (stepCount === 0) {
+        // First step with element.
+        if (action === RunTourAction.Play && (!opts.isCoverPageTourStart || !tour.coverPage ||tour.coverPage==null || tour.coverPage.location.toLowerCase() != 'start')) {
+          this.updateUserActions(tour, 'Started', '0', 'Playing')
+        }
+        previoustButton.hidden = true
+        previoustButton.disabled = true
+      }
+        if (opts.navigator.callbackBeforeTourStep != null) {
+          opts.navigator.callbackBeforeTourStep(this.tour)
+        }
+        if (stepCount === this.totalSteps - 1) {
+          nextButton.hidden = true
+          nextButton.disabled = true
+        }
+        nextButton.classList.remove('loadingNextStep')
+        previoustButton.classList.remove('loadingNextStep')
+        nextButton.disabled = false
+        previoustButton.disabled = false
+
+        let stepDescription = this.tour.steps[stepCount].message
+        let stepHeadingElement = document.getElementById('announcementboxtitle')
+        let stepDescriptionElement = document.getElementById('announcementboxdescription')
+        let stepCounter = document.getElementById('annoboxcounter')
+
+        if (this.tour.steps[stepCount].headerText !== undefined && this.tour.steps[stepCount].headerText !== '') {
+          if (this.validURL(this.tour.steps[stepCount].headerText)) {
+
+            let img = document.createElement('img');
+            img.src = this.tour.steps[stepCount].headerText
+            img.style.padding = '20px'
+            stepHeadingElement.innerText = ''
+            stepHeadingElement.appendChild(img);
+          }
+          else {
+          stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
+          }
+        } else {
+          stepHeadingElement.innerText = ''
+        }
+
+        stepCounter.innerText = stepCount + 1 + ' / ' + this.tour.steps.length
+
+        stepDescriptionElement.innerText = stepDescription
+
+        //this.tether = this.getTetherObject(stepCount)
+        this.ApplyAnnouncementTheme(stepCount)
+        this.srSpeak(`${this.tour.headerText} dialog`, 'assertive', 'dialog')
+        let tourBoxElement: HTMLElement = document.getElementById('anno-tourBox')
+        DomUtils.manageTabbing(tourBoxElement)
+        if (opts.navigator.callbackAfterTourStep != null) {
+          opts.navigator.callbackAfterTourStep(this.tour)
+        }
+
+      if (stepCount === this.totalSteps - 1) {
+        if (action === RunTourAction.Play) {
+          this.updateUserActions(tour, 'Completed', stepCount.toString(), 'Competed all steps')
+        }
+      }
+  }
+  
+  private validURL(str: string) {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(str);
   }
 
   private isValidElement = (element: HTMLElement) => {
@@ -609,6 +963,38 @@ class PageTourPlay {
         )
         tourboxdata.style.boxShadow = this.getBoxShadowCSSString(0, 4, 0, -12)
     }
+  }
+
+  private ApplyAnnouncementTheme(stepCount: number) {
+    let tourBoxElement = document.getElementById('anno-tourBox')
+    let annoClosebtn = document.getElementById('playtourBoxCloseIcon')
+    let ptnavigationdiv = document.getElementById('annonavigationdiv')
+    let previousIcon = document.getElementById('annopreviousimg')
+    let nextIcon = document.getElementById('annonextimg')
+    let counter = document.getElementById('annoboxcounter')
+    let tourboxdata = document.getElementById('announcementboxdata')
+    let annoboxHeaderdata = document.getElementById('announcementheader')
+    let annoboxBodydata = document.getElementById('annobodybox')
+
+    if (this.tourTheme.isRounded) {
+      tourboxdata.style.borderRadius = this.tourTheme.borderRadius ? `${this.tourTheme.borderRadius}px` : '10px'
+    } else {
+      tourboxdata.style.borderRadius = '0px'
+    }
+
+    ptnavigationdiv.style.background = this.tourTheme.primaryColor
+    previousIcon.style.color = this.tourTheme.secondaryColor
+    nextIcon.style.color = this.tourTheme.secondaryColor
+    counter.style.color = this.tourTheme.secondaryColor
+    tourboxdata.style.borderColor = this.tourTheme.primaryColor
+    tourboxdata.style.color = this.tourTheme.textColor
+    tourboxdata.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily
+    tourBoxElement.style.borderColor = this.tourTheme.primaryColor
+    tourBoxElement.style.borderLeftWidth = '3px'
+    annoboxHeaderdata.style.background = this.tourTheme.primaryColor
+    annoboxHeaderdata.style.color = this.tourTheme.secondaryColor
+    annoboxBodydata.style.background = this.tourTheme.secondaryColor
+    annoClosebtn.style.color = this.tourTheme.secondaryColor
   }
 
   private getBorderWidthCSSString(top: number, right: number, bottom: number, left: number) {
