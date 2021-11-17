@@ -119,6 +119,7 @@ class PageTourAuthor {
     document.getElementById('add-tour-modal-cancel-btn').onclick = this.closeAddTourModal
     document.getElementById('save-tour-modal-btn').onclick = this.saveTour
     document.getElementById('tour-type').onchange = this.tourTypeChanged
+    this.tourTypeChanged()
     this.resetIsTourPlaying()
   }
 

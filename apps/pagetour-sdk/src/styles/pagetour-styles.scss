@@ -2022,6 +2022,9 @@ div#announcement-page-modal {
   position: fixed;
   max-width: 500px;
   min-width: 300px;
+  width: 30vw;
+  height: 50vh;
+  margin-left: 30%;
   .anno-tourbox_data {
     height: 100%;
     width: 100%;
@@ -2029,96 +2032,113 @@ div#announcement-page-modal {
     background-color: white;
 
     .anno-header-container {
-      min-height: 100px;
-    }
+      height: 42.5%;
 
-    .anno-header-box {
-      display: flex;
-      flex-direction: row;
-      place-content: space-between;
-      margin-bottom: 10px;
-    }
-    .anno-heading {
-      font-size: 18px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .anno-close-btn {
-      float: right;
-      .close-button {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 1px;
-        align-self: flex-start;
-        outline: inherit;
+      .anno-header-image{
+        padding: 0px 20px;
+        margin-left: 25px;
+        margin-right: auto;
+        max-height: 200px;
+        max-width: 450px;
+        width: 25vw;
+        height: 21vh;
       }
-      .close-button:focus {
-        outline: #000000 dotted 1px;
+    
+      .anno-heading {
+        font-size: 18px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-left: 3%;
       }
-    }
-    .anno-body-box {
-      min-height: 100px;
-    }
-
-    .anno-text {
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .anno-navigation-buttons {
-      display: flex;
-      flex-direction: row;
-      height: 25px;
-      width: 100px;
-      background-color: #b8c0c8;
-      border-radius: 12px;
-      float: right;
-      justify-content: space-evenly;
-
-      .loadingNextStep {
-        cursor: wait !important;
-      }
-      .previousbuttondiv {
-        text-align: center;
-        min-width: 25px;
-        border-top-left-radius: 12px;
-        border-bottom-left-radius: 12px;
-      }
-      .nextbuttondiv {
-        text-align: center;
-        min-width: 25px;
-        border-top-right-radius: 12px;
-        border-bottom-right-radius: 12px;
-      }
-      .nav-buttons {
-        border: 0px;
-        font-size: 15px;
-        cursor: pointer;
-        background-color: transparent;
-        outline: inherit;
-        i {
-          font-size: 12px;
-          top: 0px;
-          vertical-align: middle;
+      .anno-close-btn {
+        float: right;
+        .close-button {
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+          padding: 1px;
+          align-self: flex-start;
+          outline: inherit;
+        }
+        .close-button:focus {
+          outline: #000000 dotted 1px;
         }
       }
-      .nav-buttons:focus {
-        outline: #000000 dotted 1px;
+    }
+
+    .anno-body {
+      height: 37.5%;
+      padding: 0px 48px;
+      .anno-body-box {
+        height: 85%;
+        margin: 48px 0px 24px;
       }
 
-      .pt-counter {
-        align-self: center;
-        height: min-content;
-        padding: 0 5px;
-        width: 50px;
-        text-align: center;
+      .anno-text {
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-        p {
-          margin: 0px;
-          // font-family: Segoe UI;
-          font-size: 12px;
+      .anno-footer {
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 24px;
+
+        .anno-counter {
+          width: 270px
+        }
+      }
+
+      .anno-navigation-buttons {
+        flex-direction: row;
+        display: flex;
+        height: 25px;
+        color: white;
+        justify-content: space-evenly;
+
+        .loadingNextStep {
+          cursor: wait !important;
+        }
+        .previousbuttondiv {
+          text-align: center;
+          min-width: 25px;
+          border: 1px solid black;
+        }
+        .nextbuttondiv {
+          text-align: center;
+          min-width: 25px;
+          border: 1px solid;
+          margin-left: 20px !important;
+        }
+        .nav-buttons {
+          
+          font-size: 15px;
+          cursor: pointer;
+          background-color: transparent;
+          outline: inherit;
+          padding: 2px;
+          margin: 2px;
+          height: 30px;
+          width: 90px;
+          font-weight: 600;
+        }
+        .nav-buttons:focus {
+          outline: #000000 dotted 1px;
+        }
+
+        .pt-counter {
+          align-self: center;
+          height: min-content;
+          padding: 0 5px;
+          width: 50px;
+          text-align: center;
+
+          p {
+            margin: 0px;
+            // font-family: Segoe UI;
+            font-size: 12px;
+          }
         }
       }
     }

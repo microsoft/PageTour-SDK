@@ -719,6 +719,7 @@ class PageTourPlay {
 
       const previoustButton: HTMLButtonElement = document.querySelector('#anno-previous-step')
       const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
+      const annoCounter: HTMLButtonElement = document.querySelector('#annoboxcounter')
 
       previoustButton.hidden = false
       previoustButton.disabled = false
@@ -731,6 +732,7 @@ class PageTourPlay {
         }
         previoustButton.hidden = true
         previoustButton.disabled = true
+        annoCounter.style.width = '315px'
       }
         if (opts.navigator.callbackBeforeTourStep != null) {
           opts.navigator.callbackBeforeTourStep(this.tour)
@@ -738,6 +740,7 @@ class PageTourPlay {
         if (stepCount === this.totalSteps - 1) {
           nextButton.hidden = true
           nextButton.disabled = true
+          annoCounter.style.width = '315px'
         }
         nextButton.classList.remove('loadingNextStep')
         previoustButton.classList.remove('loadingNextStep')
@@ -748,24 +751,29 @@ class PageTourPlay {
         let stepHeadingElement = document.getElementById('announcementboxtitle')
         let stepDescriptionElement = document.getElementById('announcementboxdescription')
         let stepCounter = document.getElementById('annoboxcounter')
+        let imgHeaderContainer = document.getElementById('imgHeaderContainer') as HTMLImageElement
+        let emptyHeaderContainer =  document.getElementById('emptyHeaderContainer')
 
         if (this.tour.steps[stepCount].headerText !== undefined && this.tour.steps[stepCount].headerText !== '') {
           if (this.validURL(this.tour.steps[stepCount].headerText)) {
 
             let img = document.createElement('img');
-            img.src = this.tour.steps[stepCount].headerText
-            img.style.padding = '20px'
-            stepHeadingElement.innerText = ''
-            stepHeadingElement.appendChild(img);
+            imgHeaderContainer.src = this.tour.steps[stepCount].headerText
+            stepHeadingElement.style.display = 'none'
+            imgHeaderContainer.style.display = 'block'
+            emptyHeaderContainer.style.height = '0px'
           }
           else {
-          stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
+            stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
+            imgHeaderContainer.style.display = 'none'
+            stepHeadingElement.style.display = 'block'
+            emptyHeaderContainer.style.height = '17.5vh'
           }
         } else {
           stepHeadingElement.innerText = ''
         }
 
-        stepCounter.innerText = stepCount + 1 + ' / ' + this.tour.steps.length
+        stepCounter.innerText = stepCount + 1 + ' of ' + this.tour.steps.length
 
         stepDescriptionElement.innerText = stepDescription
 
@@ -968,10 +976,9 @@ class PageTourPlay {
   private ApplyAnnouncementTheme(stepCount: number) {
     let tourBoxElement = document.getElementById('anno-tourBox')
     let annoClosebtn = document.getElementById('playtourBoxCloseIcon')
-    let ptnavigationdiv = document.getElementById('annonavigationdiv')
-    let previousIcon = document.getElementById('annopreviousimg')
-    let nextIcon = document.getElementById('annonextimg')
-    let counter = document.getElementById('annoboxcounter')
+    //let ptnavigationdiv = document.getElementById('annonavigationdiv')
+    let previousIcon = document.getElementById('anno-previous-step')
+    let nextIcon = document.getElementById('anno-next-step')
     let tourboxdata = document.getElementById('announcementboxdata')
     let annoboxHeaderdata = document.getElementById('announcementheader')
     let annoboxBodydata = document.getElementById('annobodybox')
@@ -982,10 +989,10 @@ class PageTourPlay {
       tourboxdata.style.borderRadius = '0px'
     }
 
-    ptnavigationdiv.style.background = this.tourTheme.primaryColor
-    previousIcon.style.color = this.tourTheme.secondaryColor
     nextIcon.style.color = this.tourTheme.secondaryColor
-    counter.style.color = this.tourTheme.secondaryColor
+    previousIcon.style.background = this.tourTheme.secondaryColor
+    nextIcon.style.background = this.tourTheme.primaryColor
+    nextIcon.style.borderColor = this.tourTheme.primaryColor
     tourboxdata.style.borderColor = this.tourTheme.primaryColor
     tourboxdata.style.color = this.tourTheme.textColor
     tourboxdata.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily
