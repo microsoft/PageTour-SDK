@@ -450,7 +450,7 @@ class PageTourAuthor {
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      if(this.tour.tourtype == 'announcement') {
+      if(this.tour && this.tour.tourtype == 'announcement') {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         tr.appendChild(tdStepHeader)
       }

@@ -2020,29 +2020,62 @@ div#announcement-page-modal {
 /* Annoucement Box Popup start*/
 .anno-onplay-tourbox {
   display: flex;
-  position: fixed;
-  max-width: 500px;
-  min-width: 300px;
-  width: 30vw;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   height: 50vh;
-  margin-left: 30%;
+  @media screen and (min-width: 200px) and (max-width: 767px) {
+    height: 192vh;
+  }
+  @media screen and (min-width: 768px) and (max-width: 1024px)  {
+    height: 96vh;
+  }
+  @media screen and (min-width: 1024px) and (max-width: 1200px)  {
+    height: 84vh;
+  }
+  @media screen and (min-width: 1200px) and (max-width: 1440px)  {
+    height: 72vh;
+  }
+  @media screen and (min-width: 1440px) and (max-width: 1600px)  {
+    height: 60vh;
+  }
   .anno-tourbox_data {
+    flex-basis: 30%;
     height: 100%;
     width: 100%;
     border: 1px solid black;
     background-color: white;
 
     .anno-header-container {
-      height: 42.5%;
+      max-height: 196px;
+      height: 196px;
 
       .anno-header-image{
         padding: 0px 20px;
         margin-left: 25px;
         margin-right: auto;
-        max-height: 200px;
-        max-width: 450px;
-        width: 25vw;
+        width: 30vw;
         height: 21vh;
+        @media screen and (min-width: 200px) and (max-width: 767px) {
+          width: 87vw;
+          height: 63vh;
+        }
+        @media screen and (min-width: 768px) and (max-width: 1024px)  {
+          width: 72vw;
+          height: 52vh;
+        }
+        @media screen and (min-width: 1024px) and (max-width: 1200px)  {
+          width: 51vw;
+          height: 37vh;
+        }
+        @media screen and (min-width: 1200px) and (max-width: 1440px)  {
+          width: 44vw;
+          height: 31vh;
+        }
+        @media screen and (min-width: 1440px) and (max-width: 1600px)  {
+          width: 26vw;
+          height: 36vh;
+        }
       }
     
       .anno-heading {
@@ -2066,13 +2099,11 @@ div#announcement-page-modal {
         }
       }
     }
-
-    .anno-body {
-      height: 37.5%;
-      padding: 0px 48px;
+      
       .anno-body-box {
-        height: 85%;
         margin: 48px 0px 24px;
+        min-height: 100px;
+        padding: 0px 2rem;
       }
 
       .anno-text {
@@ -2084,7 +2115,7 @@ div#announcement-page-modal {
       .anno-footer {
         display: flex;
         flex-direction: row;
-        padding-bottom: 24px;
+        padding: 2rem;
 
         .anno-counter {
           width: 270px
@@ -2143,7 +2174,6 @@ div#announcement-page-modal {
           }
         }
       }
-    }
   }
 }
 /* Annoucement Box Popup end*/

@@ -26,7 +26,8 @@ export class AppComponent implements OnInit {
   }
 
   private pageTourInit = () => {
-    PageTour.init(this.repository, {});
+    PageTour.init(this.repository, {
+    });
 
     
   }
