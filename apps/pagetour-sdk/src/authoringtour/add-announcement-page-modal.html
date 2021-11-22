@@ -18,24 +18,42 @@
               </div>
               <h1 class="font-subtitle" id="announcement-page-modal-title">Add Announcement Page</h1>
             </div>
-            <div>
-                <label class="lbl-announcement-header-text">Header Content</label>
-                <input type="text" id="input-announcement-header-text" />
-            </div>
-            <div>
-                <label class="announcement-header-text">Body Content</label>
+
+            <div class="row-8">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
+                <label class="font-caption-alt margin-bottom-12" for="cover-location-select">
+                  <strong> Announcement Header (*): </strong>
+                </label>
                 <textarea
-                  required
-                  class="textarea-announcement-page-content"
-                  id="announcement-page-content"
-                  title="Announcement page content"
-                  required
-                  aria-label="Please enter announcement page content"
-                  required
+                  class="textarea"
+                  id="input-announcement-header-text"
                   type="text"
-                  maxlength="1000"
+                  title="Announcement Header"
+                  required
+                  placeholder="Enter Header of Announcement"
                 ></textarea>
+                <span class="textarea-error" aria-live="assertive" id="tour-title-error">
+                  Announcement header is required
+                </span>
+              </div>
             </div>
+            
+            <div class="row-28 margin-top-12">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
+                <label class="font-caption-alt margin-bottom-12 margin-top-12" for="cover-page-content">
+                  <strong> Announcement Body (*): </strong>
+                </label>
+              </div>
+              <div class="cover-page-editor col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
+                <div id="editor">
+                  <p>Initial content of the editor</p>
+                </div>
+                <span class="bodytext-textarea-error" role="alert" aria-live="assertive" id="coverpage-bodytext-error">
+                  Announcement Body is required.
+                </span>
+              </div>
+            </div>
+
             <div class="announcement-page-footer-btn">
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-left-6">
                 <div class="pull-right">
@@ -58,6 +76,7 @@
                 </div>
               </div>
             </div>
+
           </div>
         </form>
       </div>

@@ -13,6 +13,7 @@ import { RunTourAction } from '../models/runtouraction'
 import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 declare const $: any
 
@@ -29,6 +30,7 @@ class PageTourAuthor {
   private lastSelectedElementStore: any = {}
   private chooseState = Object.freeze({ Choose: 1, Chosen: 2 })
   private domLookupBox: HTMLInputElement = null
+  private ckEditor: any = null;
   // Template Functions
   private stepModalTemplateFn: any = stepModalTemplate
   private chooseElementTemplateFn: any = chooseElementTemplate
@@ -1037,6 +1039,25 @@ class PageTourAuthor {
     }
     announcementPageModal = document.getElementById('announcement-page-modal')
     announcementPageModal.style.display = 'block'
+
+    ClassicEditor
+    .create(document.getElementById('editor'), {
+      toolbar: ['heading','|', 'bold','italic','link','bulletedList', 'numberedList'],
+      heading: {
+        options:[
+          { model:'paragraph', title: "Paragraph", class: 'ck-heading_paragraph'},
+          { model: 'heading2', view: 'h2', title: 'Heading 1', class: 'ck-heading_heading1' },
+          { model: 'heading3', view: 'h3', title: 'Heading 2', class: 'ck-heading_heading2' }
+        ]
+      }
+    })
+    .then( (editor: any) => {
+      this.ckEditor = editor;
+    })
+    .then((error:any) => {
+      console.log(error);
+    });
+
     let announcementPageForm = document.getElementById('announcement-page-form')
     DomUtils.manageTabbing(announcementPageForm)
 
@@ -1142,7 +1163,6 @@ class PageTourAuthor {
 
   private getAnnouncementPageDetails = () => {
     let headerElement: HTMLSelectElement = document.getElementById('input-announcement-header-text') as HTMLSelectElement
-    let bodyElement: HTMLSelectElement = document.getElementById('announcement-page-content') as HTMLSelectElement
     let pageContext = this.getPageContext()
     if(this.tour == null)
       this.tour = {}
@@ -1150,7 +1170,7 @@ class PageTourAuthor {
     
     let newStep: any = {}
     newStep.headerText = headerElement.value;
-    newStep.message = bodyElement.value;
+    newStep.message = this.ckEditor.getData();
     newStep.pagecontext = pageContext.url
     newStep.pagestatename = pageContext.state
 
