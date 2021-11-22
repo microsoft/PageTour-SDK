@@ -761,13 +761,13 @@ class PageTourPlay {
             imgHeaderContainer.src = this.tour.steps[stepCount].headerText
             stepHeadingElement.style.display = 'none'
             imgHeaderContainer.style.display = 'block'
-            emptyHeaderContainer.style.height = '0px'
+            emptyHeaderContainer.className = 'noHeightContainer'
           }
           else {
             stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
             imgHeaderContainer.style.display = 'none'
             stepHeadingElement.style.display = 'block'
-            emptyHeaderContainer.style.height = '17.5vh'
+            emptyHeaderContainer.className = 'emptyHeightContainer'
           }
         } else {
           stepHeadingElement.innerText = ''
@@ -775,7 +775,7 @@ class PageTourPlay {
 
         stepCounter.innerText = stepCount + 1 + ' of ' + this.tour.steps.length
 
-        stepDescriptionElement.innerText = stepDescription
+        stepDescriptionElement.innerHTML = stepDescription
 
         //this.tether = this.getTetherObject(stepCount)
         this.ApplyAnnouncementTheme(stepCount)

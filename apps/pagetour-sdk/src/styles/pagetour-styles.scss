@@ -2050,6 +2050,13 @@ div#announcement-page-modal {
       max-height: 196px;
       height: 196px;
 
+      .noHeightContainer {
+        height: 0;
+      }
+      .emptyHeightContainer {
+        height: 17.5vh;
+      }
+
       .anno-header-image{
         padding: 0px 20px;
         margin-left: 25px;
