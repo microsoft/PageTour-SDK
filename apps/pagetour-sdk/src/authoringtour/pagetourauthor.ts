@@ -670,8 +670,8 @@ class PageTourAuthor {
     event.stopPropagation()
     if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
       const editingStep = this.stepList[this.editStepIndex]
-      document.getElementById('input-announcement-header-text').setAttribute("value",editingStep.headerText);
-      document.getElementById('announcement-page-content').innerText = editingStep.message;
+      document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
+      document.getElementById('anno-message-editor').innerHTML = editingStep.message;
     }
   }
 
@@ -1041,7 +1041,7 @@ class PageTourAuthor {
     announcementPageModal.style.display = 'block'
 
     ClassicEditor
-    .create(document.getElementById('editor'), {
+    .create(document.getElementById('anno-message-editor'), {
       toolbar: ['heading','|', 'bold','italic','link','bulletedList', 'numberedList'],
       heading: {
         options:[
@@ -1156,6 +1156,21 @@ class PageTourAuthor {
   }
 
   private saveAnnouncementPage = () => {
+    let coverPageTextArea = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
+    if (coverPageTextArea.value === '') {
+      document.getElementById('anno-header-error').style.display = 'block'
+      return;
+    } else {
+      document.getElementById('anno-header-error').style.display = 'none'
+    }
+    let messageContent = this.ckEditor.getData();
+    if(messageContent === ''){
+      document.getElementById('anno-message-error').style.display = 'block'
+      return;
+    } else {
+      document.getElementById('anno-message-error').style.display = 'none'
+    }
+
     this.getAnnouncementPageDetails()
     this.populateSteps()
     this.closeAnnouncementPageModal()
