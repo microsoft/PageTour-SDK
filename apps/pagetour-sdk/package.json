@@ -39,6 +39,8 @@
     "dist"
   ],
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^31.0.0",
+    "@ckeditor/ckeditor5-word-count": "^31.0.0",
     "debounce": "1.2.0",
     "popper.js": "1.14.7",
     "unique-selector": "0.4.1"
