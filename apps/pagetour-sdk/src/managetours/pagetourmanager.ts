@@ -1022,7 +1022,10 @@ class PageTourManager {
 
   private playTourByObject = async (tour: any, startInterval: number) => {
     this.hideManagePageTourModal()
-    this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
+    if(tour.tourtype == "announcement")
+        this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0)
+    else
+      this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
   }
   /// Hides Manage Tour Dialog
   private hideManagePageTourModal = () => {

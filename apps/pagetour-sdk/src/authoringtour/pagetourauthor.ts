@@ -313,7 +313,7 @@ class PageTourAuthor {
   private tourTypeChanged = () => {
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
-    if(tourtype == "announcement"){
+    if(tourtype.toLowerCase() == "announcement"){
       document.getElementById("add-announcement-btn").style.display = 'inline'
       document.getElementById("add-step-btn").style.display = 'none'
       document.getElementById("cover-page-btn").style.display = 'none'
@@ -393,7 +393,7 @@ class PageTourAuthor {
       tour.coverPage.location = this.tourCoverPageLocation
       tour.coverPage.content = this.tourCoverPageContent
       if(this.tour.tourtype == "announcement")
-      this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
+        this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
       else
         this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
     }

@@ -2023,7 +2023,13 @@ div#announcement-page-modal {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 50vh;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
   @media screen and (min-width: 200px) and (max-width: 767px) {
     height: 192vh;
   }
@@ -2041,7 +2047,7 @@ div#announcement-page-modal {
   }
   .anno-tourbox_data {
     flex-basis: 30%;
-    height: 100%;
+    height: 50%;
     width: 100%;
     border: 1px solid black;
     background-color: white;
@@ -2150,8 +2156,7 @@ div#announcement-page-modal {
           border: 1px solid;
           margin-left: 20px !important;
         }
-        .nav-buttons {
-          
+        .nav-buttons { 
           font-size: 14px;
           cursor: pointer;
           background-color: transparent;
@@ -2162,6 +2167,7 @@ div#announcement-page-modal {
           width: 90px;
           font-weight: 600;
           border-radius: 2px;
+          color: black;
         }
         .nav-buttons:focus {
           outline: #000000 dotted 1px;
