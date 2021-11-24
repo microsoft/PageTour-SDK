@@ -732,7 +732,7 @@ class PageTourPlay {
         }
         previoustButton.hidden = true
         previoustButton.disabled = true
-        annoCounter.style.width = '315px'
+        annoCounter.style.width = '78%'
       }
         if (opts.navigator.callbackBeforeTourStep != null) {
           opts.navigator.callbackBeforeTourStep(this.tour)
@@ -740,7 +740,7 @@ class PageTourPlay {
         if (stepCount === this.totalSteps - 1) {
           nextButton.hidden = true
           nextButton.disabled = true
-          annoCounter.style.width = '315px'
+          annoCounter.style.width = '78%'
         }
         nextButton.classList.remove('loadingNextStep')
         previoustButton.classList.remove('loadingNextStep')

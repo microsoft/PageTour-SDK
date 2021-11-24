@@ -392,7 +392,7 @@ class PageTourAuthor {
       tour.description = (document.getElementById('tour-description') as HTMLTextAreaElement).value
       tour.coverPage.location = this.tourCoverPageLocation
       tour.coverPage.content = this.tourCoverPageContent
-      if(this.tour.tourtype == "announcement")
+      if(this.tour.tourtype.toLowerCase() == "announcement")
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
       else
         this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
@@ -437,6 +437,7 @@ class PageTourAuthor {
       tdStepMoveup.setAttribute('class', 'reorder-column')
       tdStepEdit.setAttribute('class', 'button-column')
       tdStepDelete.setAttribute('class', 'button-column')
+      tdStepHeader.setAttribute('class', 'message-desc')
 
       tdexpander.appendChild(expander)
       tdStepCount.appendChild(stepCount)
@@ -450,8 +451,9 @@ class PageTourAuthor {
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      if(this.tour && this.tour.tourtype == 'announcement') {
+      if(this.tour && this.tour.tourtype.toLowerCase() == 'announcement') {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
+        document.getElementById("step-tourtype-header").style.width = '250px'
         tr.appendChild(tdStepHeader)
       }
       else {
@@ -629,7 +631,7 @@ class PageTourAuthor {
     this.editStepIndex = index;
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
-    switch(tourtype) {
+    switch(tourtype.toLowerCase()) {
       case "announcement":
         this.editAnnouncementStep();
         break;
@@ -1052,7 +1054,7 @@ class PageTourAuthor {
       }
     })
     .then( (editor: any) => {
-      this.ckEditor = editor;
+      this.ckEditor = editor; 
     })
     .then((error:any) => {
       console.log(error);

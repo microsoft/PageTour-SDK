@@ -699,6 +699,9 @@ class PageTourManager {
         msgElement.classList.add('author-desc')
         break
       case 'tourtype':
+        let tourTypeIcon = document.createElement('i');
+        tourTypeIcon.setAttribute('class', "pagetour__icon icon-tourtype-" + tour.tourtype)
+        msgElement.appendChild(tourTypeIcon)
         msgElement.appendChild(document.createTextNode(tour.tourtype))
         msgElement.setAttribute('id', 'tour-type_' + tour.id)
         break
@@ -1022,7 +1025,7 @@ class PageTourManager {
 
   private playTourByObject = async (tour: any, startInterval: number) => {
     this.hideManagePageTourModal()
-    if(tour.tourtype == "announcement")
+    if(tour.tourtype.toLowerCase() == "announcement")
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0)
     else
       this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
