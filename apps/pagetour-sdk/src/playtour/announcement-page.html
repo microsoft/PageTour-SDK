@@ -1,31 +1,34 @@
-<div class="anno-onplay-tourbox" id="anno-tourBox">
-  <div id="announcementboxdata" class="anno-tourbox_data">
-    <div id="announcementheader" class="anno-header-container">
-      <div id="annoclosebtn" class="anno-close-btn">
-        <button class="close-button" id="anno-exit-step" aria-label="Close tour">
-          <i class="pagetour__icon close-button-icon" id="playtourBoxCloseIcon"></i>
-        </button>
-      </div>
-      <div id="annoheaderbox" class="anno-header-box">
-        <div id="emptyHeaderContainer"></div>
-        <img id="imgHeaderContainer" class="anno-header-image"></img>
-        <div id="announcementboxtitle" class="anno-heading">
+<div class="announcement-container" id="anno-tourBox">
+  <div class="announcement-card" id="announcementboxdata" >
+      <div class="announcement-header" id="announcementheader">
+        <div class="close-button-div" id="annoclosebtn">
+          <button class="close-button" id="anno-exit-step" aria-label="Close tour">
+            <i class="pagetour__icon close-button-icon" id="playtourBoxCloseIcon"></i>
+          </button>
         </div>
+          <img id= "imgHeaderContainer" alt="Image of Announcement">
+          <video id="videoHeaderContainer" oncontextmenu="return false;" disablePictureInPicture autoplay controls controlsList="nofullscreen  nodownload noremoteplayback">
+              <source id="videoSourceContainer" type="video/mp4">
+              Your browser does not support the video tag. Please use Edge or chrome
+          </video>
+          <div id="announcementboxtitle" class="announcement-heading">
+          </div>
       </div>
-    </div>
-    <div id="annobodybox" class="anno-body-box">
-      <p id="announcementboxdescription" class="anno-text"></p>
-    </div>
-    <div class="anno-footer">
-      <div class="anno-counter" id="annoboxcounter"></div>
-      <div id="annonavigationdiv" class="anno-navigation-buttons">
-        <button class="nav-buttons previous previousbuttondiv" id="anno-previous-step" aria-label="Previous step">
-          Previous
-        </button>
-        <button class="nav-buttons next nextbuttondiv" aria-label="Next step" id="anno-next-step">
-          Next
-        </button>
+      <div class="announcement-content"  id="annobodybox">
+          <p id="announcementboxdescription" class="anno-text"> </p>
+      </div>
+
+      <div class="announcement-footer">
+          <div class="announcement-page-counter" id="annoboxcounter"></div>
+          <div class="announcement-navigation-buttons" id="annonavigationdiv">
+              <button class="announcement-previous-button" id="anno-previous-step" aria-label="Previous step">
+                  Previous
+              </button>
+              <button class="announcement-next-button" id="anno-next-step" aria-label="Next step">
+                  Next
+              </button>
+          </div>
       </div>
   </div>
-  </div>
+
 </div>

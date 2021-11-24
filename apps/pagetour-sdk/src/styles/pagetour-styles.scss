@@ -1076,6 +1076,10 @@ $input-text-focus-outline: 1px dotted black;
   margin-top: 12px;
 }
 
+.margin-top-16 {
+  margin-top: 24px;
+}
+
 .margin-bottom-24 {
   margin: 0 0 24px;
 }
@@ -2029,175 +2033,160 @@ div#announcement-page-modal {
 
 
 /* Annoucement Box Popup start*/
-.anno-onplay-tourbox {
+.announcement-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.6);
   position: fixed;
-  @media screen and (min-width: 200px) and (max-width: 767px) {
-    height: 192vh;
-  }
-  @media screen and (min-width: 768px) and (max-width: 1024px)  {
-    height: 96vh;
-  }
-  @media screen and (min-width: 1024px) and (max-width: 1200px)  {
-    height: 84vh;
-  }
-  @media screen and (min-width: 1200px) and (max-width: 1440px)  {
-    height: 72vh;
-  }
-  @media screen and (min-width: 1440px) and (max-width: 1600px)  {
-    height: 60vh;
-  }
-  .anno-tourbox_data {
+
+  .announcement-card{
+    background: rgb(255, 255, 255);
     flex-basis: 30%;
-    height: 50%;
+    border-radius: 2px !important;
+    transition:0.3s;
+    box-shadow: 0 4px 20px 0 rgba(34,68,123,0.2);
+  }
+  
+  .announcement-header {
+    margin: 0;
+    padding: 0;
+    height: 216px;
+    max-height: 216px;
     width: 100%;
-    border: 1px solid black;
-    background-color: white;
-
-    .anno-header-container {
-      max-height: 196px;
-      height: 196px;
-
-      .noHeightContainer {
-        height: 0;
-      }
-      .emptyHeightContainer {
-        height: 17.5vh;
-      }
-
-      .anno-header-image{
-        padding: 0px 20px;
-        margin-left: 25px;
-        margin-right: auto;
-        width: 30vw;
-        height: 21vh;
-        @media screen and (min-width: 200px) and (max-width: 767px) {
-          width: 87vw;
-          height: 63vh;
-        }
-        @media screen and (min-width: 768px) and (max-width: 1024px)  {
-          width: 72vw;
-          height: 52vh;
-        }
-        @media screen and (min-width: 1024px) and (max-width: 1200px)  {
-          width: 51vw;
-          height: 37vh;
-        }
-        @media screen and (min-width: 1200px) and (max-width: 1440px)  {
-          width: 44vw;
-          height: 31vh;
-        }
-        @media screen and (min-width: 1440px) and (max-width: 1600px)  {
-          width: 26vw;
-          height: 36vh;
-        }
-      }
+    max-width: 100%;
     
-      .anno-heading {
-        font-size: 18px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding-left: 3%;
+    .close-button-div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-direction: row;
+    }
+
+    .close-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0px 3px;
+      align-self: flex-start;
+      outline: inherit;
+      position: fixed;
+      float: right;
+      align-items: flex-end;
+      z-index: 100;
+    }
+
+    .close-button:focus {
+      outline: #000000 dotted 1px;
+    }
+
+    .announcement-heading {
+      font-size:18px;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0 2rem;
+      padding: 1rem 0;
+      height: 100%;
+      display: flex !important;
+      align-items: flex-end;
+      // Todo: make this color contrast to background
+      color: white;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 2px 2px 0px 0px;
+      object-fit: contain;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      border-radius: 2px 2px 0px 0px;
+      object-fit: contain;
+    }
+
+  }
+
+  
+  .announcement-content {
+    padding: 2rem;
+    height: 202px;
+    max-height: 100%;
+    overflow: hidden;
+
+    .card-title{
+      font-size: 18px;
+      color: #000000;
+      margin-top: 1rem;
+    }
+
+    .card-excerpt{
+      font-size: 15px;
+      line-height: 1.5rem;
+      color: #000000;
+      margin:0;
+    }
+  
+  }
+
+  .announcement-footer {
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .announcement-page-counter {
+      font-size: 14px;
+      line-height: 20px;
+      font-family: 'Segoe UI';
+    }
+
+    .announcement-navigation-buttons {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      width: 170px;
+      justify-content: flex-end;
+    
+      .announcement-previous-button {
+        width: 93px;
+        height: 32px;
+        background: #ffffff;
+        border: 1px solid #646464;
+        border-radius: 2px;
+        box-sizing: border-box;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
       }
-      .anno-close-btn {
-        float: right;
-        .close-button {
-          background-color: transparent;
-          border: none;
-          cursor: pointer;
-          padding: 1px;
-          align-self: flex-start;
-          outline: inherit;
-        }
-        .close-button:focus {
-          outline: #000000 dotted 1px;
-        }
+
+      .announcement-next-button {
+        width: 69px;
+        height: 32px;
+        background: #0078D4;
+        border-radius: 2px;
+        border: 1px solid #0078D4;
+        box-sizing: border-box;
+        color: #ffffff;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        margin-left: 10px;
       }
     }
-      
-      .anno-body-box {
-        margin: 48px 0px 24px;
-        min-height: 100px;
-        padding: 0px 2rem;
-      }
-
-      .anno-text {
-        font-size: 14px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .anno-footer {
-        display: flex;
-        flex-direction: row;
-        padding: 2rem;
-
-        .anno-counter {
-          width: 270px
-        }
-      }
-
-      .anno-navigation-buttons {
-        flex-direction: row;
-        display: flex;
-        height: 25px;
-        color: white;
-        justify-content: space-evenly;
-
-        .loadingNextStep {
-          cursor: wait !important;
-        }
-        .previousbuttondiv {
-          text-align: center;
-          min-width: 25px;
-          border: 1px solid rgb(138, 136, 134);
-        }
-        .nextbuttondiv {
-          text-align: center;
-          min-width: 25px;
-          border: 1px solid;
-          margin-left: 20px !important;
-        }
-        .nav-buttons { 
-          font-size: 14px;
-          cursor: pointer;
-          background-color: transparent;
-          outline: inherit;
-          padding: 0 16px;
-          margin: 2px;
-          height: 30px;
-          width: 90px;
-          font-weight: 600;
-          border-radius: 2px;
-          color: black;
-        }
-        .nav-buttons:focus {
-          outline: #000000 dotted 1px;
-        }
-
-        .pt-counter {
-          align-self: center;
-          height: min-content;
-          padding: 0 5px;
-          width: 50px;
-          text-align: center;
-
-          p {
-            margin: 0px;
-            // font-family: Segoe UI;
-            font-size: 12px;
-          }
-        }
-      }
   }
 }
+
+
 /* Annoucement Box Popup end*/

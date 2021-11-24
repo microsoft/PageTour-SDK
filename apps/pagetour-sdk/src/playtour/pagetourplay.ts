@@ -752,22 +752,29 @@ class PageTourPlay {
         let stepDescriptionElement = document.getElementById('announcementboxdescription')
         let stepCounter = document.getElementById('annoboxcounter')
         let imgHeaderContainer = document.getElementById('imgHeaderContainer') as HTMLImageElement
-        let emptyHeaderContainer =  document.getElementById('emptyHeaderContainer')
+        let videoSourceContainer = document.getElementById('videoSourceContainer') as HTMLSourceElement
+        let videoHeaderContainer = document.getElementById('videoHeaderContainer') as HTMLVideoElement
 
         if (this.tour.steps[stepCount].headerText !== undefined && this.tour.steps[stepCount].headerText !== '') {
-          if (this.validURL(this.tour.steps[stepCount].headerText)) {
-
-            let img = document.createElement('img');
+          if (this.validImageURL(this.tour.steps[stepCount].headerText)) {
             imgHeaderContainer.src = this.tour.steps[stepCount].headerText
-            stepHeadingElement.style.display = 'none'
             imgHeaderContainer.style.display = 'block'
-            emptyHeaderContainer.className = 'noHeightContainer'
+            stepHeadingElement.style.display = 'none'
+            videoHeaderContainer.style.display ='none'
+          } else if(this.validVideoUrl(this.tour.steps[stepCount].headerText)) {
+            videoSourceContainer.src = this.tour.steps[stepCount].headerText;
+            videoHeaderContainer.style.display ='block'
+            videoHeaderContainer.load();
+            videoHeaderContainer.play();
+
+            stepHeadingElement.style.display = 'none'
+            imgHeaderContainer.style.display = 'none'
           }
           else {
             stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
-            imgHeaderContainer.style.display = 'none'
             stepHeadingElement.style.display = 'block'
-            emptyHeaderContainer.className = 'emptyHeightContainer'
+            imgHeaderContainer.style.display = 'none'
+            videoHeaderContainer.style.display ='none'
           }
         } else {
           stepHeadingElement.innerText = ''
@@ -793,14 +800,16 @@ class PageTourPlay {
       }
   }
   
-  private validURL(str: string) {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    return !!pattern.test(str);
+  private validImageURL(text: string) {
+    var pattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
+    var result = !!pattern.test(text);
+    return result;
+  }
+
+  private validVideoUrl(text: string) {
+    var pattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:mp4|mov|wmv|avi|)+$/;
+    var result = !!pattern.test(text);
+    return result;
   }
 
   private isValidElement = (element: HTMLElement) => {
