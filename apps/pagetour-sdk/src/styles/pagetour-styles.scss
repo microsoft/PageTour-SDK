@@ -38,7 +38,7 @@ div#cover-page-modal {
 
 .font-subtitle-alt {
   font-family: 'Segoe UI';
-  font-weight: normal;
+  font-weight: 600;
   font-size: 18px !important;
   line-height: 22px !important;
 }
@@ -844,6 +844,17 @@ $input-text-focus-outline: 1px dotted black;
         width: 100%;
         max-width: none;
       }
+    }
+
+    .add-new {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+
+    .btn-outline-primary{
+      border: none;
     }
 
     .pagination-panel {

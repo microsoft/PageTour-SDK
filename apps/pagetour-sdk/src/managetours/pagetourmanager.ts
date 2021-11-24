@@ -306,6 +306,11 @@ class PageTourManager {
     if (manageTourModal != null || manageTourModal != undefined) manageTourModal.parentNode.removeChild(manageTourModal)
   }
 
+  // Opens the option
+  // private addNew = () => {
+  //   document.getElementById('#addNewDropDown');
+  // }
+
   /// Opens Add Tour Dialog
   private addTour = () => {
     this.hideManagePageTourModal()
