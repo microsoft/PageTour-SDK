@@ -46,7 +46,7 @@ class PageTourPlay {
       const tour = await this.dataStore.GetTourById(tourId)
       this.autoPlayTest = autoPlayTest
 
-      switch(tour.tourtype){ 
+      switch(tour.tourtype.toLowerCase()){ 
         case "announcement":
           this.runAnnouncement(tour, action, startInterval, null, autoPlayTest)
           break;
@@ -727,7 +727,7 @@ class PageTourPlay {
       nextButton.disabled = false
       if (stepCount === 0) {
         // First step with element.
-        if (action === RunTourAction.Play && (!opts.isCoverPageTourStart || !tour.coverPage ||tour.coverPage==null || tour.coverPage.location.toLowerCase() != 'start')) {
+        if (action === RunTourAction.Play) {
           this.updateUserActions(tour, 'Started', '0', 'Playing')
         }
         previoustButton.hidden = true
