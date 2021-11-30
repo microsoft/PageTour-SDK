@@ -1187,6 +1187,8 @@ class PageTourAuthor {
     let newStep: any = {}
     newStep.headerText = headerElement.value;
     newStep.message = this.ckEditor.getData();
+    newStep.pagecontext = pageContext.url
+    newStep.pagestatename = pageContext.state
 
     if (this.editStepIndex !== -1) {
       this.stepList[this.editStepIndex] = newStep
