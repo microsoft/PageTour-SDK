@@ -7,7 +7,7 @@ interface NavigatorOptions {
   getStartPageUrl?: (startUrl: string) => string
   getCurrentPageContext?: () => PageContext
   callbackBeforeTourStep?: (tour: Tutorial) => void
-  callbackAfterTourStep?: (tour: Tutorial) => void
+  callbackAfterTourStep?: (step: any) => void
   callbackBeforeTourStart?: (tour: Tutorial) => void
   callbackOnTourStart?: (tour: Tutorial) => void
   callbackAfterTourEnd?: (tour: Tutorial) => void

@@ -417,6 +417,7 @@ class PageTourAuthor {
       let tdStepType = document.createElement('td')
       let tdStepHeader = document.createElement('td')
       let tdStepMessage = document.createElement('td')
+      let tdStepMediaUrl = document.createElement('td')
       let tdStepMoveup = document.createElement('td')
       let tdStepEdit = document.createElement('td')
       let tdStepDelete = document.createElement('td')
@@ -424,6 +425,7 @@ class PageTourAuthor {
       let stepCount = document.createTextNode((i + 1).toString())
       let stepType = document.createTextNode(this.stepList[i].type)
       let stepHeaderText = document.createTextNode(this.stepList[i].headerText)
+      let stepMediaUrl = document.createTextNode(this.stepList[i].mediaUrl)
       let stepMessage = this.getStepMessageElement(i)
       let stepMoveup = this.getButton('moveup', i)
       let stepMovedown = this.getButton('movedown', i)
@@ -448,16 +450,20 @@ class PageTourAuthor {
       tdStepEdit.appendChild(stepEdit)
       tdStepDelete.appendChild(stepDelete)
       tdStepHeader.appendChild(stepHeaderText)
+      tdStepMediaUrl.appendChild(stepMediaUrl)
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
       if(this.tour && this.tour.tourtype.toLowerCase() == 'announcement') {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         document.getElementById("step-tourtype-header").style.width = '250px'
+        document.getElementById("step-announcement-image-url").style.display = 'inline'
         tr.appendChild(tdStepHeader)
+        tr.appendChild(tdStepMediaUrl)
       }
       else {
         document.getElementById("step-tourtype-header").innerText = 'Type'
+        document.getElementById("step-announcement-image-url").style.display = 'none'
         tr.appendChild(tdStepType)
       }
       tr.appendChild(tdStepMessage)
@@ -674,6 +680,7 @@ class PageTourAuthor {
       const editingStep = this.stepList[this.editStepIndex]
       document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
       document.getElementById('anno-message-editor').innerHTML = editingStep.message;
+      document.getElementById('input-announcement-image-video').innerText = editingStep.mediaUrl;
     }
   }
 
@@ -1050,6 +1057,9 @@ class PageTourAuthor {
           { model: 'heading3', view: 'h4', title: 'Heading', class: 'ck-heading_heading3' },
           { model:'paragraph', title: "Paragraph", class: 'ck-heading_paragraph'}
         ]
+      },
+      link: {
+        addTargetToExternalLinks: true
       }
     })
     .then( (editor: any) => {
@@ -1157,12 +1167,20 @@ class PageTourAuthor {
   }
 
   private saveAnnouncementPage = () => {
-    let coverPageTextArea = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
-    if (coverPageTextArea.value === '') {
+    let announcementHeader = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
+    if (announcementHeader.value === '') {
       document.getElementById('anno-header-error').style.display = 'block'
       return;
     } else {
       document.getElementById('anno-header-error').style.display = 'none'
+    }
+
+    let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    if (mediaUrl.value !== '' && !this.validateUrl(mediaUrl.value)) {
+      document.getElementById('anno-media-error').style.display = 'block'
+      return;
+    } else {
+      document.getElementById('anno-media-error').style.display = 'none'
     }
     let messageContent = this.ckEditor.getData();
     if(messageContent === ''){
@@ -1177,8 +1195,18 @@ class PageTourAuthor {
     this.closeAnnouncementPageModal()
   }
 
+  private validateUrl(text: string) {
+    let imgPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
+    let result = !!imgPattern.test(text);
+    if(!result) {
+      let videoPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:mp4|mov|wmv|avi|)+$/;
+      result = !!videoPattern.test(text);
+    }
+    return result;
+  }
   private getAnnouncementPageDetails = () => {
-    let headerElement: HTMLSelectElement = document.getElementById('input-announcement-header-text') as HTMLSelectElement
+    let headerElement = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
+    let mediaUrlElement = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
     let pageContext = this.getPageContext()
     if(this.tour == null)
       this.tour = {}
@@ -1186,7 +1214,10 @@ class PageTourAuthor {
     
     let newStep: any = {}
     newStep.headerText = headerElement.value;
+    newStep.mediaUrl = mediaUrlElement.value;
     newStep.message = this.ckEditor.getData();
+    newStep.pagecontext = pageContext.url
+    newStep.pagestatename = pageContext.state
 
     if (this.editStepIndex !== -1) {
       this.stepList[this.editStepIndex] = newStep

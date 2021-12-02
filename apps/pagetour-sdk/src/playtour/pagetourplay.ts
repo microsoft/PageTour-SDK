@@ -648,7 +648,7 @@ class PageTourPlay {
         let tourBoxElement: HTMLElement = document.getElementById('pagetour-tourBox')
         DomUtils.manageTabbing(tourBoxElement)
         if (opts.navigator.callbackAfterTourStep != null) {
-          opts.navigator.callbackAfterTourStep(this.tour)
+          opts.navigator.callbackAfterTourStep(this.tour.steps[stepCount])
         }
       }
 
@@ -755,33 +755,27 @@ class PageTourPlay {
         let videoSourceContainer = document.getElementById('videoSourceContainer') as HTMLSourceElement
         let videoHeaderContainer = document.getElementById('videoHeaderContainer') as HTMLVideoElement
 
-        if (this.tour.steps[stepCount].headerText !== undefined && this.tour.steps[stepCount].headerText !== '') {
-          if (this.validImageURL(this.tour.steps[stepCount].headerText)) {
-            imgHeaderContainer.src = this.tour.steps[stepCount].headerText
+        if (this.tour.steps[stepCount].mediaUrl !== undefined && this.tour.steps[stepCount].mediaUrl !== '') {
+          if (this.validImageURL(this.tour.steps[stepCount].mediaUrl)) {
+            imgHeaderContainer.src = this.tour.steps[stepCount].mediaUrl
             imgHeaderContainer.style.display = 'block'
-            stepHeadingElement.style.display = 'none'
             videoHeaderContainer.style.display ='none'
-          } else if(this.validVideoUrl(this.tour.steps[stepCount].headerText)) {
-            videoSourceContainer.src = this.tour.steps[stepCount].headerText;
+          } else if(this.validVideoUrl(this.tour.steps[stepCount].mediaUrl)) {
+            videoSourceContainer.src = this.tour.steps[stepCount].mediaUrl;
             videoHeaderContainer.style.display ='block'
             videoHeaderContainer.load();
             videoHeaderContainer.play();
-
-            stepHeadingElement.style.display = 'none'
             imgHeaderContainer.style.display = 'none'
           }
-          else {
-            stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
-            stepHeadingElement.style.display = 'block'
-            imgHeaderContainer.style.display = 'none'
-            videoHeaderContainer.style.display ='none'
-          }
-        } else {
-          stepHeadingElement.innerText = ''
+        }
+        else {
+          imgHeaderContainer.src = this.configStore.Options.announcementDefaultImage
+          imgHeaderContainer.style.display = 'block'
+          videoHeaderContainer.style.display ='none'
         }
 
         stepCounter.innerText = stepCount + 1 + ' of ' + this.tour.steps.length
-
+        stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
         stepDescriptionElement.innerHTML = stepDescription
 
         //this.tether = this.getTetherObject(stepCount)
@@ -790,7 +784,7 @@ class PageTourPlay {
         let tourBoxElement: HTMLElement = document.getElementById('anno-tourBox')
         DomUtils.manageTabbing(tourBoxElement)
         if (opts.navigator.callbackAfterTourStep != null) {
-          opts.navigator.callbackAfterTourStep(this.tour)
+          opts.navigator.callbackAfterTourStep(this.tour.steps[stepCount])
         }
 
       if (stepCount === this.totalSteps - 1) {
@@ -801,14 +795,14 @@ class PageTourPlay {
   }
   
   private validImageURL(text: string) {
-    var pattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
-    var result = !!pattern.test(text);
+    let pattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
+    let result = !!pattern.test(text);
     return result;
   }
 
   private validVideoUrl(text: string) {
-    var pattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:mp4|mov|wmv|avi|)+$/;
-    var result = !!pattern.test(text);
+    let pattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:mp4|mov|wmv|avi|)+$/;
+    let result = !!pattern.test(text);
     return result;
   }
 
