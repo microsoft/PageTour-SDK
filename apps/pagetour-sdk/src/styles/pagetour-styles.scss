@@ -2094,6 +2094,14 @@ div#announcement-page-modal {
       z-index: 100;
     }
 
+    .loadingImage {
+      background: transparent url('https://fxpsitstoragenew.z13.web.core.windows.net/loader.gif') center no - repeat;
+    }
+
+    .noLoadingImage {
+      background: none;
+    }
+
     .close-button:focus {
       outline: #000000 dotted 1px;
     }

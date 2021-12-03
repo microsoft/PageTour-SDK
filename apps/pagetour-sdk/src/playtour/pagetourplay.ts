@@ -755,11 +755,17 @@ class PageTourPlay {
         let videoSourceContainer = document.getElementById('videoSourceContainer') as HTMLSourceElement
         let videoHeaderContainer = document.getElementById('videoHeaderContainer') as HTMLVideoElement
 
+        imgHeaderContainer.onload = function () {
+          imgHeaderContainer.className = 'noLoadingImage'
+       }
+
         if (this.tour.steps[stepCount].mediaUrl !== undefined && this.tour.steps[stepCount].mediaUrl !== '') {
           if (this.validImageURL(this.tour.steps[stepCount].mediaUrl)) {
             imgHeaderContainer.src = this.tour.steps[stepCount].mediaUrl
             imgHeaderContainer.style.display = 'block'
             videoHeaderContainer.style.display ='none'
+            imgHeaderContainer.className = 'loadingImage'
+            imgHeaderContainer.alt = 'Image of Announcement'
           } else if(this.validVideoUrl(this.tour.steps[stepCount].mediaUrl)) {
             videoSourceContainer.src = this.tour.steps[stepCount].mediaUrl;
             videoHeaderContainer.style.display ='block'
