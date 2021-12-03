@@ -984,13 +984,13 @@ class PageTourPlay {
 
   private ApplyAnnouncementTheme(stepCount: number) {
     let tourBoxElement = document.getElementById('anno-tourBox')
-    let annoClosebtn = document.getElementById('playtourBoxCloseIcon')
+    // let annoClosebtn = document.getElementById('playtourBoxCloseIcon')
     //let ptnavigationdiv = document.getElementById('annonavigationdiv')
     let previousIcon = document.getElementById('anno-previous-step')
     let nextIcon = document.getElementById('anno-next-step')
     let tourboxdata = document.getElementById('announcementboxdata')
-    let annoboxHeaderdata = document.getElementById('announcementheader')
-    let annoboxBodydata = document.getElementById('annobodybox')
+    // let annoboxHeaderdata = document.getElementById('announcementheader')
+    // let annoboxBodydata = document.getElementById('annobodybox')
 
     if (this.tourTheme.isRounded) {
       tourboxdata.style.borderRadius = this.tourTheme.borderRadius ? `${this.tourTheme.borderRadius}px` : '10px'
@@ -1007,10 +1007,10 @@ class PageTourPlay {
     tourboxdata.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily
     tourBoxElement.style.borderColor = this.tourTheme.primaryColor
     tourBoxElement.style.borderLeftWidth = '3px'
-    annoboxHeaderdata.style.background = this.tourTheme.primaryColor
-    annoboxHeaderdata.style.color = this.tourTheme.secondaryColor
-    annoboxBodydata.style.background = this.tourTheme.secondaryColor
-    annoClosebtn.style.color = this.tourTheme.secondaryColor
+    // annoboxHeaderdata.style.background = this.tourTheme.primaryColor
+    // annoboxHeaderdata.style.color = this.tourTheme.secondaryColor
+    // annoboxBodydata.style.background = this.tourTheme.secondaryColor
+    // annoClosebtn.style.color = this.tourTheme.secondaryColor
   }
 
   private getBorderWidthCSSString(top: number, right: number, bottom: number, left: number) {

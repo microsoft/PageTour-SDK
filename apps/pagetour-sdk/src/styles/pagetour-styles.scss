@@ -2069,10 +2069,10 @@ div#announcement-page-modal {
   .announcement-header {
     margin: 0;
     padding: 0;
+    width: 576px;
+    max-width: 576px;
     height: 216px;
     max-height: 216px;
-    width: 100%;
-    max-width: 100%;
     
     .close-button-div {
       display: flex;
@@ -2125,6 +2125,7 @@ div#announcement-page-modal {
       height: 100%;
       border-radius: 2px 2px 0px 0px;
       object-fit: contain;
+      backdrop-filter: blur(4px);
     }
 
     video {
@@ -2132,6 +2133,7 @@ div#announcement-page-modal {
       height: 100%;
       border-radius: 2px 2px 0px 0px;
       object-fit: contain;
+      backdrop-filter: blur(4px);
     }
 
   }
