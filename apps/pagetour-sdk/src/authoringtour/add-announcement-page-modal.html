@@ -22,7 +22,7 @@
             <div class="row-8">
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
                 <label class="font-caption-alt margin-bottom-12" for="cover-location-select">
-                  <strong> Header (Add Image/Video url or Text): </strong>
+                  <strong> Header Text (*): </strong>
                 </label>
                 <textarea
                   class="textarea"
@@ -37,10 +37,28 @@
                 </span>
               </div>
             </div>
+
+            <div class="row-8">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
+                <label class="font-caption-alt margin-bottom-12">
+                  <strong> Add Image/Video url: </strong>
+                </label>
+                <textarea
+                  class="textarea"
+                  id="input-announcement-image-video"
+                  type="text"
+                  title="Image/Video url"
+                  placeholder="Enter Image/Video url(If url is not entered it will take default image)"
+                ></textarea>
+                <span class="textarea-error" aria-live="assertive" id="anno-media-error">
+                  Media url is not valid
+                </span>
+              </div>
+            </div>
             
             <div class="row-28 margin-top-12">
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
-                <label class="font-caption-alt margin-bottom-12 margin-top-12" for="cover-page-content">
+                <label class="font-caption-alt margin-bottom-12 margin-top-12">
                   <strong> Body Content (*): </strong>
                 </label>
               </div>
