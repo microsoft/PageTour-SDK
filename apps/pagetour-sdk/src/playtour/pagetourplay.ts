@@ -757,9 +757,9 @@ class PageTourPlay {
 
         if (this.tour.steps[stepCount].mediaUrl !== undefined && this.tour.steps[stepCount].mediaUrl !== '') {
           if (this.validImageURL(this.tour.steps[stepCount].mediaUrl)) {
-            // imgHeaderContainer.src = this.tour.steps[stepCount].mediaUrl
-            // imgHeaderContainer.style.display = 'block'
-            // videoHeaderContainer.style.display ='none'
+            imgHeaderContainer.src = this.tour.steps[stepCount].mediaUrl
+            imgHeaderContainer.style.display = 'block'
+            videoHeaderContainer.style.display ='none'
           } else if(this.validVideoUrl(this.tour.steps[stepCount].mediaUrl)) {
             videoSourceContainer.src = this.tour.steps[stepCount].mediaUrl;
             videoHeaderContainer.style.display ='block'

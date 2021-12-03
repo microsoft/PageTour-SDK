@@ -312,16 +312,21 @@ class PageTourAuthor {
 
   private tourTypeChanged = () => {
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
+    let autoPlayCheckbox = document.getElementById("isAutoPlayEnabled") as HTMLInputElement
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
     if(tourtype.toLowerCase() == "announcement"){
       document.getElementById("add-announcement-btn").style.display = 'inline'
       document.getElementById("add-step-btn").style.display = 'none'
       document.getElementById("cover-page-btn").style.display = 'none'
+      autoPlayCheckbox.checked = true;
+      autoPlayCheckbox.disabled = true;
     }
     else {
       document.getElementById("add-announcement-btn").style.display = 'none'
       document.getElementById("add-step-btn").style.display = 'inline'
       document.getElementById("cover-page-btn").style.display = 'inline'
+      autoPlayCheckbox.checked = false;
+      autoPlayCheckbox.disabled = false;
     }
 
   }
