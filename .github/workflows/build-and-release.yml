@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '10.16.3'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install Dependencies
         run: npm install
       - name: Build
         run: npm run build
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '12.x'
-          registry-url: 'https://registry.npmjs.org'
       - name: Publish SDK
         run: cd apps/pagetour-sdk && npm publish
         env:

@@ -1,6 +1,6 @@
 {
   "name": "pagetour-sdk",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "description": "Lightweight Typescript SDK for designing tours in Web Apps",
   "main": "dist/umd/pagetour.umd.js",
@@ -70,7 +70,7 @@
     "typescript": "3.2.4",
     "underscore.string": "3.3.5",
     "url-loader": "1.1.2",
-    "webpack": "4.29.3",
+    "webpack": "4.46.0",
     "webpack-cli": "3.2.3"
   }
 }
