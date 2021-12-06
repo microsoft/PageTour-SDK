@@ -10,7 +10,6 @@ import { PageContext } from '../models/pagecontext'
 import { RunTourAction } from '../models/runtouraction'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
-declare const $: any
 declare const navigator: any
 class PageTourManager {
   private toursList: any = [] // This holds an array of tours
@@ -144,7 +143,9 @@ class PageTourManager {
     document.getElementById('all-list-x-btn').onclick = this.closeManageToursModal
     document.getElementById('manage-tours-modal-close-btn').onclick = this.closeManageToursModal
     document.getElementById('manage-tours-modal-add-tour-btn').onmouseenter = this.showOptions
+    document.getElementById('manage-tours-modal-add-tour-btn').onfocus = this.showOptions
     document.getElementById('manage-tours-modal-add-tour-div').onmouseleave = this.hideOptions
+    document.getElementById('manage-tours-modal-add-tour-btn').onblur = this.hideOptions
     document.getElementById('option-page-tour').onclick = this.addPageTour
     document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
     document.getElementById('manage-tours-sort').onclick = this.sortTours
@@ -311,11 +312,11 @@ class PageTourManager {
 
   // Opens the option
   private showOptions = () => {
-    $("#add-new-dropdown").show();
+    document.getElementById("add-new-dropdown").classList.add("show");
   }
 
   private hideOptions = () => {
-    $("#add-new-dropdown").hide();
+    document.getElementById("add-new-dropdown").classList.remove("show");
   }
 
   
