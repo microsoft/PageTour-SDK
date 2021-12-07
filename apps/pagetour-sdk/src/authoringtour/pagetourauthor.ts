@@ -14,6 +14,8 @@ import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { SpeechConfig, AudioConfig, SpeechSynthesizer, SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk';
+
 
 declare const $: any
 
@@ -686,7 +688,10 @@ class PageTourAuthor {
       const editingStep = this.stepList[this.editStepIndex]
       document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
       document.getElementById('anno-message-editor').innerHTML = editingStep.message;
-      document.getElementById('input-announcement-image-video').innerText = editingStep.mediaUrl;
+      if (editingStep.mediaUrl)
+        document.getElementById('input-announcement-image-video').innerText = editingStep.mediaUrl;
+      if (editingStep.transcript)
+        document.getElementById('transcript-message-for-announcement').innerText = editingStep.transcript;
     }
   }
 
@@ -1086,6 +1091,10 @@ class PageTourAuthor {
 
     const saveAnnouncementPageElement = document.getElementById('save-announcement-page-btn')
     saveAnnouncementPageElement.onclick = this.saveAnnouncementPage
+
+    const recordAnnouncementPageElement = document.getElementById('record-announcement-page-btn')
+    recordAnnouncementPageElement.onclick = this.recordAnnouncementPage
+
   }
 
   /// Validates input in CoverPage Position Select Box
@@ -1201,6 +1210,29 @@ class PageTourAuthor {
     this.closeAnnouncementPageModal()
   }
 
+  private recordAnnouncementPage = () => {
+    let speechConfig = SpeechConfig.fromSubscription("e5edc487f1ea4974831bfacf457175ea", "westus2");
+    let transcriptDiv = document.getElementById('transcript-message-for-announcement');
+    speechConfig.speechRecognitionLanguage = "en-US";
+    let audioConfig  = AudioConfig.fromDefaultMicrophoneInput();
+    let recognizer = new SpeechRecognizer(speechConfig, audioConfig);
+
+    recognizer.recognizeOnceAsync(
+      function (result) {
+        transcriptDiv.innerHTML += result.text;
+        window.console.log(result);
+
+        recognizer.close();
+        recognizer = undefined;
+      },
+      function (err) {
+        transcriptDiv.innerHTML += err;
+        window.console.log(err);
+
+        recognizer.close();
+        recognizer = undefined;
+      });
+  }
   private validateUrl(text: string) {
     let imgPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
     let result = !!imgPattern.test(text);
@@ -1213,6 +1245,7 @@ class PageTourAuthor {
   private getAnnouncementPageDetails = () => {
     let headerElement = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
     let mediaUrlElement = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    let transcriptElement = document.getElementById('transcript-message-for-announcement') as HTMLTextAreaElement
     let pageContext = this.getPageContext()
     if(this.tour == null)
       this.tour = {}
@@ -1224,6 +1257,7 @@ class PageTourAuthor {
     newStep.message = this.ckEditor.getData();
     newStep.pagecontext = pageContext.url
     newStep.pagestatename = pageContext.state
+    newStep.transcript = transcriptElement.value;
 
     if (this.editStepIndex !== -1) {
       this.stepList[this.editStepIndex] = newStep
@@ -1474,6 +1508,9 @@ class PageTourAuthor {
     ) as HTMLTextAreaElement
     let valueForStepElement: HTMLTextAreaElement = document.getElementById('value-for-step') as HTMLTextAreaElement
     let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
+    let transcriptForStepElement: HTMLTextAreaElement = document.getElementById(
+      'transcript-message-for-step',
+    ) as HTMLTextAreaElement
 
     let eventType = eventTypeElement.options[eventTypeElement.selectedIndex].value
     let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
@@ -1520,6 +1557,8 @@ class PageTourAuthor {
       newStep.ignoreStepIf = false
     }
 
+    newStep.transcript = transcriptForStepElement.value;
+
     /// Updates the step in stepDetails during edit of a step or pushes a new step to the stepDetails array.
     if (this.editStepIndex !== -1) {
       this.stepList[this.editStepIndex] = newStep
@@ -1549,6 +1588,7 @@ class PageTourAuthor {
     ;(document.getElementById('message-for-step') as HTMLTextAreaElement).value = step.message
     ;(document.getElementById('error-message-for-step') as HTMLTextAreaElement).value = step.errorMessage
     ;(document.getElementById('value-for-step') as HTMLTextAreaElement).value = step.value
+    ;(document.getElementById('transcript-message-for-step') as HTMLTextAreaElement).value = step.transcript
     if (step.delayBefore) {
       let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
       let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement

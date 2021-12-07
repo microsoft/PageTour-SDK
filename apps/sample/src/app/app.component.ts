@@ -29,8 +29,6 @@ export class AppComponent implements OnInit {
     PageTour.init(this.repository, {
       announcementDefaultImage : 'https://fxpsitstoragenew.z13.web.core.windows.net/perfectfit.jpg'
     });
-
-    
   }
 
   public openAuthorTourDialog = () => {
