@@ -1211,7 +1211,7 @@ class PageTourAuthor {
   }
 
   private recordAnnouncementPage = () => {
-    let speechConfig = SpeechConfig.fromSubscription("", "");
+    let speechConfig = SpeechConfig.fromSubscription("e5edc487f1ea4974831bfacf457175ea", "westus2");
     let transcriptDiv = document.getElementById('transcript-message-for-announcement');
     speechConfig.speechRecognitionLanguage = "en-US";
     let audioConfig  = AudioConfig.fromDefaultMicrophoneInput();
