@@ -400,7 +400,7 @@ class PageTourAuthor {
       tour.description = (document.getElementById('tour-description') as HTMLTextAreaElement).value
       tour.coverPage.location = this.tourCoverPageLocation
       tour.coverPage.content = this.tourCoverPageContent
-      if(this.tour.tourtype.toLowerCase() == "announcement")
+      if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == "announcement")
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
       else
         this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
@@ -462,7 +462,7 @@ class PageTourAuthor {
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      if(this.tour && this.tour.tourtype.toLowerCase() == 'announcement') {
+      if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == 'announcement') {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         document.getElementById("step-tourtype-header").style.width = '250px'
         document.getElementById("step-announcement-image-url").style.display = 'inline'
