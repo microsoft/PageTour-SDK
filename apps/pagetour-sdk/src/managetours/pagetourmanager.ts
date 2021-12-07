@@ -10,7 +10,6 @@ import { PageContext } from '../models/pagecontext'
 import { RunTourAction } from '../models/runtouraction'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
-
 declare const navigator: any
 class PageTourManager {
   private toursList: any = [] // This holds an array of tours
@@ -143,7 +142,12 @@ class PageTourManager {
 
     document.getElementById('all-list-x-btn').onclick = this.closeManageToursModal
     document.getElementById('manage-tours-modal-close-btn').onclick = this.closeManageToursModal
-    document.getElementById('manage-tours-modal-add-tour-btn').onclick = this.addTour
+    document.getElementById('manage-tours-modal-add-tour-btn').onmouseenter = this.showOptions
+    document.getElementById('manage-tours-modal-add-tour-btn').onfocus = this.showOptions
+    document.getElementById('manage-tours-modal-add-tour-div').onmouseleave = this.hideOptions
+    document.getElementById('manage-tours-modal-add-tour-btn').onblur = this.hideOptions
+    document.getElementById('option-page-tour').onclick = this.addPageTour
+    document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
     document.getElementById('manage-tours-sort').onclick = this.sortTours
     document.getElementById('searchbytitle').onkeyup = this.searchTours
     document.getElementById('showexpiredtours-chkbox').onchange = this.searchTours
@@ -307,14 +311,25 @@ class PageTourManager {
   }
 
   // Opens the option
-  // private addNew = () => {
-  //   document.getElementById('#addNewDropDown');
-  // }
+  private showOptions = () => {
+    document.getElementById("add-new-dropdown").classList.add("show");
+  }
 
+  private hideOptions = () => {
+    document.getElementById("add-new-dropdown").classList.remove("show");
+  }
+
+  
   /// Opens Add Tour Dialog
-  private addTour = () => {
-    this.hideManagePageTourModal()
-    this.pagetourAuthor.AddTour()
+  private addPageTour = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour("Pagetour");
+  }
+
+  // Opens Add system announcement dialog
+  private addSystemAnnouncement = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour("Announcement");
   }
 
   /*#BeginRegion:Tours Search*/

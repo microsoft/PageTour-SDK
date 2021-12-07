@@ -46,21 +46,21 @@ class PageTourAuthor {
     this.bodyMouseMoveFunction = debounce(this.onBodyMouseMove, 50)
   }
 
-  public InitAuthoringDock = () => {
-    this.addTourDialog()
+  public InitAuthoringDock = (tourType : string) => {
+    this.addTourDialog(tourType)
   }
 
   // Adds Tour.
-  public AddTour = () => {
+  public AddTour = (tourType : string) => {
     // Clear Tour and StepsList while creating new tour
     this.tour = null
     this.stepList = []
-    this.InitAuthoringDock()
+    this.InitAuthoringDock(tourType)
   }
 
   /// Edit Tour
   public EditTour = (objTour: any) => {
-    this.InitAuthoringDock()
+    this.InitAuthoringDock(objTour.tourtype)
     document.getElementById('tutorial-modal-title').innerText = 'Edit Tour'
     let addTourDialogCloseBtn = document.getElementById('add-tour-modal-close')
     addTourDialogCloseBtn.setAttribute('aria-label', 'Close Edit Tour dialog')
@@ -88,7 +88,7 @@ class PageTourAuthor {
   /*#BeginRegion:Add tour dialog methods*/
 
   /// Adds Tour Dialog
-  private addTourDialog = () => {
+  private addTourDialog = (tourType : string) => {
     if (this.configStore.Options.navigator.callbackOnAuthoringStart) {
       this.configStore.Options.navigator.callbackOnAuthoringStart()
     }
@@ -106,7 +106,8 @@ class PageTourAuthor {
     let defaultExpiresOn = new Date().setMonth(new Date().getMonth() + 6)
     ;(document.getElementById('tour-expireson') as HTMLInputElement).value = new Date(defaultExpiresOn)
       .toISOString()
-      .split('T')[0]
+      .split('T')[0];
+    (document.getElementById("tour-type") as HTMLSelectElement).value = tourType;
 
     document.getElementById('tour-title').onkeyup = this.checkTourTitle
     document.getElementById('tour-description').onkeyup = this.checkTourDescription

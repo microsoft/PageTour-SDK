@@ -383,6 +383,16 @@ class PageTourPlay {
     }
   }
 
+  /**
+   * gotoAnnoucementNextStep - 
+   * @param stepAction - enum with value Next, Exit, Previous.
+   * @param tour - tour object to be displayed.
+   * @param action - enum with value Preview, Play.
+   * @param callback - the callback function to be executed after some action.
+   * @param startInterval - time in milliseconds to delay the start event.
+   * @param autoPlayTest 
+   * @returns null
+   */
   private goToAnnouncementNextStep = (
     stepAction: StepAction,
     tour: Tutorial,
@@ -402,17 +412,25 @@ class PageTourPlay {
       if (self.currentStep === this.totalSteps - 1) {
         self.isTourPlaying = false
       }
-      let element = document.querySelector(self.getElementSelector(self.currentStep))
-      let stepType = self.tour.steps[self.currentStep].type
-      self.executeAction(tour, stepType, element, self.currentStep)
+
+      // let element = document.querySelector(self.getElementSelector(self.currentStep))
+      // let stepType = self.tour.steps[self.currentStep].type
+      // self.executeAction(tour, stepType, element, self.currentStep)
       if (self.currentStep === self.totalSteps - 1) {
         self.removeTether()
-        if (callback != null) callback()
+        // if (callback != null) callback()
 
         if (self.currentStep === this.totalSteps - 1) {
           if (opts.navigator.callbackAfterTourEnd != null) {
             opts.navigator.callbackAfterTourEnd(tour)
           }
+          // code to dismiss the announcement if it is last step
+          let element = document.querySelector(self.getElementSelector(self.currentStep))
+          self.cleanupAction(element)
+          if (opts.navigator.callbackAfterTourEnd != null) {
+            opts.navigator.callbackAfterTourEnd(self.tour)
+          }
+          self.isTourPlaying = false
         }
       } else {
         let prevStep = tour.steps[self.currentStep]
@@ -424,7 +442,7 @@ class PageTourPlay {
           self.executeAnnouncementNextStep(tour, action, self.currentStep, 0, callback, startInterval)
         }, delay)
       }
-      self.cleanupAction(element)
+      // self.cleanupAction(element)
     } else if (stepAction === StepAction.Exit) {
       let element = document.querySelector(self.getElementSelector(self.currentStep))
       self.cleanupAction(element)
@@ -436,8 +454,11 @@ class PageTourPlay {
       self.isTourPlaying = false
     } else if (stepAction === StepAction.Previous) {
       const previousButton: HTMLButtonElement = document.querySelector('#anno-previous-step')
+      const nextButton: HTMLButtonElement = document.querySelector("#anno-next-step");
       previousButton.classList.add('loadingNextStep')
       previousButton.disabled = true
+      nextButton.innerText = "Next"
+      
 
       if (self.currentStep === 0) {
         return
@@ -682,9 +703,7 @@ class PageTourPlay {
     startInterval: any,
   ) => {
     const opts = this.configStore.Options
-    if (
-      retryCount > this.maxRetryCount
-    ) {
+    if (retryCount > this.maxRetryCount) {
       let self = this
       self.isTourPlaying = false
 
@@ -734,14 +753,15 @@ class PageTourPlay {
         previoustButton.disabled = true
         annoCounter.style.width = '78%'
       }
-        if (opts.navigator.callbackBeforeTourStep != null) {
-          opts.navigator.callbackBeforeTourStep(this.tour)
-        }
-        if (stepCount === this.totalSteps - 1) {
-          nextButton.hidden = true
-          nextButton.disabled = true
-          annoCounter.style.width = '78%'
-        }
+      if (opts.navigator.callbackBeforeTourStep != null) {
+        opts.navigator.callbackBeforeTourStep(this.tour)
+      }
+      if (stepCount === this.totalSteps - 1) {
+        // nextButton.hidden = true
+        // nextButton.disabled = true
+        nextButton.innerText = "Let's go!"
+        annoCounter.style.width = '78%'
+      }
         nextButton.classList.remove('loadingNextStep')
         previoustButton.classList.remove('loadingNextStep')
         nextButton.disabled = false
