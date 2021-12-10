@@ -1,27 +1,37 @@
-<div class="pagetour-onplay-tourbox" id="pagetour-tourBox">
-  <div id="pagetourusermessagebox" class="pagetour-onplay-tourbox-child"></div>
+<div>
+  <div class="pagetour-overlay"
+    style="inset: 0px;position: absolute;cursor: pointer;z-index: 999999;/* background-color: rgba(0,0,0,0.6); */">
+  </div>
+  <div id="pagetour-elementLayer"
+    style="box-shadow: rgba(33, 33, 33, 0.8) 0px 0px 1px 2px, rgba(33, 33, 33, 0.5) 0px 0px 0px 5000px;opacity: 1;z-index: 9999998;position: absolute;">
+  </div>
+  <div class="pagetour-onplay-tourbox" id="pagetour-tourBox">
+    <div id="pagetourusermessagebox" class="pagetour-onplay-tourbox-child"></div>
 
-  <div id="arrowpointer"></div>
+    <div id="arrowpointer"></div>
 
-  <div id="tourboxdata" class="pt-tourbox_data">
-    <div class="pt-header-box">
-      <p id="usermessageboxtitle" class="pt-heading"></p>
-      <button class="close-button" id="pagetour-exit-step" aria-label="Close tour">
-        <i class="pagetour__icon close-button-icon" id="playtourBoxCloseIcon"></i>
-      </button>
-    </div>
-    <p id="usermessageboxdescription" class="pt-text"></p>
-    <div id="ptnavigationdiv" class="pt-navigation-buttons">
-      <div class="previousbuttondiv">
-        <button class="nav-buttons previous" id="pagetour-previous-step" aria-label="Previous step">
-          <i id="ptpreviousimg" class="pagetour__icon icon-previous"></i>
+    <div id="tourboxdata" class="pt-tourbox_data">
+      <div class="pt-header-box">
+        <p id="usermessageboxtitle" class="pt-heading"></p>
+        <button class="close-button" id="pagetour-exit-step" aria-label="Close tour">
+          <i class="pagetour__icon close-button-icon" id="playtourBoxCloseIcon"></i>
         </button>
       </div>
-      <div class="pt-counter"><p id="usermessageboxcounter"></p></div>
-      <div class="nextbuttondiv">
-        <button class="nav-buttons next" id="pagetour-next-step" aria-label="Next step">
-          <i id="ptnextimg" class="pagetour__icon icon-next"></i>
-        </button>
+      <p id="usermessageboxdescription" class="pt-text"></p>
+      <div id="ptnavigationdiv" class="pt-navigation-buttons">
+        <div class="previousbuttondiv">
+          <button class="nav-buttons previous" id="pagetour-previous-step" aria-label="Previous step">
+            <i id="ptpreviousimg" class="pagetour__icon icon-previous"></i>
+          </button>
+        </div>
+        <div class="pt-counter">
+          <p id="usermessageboxcounter"></p>
+        </div>
+        <div class="nextbuttondiv">
+          <button class="nav-buttons next" id="pagetour-next-step" aria-label="Next step">
+            <i id="ptnextimg" class="pagetour__icon icon-next"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

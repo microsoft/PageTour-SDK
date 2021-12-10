@@ -525,7 +525,7 @@ class PageTourPlay {
   private setupTourBox = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.tourBoxHtmlFn())
-    this.tourBox.style.zIndex = '20000'
+    //this.tourBox.style.zIndex = '20000'
   }
 
   private setupAnnouncementBox = (tour: any) => {
@@ -1000,6 +1000,7 @@ class PageTourPlay {
         )
         tourboxdata.style.boxShadow = this.getBoxShadowCSSString(0, 4, 0, -12)
     }
+    tourBoxElement.style.zIndex = '9999999'
   }
 
   private ApplyAnnouncementTheme(stepCount: number) {
@@ -1165,19 +1166,32 @@ class PageTourPlay {
   }
 
   private addTourOutline = (element: HTMLElement) => {
-    if (element && !element.getAttribute('disabled')) {
-      this.datastore['pagetour_lastoutline'] = element.style.outline
-      element.style.outline = '#f00 solid 1px'
+    // if (element && !element.getAttribute('disabled')) {
+    //   this.datastore['pagetour_lastoutline'] = element.style.outline
+    //   element.style.outline = '#f00 solid 1px'
 
-      let elementOnRemovedListener = this.datastore['pagetour_nodeRemovedListener']
-      if (elementOnRemovedListener) {
-        elementOnRemovedListener.removeEventListener('DOMNodeRemoved', this.elementDomRemoved)
-        this.datastore['pagetour_nodeRemovedListener'] = null
-      }
+    //   let elementOnRemovedListener = this.datastore['pagetour_nodeRemovedListener']
+    //   if (elementOnRemovedListener) {
+    //     elementOnRemovedListener.removeEventListener('DOMNodeRemoved', this.elementDomRemoved)
+    //     this.datastore['pagetour_nodeRemovedListener'] = null
+    //   }
 
-      element.addEventListener('DOMNodeRemoved', this.elementDomRemoved)
+    //   element.addEventListener('DOMNodeRemoved', this.elementDomRemoved)
 
-      this.datastore['pagetour_nodeRemovedListener'] = element
+    //   this.datastore['pagetour_nodeRemovedListener'] = element
+    // }
+
+    if(element && !element.getAttribute('disabled'))
+    {
+      let width = element.offsetWidth;
+      let height = element.offsetHeight;
+      var rect = element.getBoundingClientRect();
+      let pagetourHelperLayer = document.getElementById("pagetour-elementLayer");
+      
+      pagetourHelperLayer.style.left = rect.left.toString() + 'px';
+      pagetourHelperLayer.style.top = rect.top.toString() + 'px';
+      pagetourHelperLayer.style.height = height.toString() + 'px';
+      pagetourHelperLayer.style.width = width.toString() + 'px';
     }
   }
 
