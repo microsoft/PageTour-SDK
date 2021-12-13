@@ -1,0 +1,101 @@
+<div id="tip-detail-modal" class="pagetour tour-dialog" role="dialog" aria-describedby="tip-detail-modal-title">
+  <div class="step-dialog">
+    <div class="step-detail-modal">
+      <form id="step-detail-form">
+        <div class="step-detail-content">
+          <div class="row-24">
+            <div class="pull-right">
+              <button
+                id="step-detail-close-btn"
+                type="button"
+                class="icon-holder-36-close-with-margin"
+                title="Close"
+                aria-label="Close Add Step Details dialog"
+              >
+                <i class="pagetour__icon icon-close"></i>
+              </button>
+            </div>
+            <h1 class="font-subtitle" id="tip-detail-modal-title">Add Tip - Details</h1>
+          </div>
+          <div class="row row-8">
+            <div>
+              <label class="font-caption-alt margin-bottom-12">Position of message to element*:</label>
+              <div class="select-box-holder">
+                <select
+                  class="select-box font-body"
+                  id="position-select"
+                  aria-required="true"
+                  title="Position of message"
+                  aria-label="Position of message"
+                >
+                  <option value="">Select</option>
+                  <option value="above" selected="selected">Above</option>
+                  <option value="below">Below</option>
+                  <option value="aboveLeft">Above Left</option>
+                  <option value="aboveRight">Above Right</option>
+                  <option value="left">Left</option>
+                  <option value="right" selected="selected">Right</option>
+                  <option value="belowLeft">Below Left</option>
+                  <option value="belowRight">Below Right</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row row-28">
+            <label class="font-caption-alt margin-bottom-12">Message to user*:</label>
+            <div class="textarea-messagetouser-group">
+              <textarea
+                class="textarea-messagetouser"
+                id="message-for-step"
+                title="Message to user"
+                aria-required="true"
+                aria-label="Please enter message to user"
+                type="text"
+                placeholder="Enter the message user will see during this step"
+                maxlength="1000"
+                required
+              ></textarea>
+              <div>
+                <span class="textarea-error" role="alert" aria-live="assertive" id="message-for-step-error">
+                  Message to user is required.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row row-24">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 pad-right-6">
+              <button
+                class="pagetour-btn--secondary footer-btn"
+                id="back-tip-detail-btn"
+                type="button"
+                title="Back to author tour modal"
+              >
+                Back
+              </button>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 pad-left-6">
+              <div class="pull-right">
+                <button
+                  class="pagetour-btn--secondary footer-btn-big"
+                  id="save-return-btn"
+                  title="save and return to author tour modal"
+                  type="button"
+                >
+                  Save & return to tour
+                </button>
+                <button
+                  class="pagetour-btn--primary footer-btn-big"
+                  id="save-add-new-btn"
+                  title="save and add new step"
+                  type="button"
+                >
+                  Save & add new step
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

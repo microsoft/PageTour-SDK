@@ -2,6 +2,7 @@ import { PageTourPlay } from '../playtour/pagetourplay'
 import * as stepModalTemplate from './step-detail-modal.html'
 import * as chooseElementTemplate from './chose-element-modal.html'
 import * as addTourModalTemplate from './add-tour-modal.html'
+import * as smartTipDetailModal from './smart-tip-detail-modal.html'
 import * as createCoverPageModalTemplate from './create-cover-page-modal.html'
 import * as createAnnouncementModalTemplate from './add-announcement-page-modal.html'
 import { DomUtils } from '../common/domutils'
@@ -34,6 +35,7 @@ class PageTourAuthor {
   private ckEditor: any = null;
   // Template Functions
   private stepModalTemplateFn: any = stepModalTemplate
+  private smartTipDetailModalFn: any = smartTipDetailModal
   private chooseElementTemplateFn: any = chooseElementTemplate
   private addTourModalTemplateFn: any = addTourModalTemplate
   private createCoverPageTemplateFn: any = createCoverPageModalTemplate
@@ -323,6 +325,13 @@ class PageTourAuthor {
       autoPlayCheckbox.checked = true;
       autoPlayCheckbox.disabled = true;
     }
+    if(tourtype.toLowerCase() == "smarttip"){
+      document.getElementById("add-announcement-btn").style.display = 'none'
+      document.getElementById("add-step-btn").style.display = 'inline'
+      document.getElementById("cover-page-btn").style.display = 'none'
+      autoPlayCheckbox.checked = true;
+      autoPlayCheckbox.disabled = true;
+    }
     else {
       document.getElementById("add-announcement-btn").style.display = 'none'
       document.getElementById("add-step-btn").style.display = 'inline'
@@ -401,6 +410,8 @@ class PageTourAuthor {
       tour.coverPage.content = this.tourCoverPageContent
       if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == "announcement")
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
+      else if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == "smarttip")
+        this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0, this.addTourDialog)
       else
         this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
     }
@@ -461,12 +472,17 @@ class PageTourAuthor {
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == 'announcement') {
+      let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
+      if(tourType.toLowerCase() == 'announcement') {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         document.getElementById("step-tourtype-header").style.width = '250px'
         document.getElementById("step-announcement-image-url").style.display = 'inline'
         tr.appendChild(tdStepHeader)
         tr.appendChild(tdStepMediaUrl)
+      }
+      if(tourType.toLowerCase() == 'smarttip') {
+        document.getElementById("step-tourtype-header").style.display = 'none'
+        document.getElementById("step-announcement-image-url").style.display = 'none'
       }
       else {
         document.getElementById("step-tourtype-header").innerText = 'Type'
@@ -651,12 +667,37 @@ class PageTourAuthor {
       case "pagetour":
         this.editTourStep();
         break;
+      case "smarttip":
+        this.editSmartTipStep();
+        break;
     }
   }
 
   private editTourStep() {
     this.createChooseElementModal()
     document.getElementById('choose-element-title').innerText = 'Edit Step - Choose an element'
+    document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
+    document.getElementById('cancel-choose-element-btn').setAttribute('aria-label', 'cancel and Close Edit Step dialog')
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
+      const editingStep = this.stepList[this.editStepIndex]
+      if (editingStep && editingStep.selector && editingStep.selector !== '') {
+        this.ignoreStepIfSetup(editingStep)
+        let elementfromselector = document.querySelector(editingStep.selector)
+        if (elementfromselector) {
+          this.lastSelectedElement = elementfromselector
+          this.lastSelectedElementOriginal = elementfromselector
+          this.toggleChooseElement(this.chooseState.Chosen, editingStep)
+        }
+      }
+    }
+  }
+
+  private editSmartTipStep() {
+    this.createChooseElementModal()
+    document.getElementById('choose-element-title').innerText = 'Edit Tip - Choose an element'
     document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
     document.getElementById('cancel-choose-element-btn').setAttribute('aria-label', 'cancel and Close Edit Step dialog')
     event.preventDefault()
@@ -780,9 +821,10 @@ class PageTourAuthor {
 
     let cancelChooseElement = document.getElementById('cancel-choose-element-btn')
     cancelChooseElement.onclick = this.closeChooseElementModal
-
+    let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
     let nextElement = document.getElementById('select-element-next-btn')
-    nextElement.addEventListener('click', this.createRecordBox)
+
+    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === "smarttip") ? this.createSmartTipBox : this.createRecordBox)
     DomUtils.manageTabbing(authoringDeck)
     this.showHideIgnoreKeyElement(false, null)
   }
@@ -846,7 +888,7 @@ class PageTourAuthor {
     DomUtils.removeTabbing(authoringDeckModal)
     authoringDeckModal.parentNode.removeChild(authoringDeckModal)
     this.disablePageInspector(true)
-    this.removeStepDetailModal()
+    this.removeStepDetailModal('step-detail-modal')
     this.unHideAddTourModal()
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
   }
@@ -1330,6 +1372,39 @@ class PageTourAuthor {
     DomUtils.manageTabbing(stepDetailForm)
   }
 
+  private createSmartTipBox = (event: Event) => {
+    event.stopPropagation()
+    this.hideChooseElementModal()
+    let stepDetailModal = document.getElementById('step-detail-modal')
+    if (!stepDetailModal) {
+      let recordBox = this.smartTipDetailModalFn()
+      recordBox = DomUtils.appendToBody(recordBox)
+      DomUtils.show(recordBox)
+
+      let saveAddNewStepBtn = document.getElementById('save-add-new-btn')
+      saveAddNewStepBtn.onclick = this.saveAndAddNewTip
+
+      let saveReturnBtn = document.getElementById('save-return-btn')
+      saveReturnBtn.onclick = this.saveTipAndReturn
+
+      let backToStepDetailBtn = document.getElementById('back-tip-detail-btn')
+      backToStepDetailBtn.onclick = this.backToTipDetails
+
+      let stepDetailCloseBtn = document.getElementById('step-detail-close-btn')
+      stepDetailCloseBtn.onclick = this.stopSmartTipRecording
+
+      /// Loads Step details in a Record box during Edit.
+      if (this.editStepIndex !== -1) {
+        document.getElementById('tip-detail-modal-title').innerText = 'Edit Step - Details'
+        this.populateTipDetails()
+      }
+    } else {
+      stepDetailModal.style.display = 'block'
+    }
+    let stepDetailForm = document.getElementById('step-detail-form')
+    DomUtils.manageTabbing(stepDetailForm)
+  }
+
   /*#BeginRegion: Step Details validations*/
 
   /// Validates input in Event Type Select Box
@@ -1424,6 +1499,21 @@ class PageTourAuthor {
     return true
   }
 
+  /// Executes inputs of all controls in Step Details Record Dialog
+  private checkSmartTipInputs = () => {
+    this.checkMessageForStep()
+
+    let controlsList = ['message-for-step']
+
+    if (!this.validateandSetFocus(controlsList)) {
+      event.preventDefault()
+      event.stopPropagation()
+      return false
+    }
+
+    return true
+  }
+
   /*#EndRegion: Step Details validations*/
 
   /// Enables and disables Value for Step Text Box based on Event Type selected.
@@ -1457,9 +1547,21 @@ class PageTourAuthor {
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
   }
 
+  /// Closes Step Details Record Dialog and opens Add Tour dialog
+  private stopSmartTipRecording = () => {
+    let stepDetailModal = document.getElementById('tip-detail-modal')
+    stepDetailModal.parentNode.removeChild(stepDetailModal)
+    const authoringDeck = document.getElementById('authoringDock')
+    authoringDeck.parentNode.removeChild(authoringDeck)
+    this.editStepIndex = -1
+    this.disablePageInspector(true)
+    this.unHideAddTourModal()
+    this.populateSteps() /// Populates steps in Add Tour Dialogue.
+  }
+
   /// Removes Step Details Record box.
-  private removeStepDetailModal = () => {
-    let stepDetailModal = document.getElementById('step-detail-modal')
+  private removeStepDetailModal = (modalId: string) => {
+    let stepDetailModal = document.getElementById(modalId)
     if (stepDetailModal != null) {
       stepDetailModal.parentNode.removeChild(stepDetailModal)
       this.editStepIndex = -1
@@ -1468,7 +1570,15 @@ class PageTourAuthor {
 
   /// Takes back to Choose element Dailog from Step details Record Dialog
   private backToStepDetails = () => {
-    document.getElementById('step-detail-modal').style.display = 'none'
+    this.backToDetails('step-detail-modal');
+  }
+
+  private backToTipDetails = () => {
+    this.backToDetails('tip-detail-modal');
+  }
+
+  private backToDetails = (modalId: string) => {
+    document.getElementById(modalId).style.display = 'none'
     let authoringDeck = document.getElementById('authoringDock')
     authoringDeck.style.display = 'block'
     DomUtils.manageTabbing(authoringDeck)
@@ -1481,8 +1591,21 @@ class PageTourAuthor {
       return
     }
     this.getStepDetails()
-    this.backToStepDetails()
-    this.removeStepDetailModal()
+    this.backToDetails('step-detail-modal')
+    this.removeStepDetailModal('step-detail-modal')
+    this.toggleChooseElement(this.chooseState.Choose, null)
+    this.disablePageInspector(true)
+    let chooseElementDock = document.getElementById('authoringDock')
+    DomUtils.manageTabbing(chooseElementDock)
+  }
+
+  private saveAndAddNewTip = () => {
+    if (!this.checkSmartTipInputs()) {
+      return
+    }
+    this.getTipDetails()
+    this.backToDetails('tip-detail-modal')
+    this.removeStepDetailModal('tip-detail-modal')
     this.toggleChooseElement(this.chooseState.Choose, null)
     this.disablePageInspector(true)
     let chooseElementDock = document.getElementById('authoringDock')
@@ -1496,7 +1619,18 @@ class PageTourAuthor {
       return
     }
     this.getStepDetails()
-    this.removeStepDetailModal()
+    this.removeStepDetailModal('step-detail-modal')
+    this.closeChooseElementModal()
+    this.unHideAddTourModal()
+    this.populateSteps() /// Populates steps in Add Tour Dialogue.
+  }
+
+  private saveTipAndReturn = () => {
+    if (!this.checkSmartTipInputs()) {
+      return
+    }
+    this.getTipDetails()
+    this.removeStepDetailModal('tip-detail-modal')
     this.closeChooseElementModal()
     this.unHideAddTourModal()
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
@@ -1572,6 +1706,53 @@ class PageTourAuthor {
     }
   }
 
+    /// Extracts the content from Step Details Record box and pushes to new step to StepDetials array
+    private getTipDetails = () => {
+      let messageForStepElement: HTMLTextAreaElement = document.getElementById('message-for-step') as HTMLTextAreaElement
+  
+      let message = messageForStepElement.value
+      let newStep: any = {}
+      newStep.message = message
+      let id = this.lastSelectedElement.getAttribute('id')
+      newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
+      newStep.selector = ''
+      let options = {
+        selectorTypes: ['Class', 'Tag', 'NthChild'],
+      }
+      let elementSelector = unique(this.lastSelectedElementOriginal, options)
+      newStep.selector = elementSelector.toString()
+      let pageContext = this.getPageContext()
+      newStep.pagecontext = pageContext.url
+      newStep.pagestatename = pageContext.state
+  
+      let ignoreKeyCheckboxElement: HTMLInputElement = document.getElementById(
+        'ignore-element-key-chkbox',
+      ) as HTMLInputElement
+      if (ignoreKeyCheckboxElement) {
+        newStep.ignoreelementkey = ignoreKeyCheckboxElement.checked
+      } else {
+        newStep.ignoreelementkey = false
+      }
+  
+      let ignoreNextIfNextStepElementFound: HTMLInputElement = document.getElementById(
+        'ignoreStep-IfNextStepElementFound-chkbox',
+      ) as HTMLInputElement
+      if (ignoreNextIfNextStepElementFound && ignoreNextIfNextStepElementFound.checked) {
+        newStep.ignoreStepIf = true
+        newStep.ignoreStepIfConditions = 'NextStepElementFound'
+      } else {
+        newStep.ignoreStepIf = false
+      }
+  
+      /// Updates the step in stepDetails during edit of a step or pushes a new step to the stepDetails array.
+      if (this.editStepIndex !== -1) {
+        this.stepList[this.editStepIndex] = newStep
+        this.editStepIndex = -1
+      } else {
+        this.stepList.push(newStep)
+      }
+    }
+
   /// Resets the Create Record Box and sets to default values.
   private resetStepDetailsModal = () => {
     let stepDetailModal = document.getElementById('step-detail-modal')
@@ -1600,6 +1781,11 @@ class PageTourAuthor {
       delayBeforeStepValue.value = delayBeforeStepSlider.value
     }
     this.toggleValueDisplay()
+  }
+
+  private populateTipDetails = () => {
+    let step = this.stepList[this.editStepIndex];
+    (document.getElementById('message-for-step') as HTMLTextAreaElement).value = step.message
   }
 
   private getPageContext = () => {

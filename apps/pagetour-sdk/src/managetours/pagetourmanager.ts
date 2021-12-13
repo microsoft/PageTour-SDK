@@ -148,6 +148,7 @@ class PageTourManager {
     document.getElementById('manage-tours-modal-add-tour-btn').onblur = this.hideOptions
     document.getElementById('option-page-tour').onclick = this.addPageTour
     document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
+    document.getElementById('option-smart-tip').onclick = this.addSmartTip
     document.getElementById('manage-tours-sort').onclick = this.sortTours
     document.getElementById('searchbytitle').onkeyup = this.searchTours
     document.getElementById('showexpiredtours-chkbox').onchange = this.searchTours
@@ -330,6 +331,11 @@ class PageTourManager {
   private addSystemAnnouncement = () => {
     this.hideManagePageTourModal();
     this.pagetourAuthor.AddTour("Announcement");
+  }
+
+  private addSmartTip = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour("SmartTip");
   }
 
   /*#BeginRegion:Tours Search*/

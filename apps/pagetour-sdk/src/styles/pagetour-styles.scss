@@ -1850,10 +1850,10 @@ $input-text-focus-outline: 1px dotted black;
   font-size: 14px;
 }
 
-.hrw-hint {
-  position: relative;
-    top: -30px;
-    left: 40px;
+.smart-tip-hint {
+    position: fixed;
+    //top: -30px;
+    //left: 40px;
     font-size: 14px;
     z-index: 100000;
 }
@@ -1876,9 +1876,9 @@ $input-text-focus-outline: 1px dotted black;
   border-radius: 60px;
   height: 50px;
   width: 50px;
-  -webkit-animation: introjspulse 3s ease-out;
-  -moz-animation: introjspulse 3s ease-out;
-  animation: introjspulse 3s ease-out;
+  -webkit-animation: smarttippulse 3s ease-out;
+  -moz-animation: smarttippulse 3s ease-out;
+  animation: smarttippulse 3s ease-out;
   -webkit-animation-iteration-count: infinite;
   -moz-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
@@ -1907,7 +1907,7 @@ $input-text-focus-outline: 1px dotted black;
   transition: all 0.2s ease-out;
 }
 
-.hrw-hint .triangle-border.active {
+.smart-tip-hint .triangle-border.active {
   display: block;
 }
 
@@ -1917,17 +1917,13 @@ $input-text-focus-outline: 1px dotted black;
     top: 26px;
     display: none;
     position: absolute;
-    padding: 15px;
     margin: 1em 0 3em;
-    border: 5px solid #0078D7;
-    color: #333;
-    background: #fff;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
+    color: white;
+    background-color:#0078D4;
+    text-align: left;
 }
 
-@keyframes introjspulse {
+@keyframes smarttippulse {
   0% {
     transform: scale(0);
     opacity: 0;

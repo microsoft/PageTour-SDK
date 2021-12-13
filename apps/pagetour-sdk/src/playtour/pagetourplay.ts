@@ -100,29 +100,31 @@ class PageTourPlay {
     autoPlayTest: boolean = false,
   ) => {
     objTour.steps.forEach((element,i) => {
-      let selectedElement = document.querySelector(element.selector);
-      // let img = document.createElement('img');
-      // img.src = 'https://fxpsitstoragenew.z13.web.core.windows.net/effective-thinking-concept-solution-bulb-260nw-1165554163.jpg';
-      // img.title = element.message;
-      // img.height = 40;
-      // img.width = 40;
-      // //img.setAttribute("data-tooltip", element.message);
-      // selectedElement.appendChild(img);
-      // selectedElement.insertBefore(img, selectedElement.nextSibling);
-
-      let div = document.createElement('div');
-      div.className = "hrw-hint";
-      div.addEventListener("mouseover", function() {
-        let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
-        availableSmartTips.forEach((tips) => {
-          tips.className = "triangle-border top";
+      let selectedElement = document.querySelector(element.selector) as HTMLElement;
+      if(selectedElement && !selectedElement.getAttribute('disabled'))
+      {
+        var rect = selectedElement.getBoundingClientRect();
+        let div = document.createElement('div');
+        div.style.top = rect.top.toString() + 'px';
+        div.style.left = (rect.left + rect.width).toString() + 'px';
+        div.className = "smart-tip-hint";
+        div.addEventListener("mouseover", function() {
+          let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
+          availableSmartTips.forEach((tips) => {
+            tips.className = "triangle-border top";
+          });
+          let smartTip = document.getElementById("smarttip_" + objTour.id + "_" + i)
+          smartTip.className = "triangle-border top active"
         });
-        console.log(availableSmartTips);
-        let smartTip = document.getElementById("smarttip_" + objTour.id + "_" + i)
-        smartTip.className = "triangle-border top active"
-      });
-      div.innerHTML = "<a href='#' role='button' class='smarttip hrw-focusable' aria-label='Smart tip'><div class='smarttip-bubble'></div><div class='smarttip-bubble-out'></div></a><div id=smarttip_" + objTour.id + "_" + i +"  class='triangle-border top'><div>"+ element.message +"</div>";
-      selectedElement.appendChild(div);
+        // div.addEventListener("mouseout", function() {
+        //   let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
+        //   availableSmartTips.forEach((tips) => {
+        //     tips.className = "triangle-border top";
+        //   });
+        // });
+        div.innerHTML = "<a href='#' role='button' class='smarttip hrw-focusable' aria-label='Smart tip'><div class='smarttip-bubble'></div><div class='smarttip-bubble-out'></div></a><div id=smarttip_" + objTour.id + "_" + i +"  class='triangle-border top'><div style='padding:24px;'>"+ element.message +"</div>";
+        selectedElement.appendChild(div);
+      }
     });
   }
 
