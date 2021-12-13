@@ -9,6 +9,7 @@ class ConfigStore {
     exportFeatureFlag: true,
     autoPlayEnabled: true,
     isCoverPageTourStart: false,
+    enableTranscript: false,
     theme: {
       primaryColor: '#0063b1',
       secondaryColor: '#fdfdfd',

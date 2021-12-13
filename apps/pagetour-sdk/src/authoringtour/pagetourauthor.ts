@@ -14,7 +14,6 @@ import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-// import { SpeechConfig, AudioConfig, SpeechSynthesizer, SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk';
 
 
 declare const $: any
@@ -1079,6 +1078,11 @@ class PageTourAuthor {
 
     document.getElementById('cancel-announcement-page-btn').onclick = this.closeAnnouncementPageModal 
     document.getElementById('save-announcement-page-btn').onclick = this.saveAnnouncementPage
+
+    if(!this.configStore.Options.enableTranscript)
+      document.getElementById('transcript-announcement-area').style.display = 'none'
+    // const recordAnnouncementPageElement = document.getElementById('record-announcement-page-btn')
+    // recordAnnouncementPageElement.onclick = this.recordAnnouncementPage
   }
 
   private async initiateCkEditor() {
@@ -1293,7 +1297,7 @@ class PageTourAuthor {
     return result;
   }
 
-  // private recordAnnouncementPage = () => {
+  private recordAnnouncementPage = () => {
   //   let speechConfig = SpeechConfig.fromSubscription("", "");
   //   let transcriptDiv = document.getElementById('transcript-message-for-announcement');
   //   speechConfig.speechRecognitionLanguage = "en-US";
@@ -1315,7 +1319,7 @@ class PageTourAuthor {
   //       recognizer.close();
   //       recognizer = undefined;
   //     });
-  // }
+  }
 
   private getAnnouncementPageDetails = () => {
     let headerElement = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
@@ -1332,6 +1336,7 @@ class PageTourAuthor {
     newStep.message = this.ckEditor.getData();
     newStep.pagecontext = pageContext.url
     newStep.pagestatename = pageContext.state
+    if(transcriptElement)
     newStep.transcript = transcriptElement.value;
 
     if (this.editStepIndex !== -1) {
@@ -1397,6 +1402,8 @@ class PageTourAuthor {
     } else {
       stepDetailModal.style.display = 'block'
     }
+    if(!this.configStore.Options.enableTranscript)
+      document.getElementById('transcript-pagetour-area').style.display = "none"
     let stepDetailForm = document.getElementById('step-detail-form')
     DomUtils.manageTabbing(stepDetailForm)
   }
@@ -1631,7 +1638,7 @@ class PageTourAuthor {
     } else {
       newStep.ignoreStepIf = false
     }
-
+    if(transcriptForStepElement)
     newStep.transcript = transcriptForStepElement.value;
 
     /// Updates the step in stepDetails during edit of a step or pushes a new step to the stepDetails array.
