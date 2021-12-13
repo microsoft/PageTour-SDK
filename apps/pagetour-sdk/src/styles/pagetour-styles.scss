@@ -2201,11 +2201,13 @@ div#announcement-page-modal {
       margin-top: 1rem;
     }
 
-    .card-excerpt{
-      font-size: 15px;
-      line-height: 1.5rem;
+    .anno-text{
+      line-height: 1.5;
       color: #000000;
       margin:0;
+      font-family: "Segoe UI";
+      font-size: 14px;
+      font-weight: 400;
     }
   
   }
@@ -2265,7 +2267,7 @@ div#announcement-page-modal {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 58vh;
+  height: 50vh;
   background-color: rgba(255, 255, 255, 0.6);
   top: 0;
   left: 0;

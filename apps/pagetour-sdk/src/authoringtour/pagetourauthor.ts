@@ -1081,8 +1081,6 @@ class PageTourAuthor {
 
     if(!this.configStore.Options.enableTranscript)
       document.getElementById('transcript-announcement-area').style.display = 'none'
-    // const recordAnnouncementPageElement = document.getElementById('record-announcement-page-btn')
-    // recordAnnouncementPageElement.onclick = this.recordAnnouncementPage
   }
 
   private async initiateCkEditor() {
@@ -1107,11 +1105,9 @@ class PageTourAuthor {
   }
 
   private checkCharacterLength(currentCharacterLength: number, event: any = null) {
-    console.log("current Character length", currentCharacterLength);
     // Todo: make this value configurable
     let maxCharacterLength = 500;
     if(currentCharacterLength >= maxCharacterLength) {
-      console.log(event);
       // event.preventDefault();
     }
     const remaining = maxCharacterLength - currentCharacterLength;
@@ -1151,7 +1147,7 @@ class PageTourAuthor {
     }
 
     //check if it is image or video url
-    if (!isValidUrl) {
+    if (!isValidUrl && mediaUrl.value !== '') {
       document.getElementById('anno-media-error').style.display = 'contents'
       return;
     } else {
