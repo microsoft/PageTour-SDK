@@ -1956,9 +1956,18 @@ div#announcement-page-modal {
 }
 
 .announcement-page-dialog {
-    @extend .tour-modal;
+    display: block;
+    z-index: 10100 !important;
+    left: 0;
+    top: 0;
+    font-size: 15px !important;
+    line-height: 20px !important;
+    height: 100%;
     width: 100%;
-    margin-left: 0%;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 0 !important;
+    font-weight: 400;
   }
 
 .announcement-page-modal {
@@ -1975,9 +1984,13 @@ div#announcement-page-modal {
   right: 0;
   bottom: 0;
   left: 0;
-  width: 55%;
+  width: 65%;
   min-width: 250px;
   overflow: auto;
+
+  @media only screen and (max-width: 1366px) {
+    width: 100%;
+  }
 }
 
 .announcement-page-content {
@@ -1986,6 +1999,31 @@ div#announcement-page-modal {
   padding: 20px;
   overflow-x: auto;
   border: 1px solid #888;
+}
+
+.announcement-modal-header {
+  margin-bottom: 10px;
+}
+
+.announcement-editor {
+  margin-bottom: 20px;
+  height: 220px;
+}
+
+.ck-editor__editable_inline {
+  height: 175px;
+}
+
+.input-block {
+  height: 95px;
+}
+
+.footer-row {
+  margin-top: 20px;
+}
+
+.character-remaining {
+  float: right
 }
 
 .textarea-transcript{
@@ -2152,7 +2190,7 @@ div#announcement-page-modal {
 
   
   .announcement-content {
-    padding: 2rem;
+    padding: 1.3rem 2rem;
     height: 202px;
     max-height: 100%;
     overflow: hidden;
@@ -2222,5 +2260,174 @@ div#announcement-page-modal {
   }
 }
 
+.announcement-container-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 58vh;
+  background-color: rgba(255, 255, 255, 0.6);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: inherit;
+
+  @media only screen and (max-width: 1366px) {
+    height: 95vh;
+  }
+
+  .announcement-card{
+    background: rgb(255, 255, 255);
+    flex-basis: 30%;
+    border-radius: 2px !important;
+    transition:0.3s;
+    box-shadow: 0 0px 30px 18px rgba(34,68,123,0.2);
+  }
+  
+  .announcement-header {
+    margin: 0;
+    padding: 0;
+    width: 576px;
+    max-width: 576px;
+    height: 216px;
+    max-height: 216px;
+    
+    .close-button-div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-direction: row;
+    }
+
+    .close-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0px 3px;
+      align-self: flex-start;
+      outline: inherit;
+      position: fixed;
+      float: right;
+      align-items: flex-end;
+      z-index: 100;
+    }
+
+    .loadingImage {
+      background: transparent url('https://fxpsitstoragenew.z13.web.core.windows.net/loader.gif') center no - repeat;
+    }
+
+    .noLoadingImage {
+      background: none;
+    }
+
+    .close-button:focus {
+      outline: #000000 dotted 1px;
+    }
+
+    .announcement-heading {
+      font-size:18px;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0 2rem;
+      padding: 1rem 0;
+      height: 100%;
+      display: flex !important;
+      align-items: flex-end;
+      // Todo: make this color contrast to background
+      color: white;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 2px 2px 0px 0px;
+      object-fit: contain;
+      backdrop-filter: blur(4px);
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      border-radius: 2px 2px 0px 0px;
+      object-fit: contain;
+      backdrop-filter: blur(4px);
+    }
+
+  }
+
+  
+  .announcement-content {
+    padding: 1.3rem 2rem;
+    height: 202px;
+    max-height: 100%;
+    overflow: hidden;
+
+    .card-title{
+      font-size: 18px;
+      color: #000000;
+      margin-top: 1rem;
+    }
+
+    .card-excerpt{
+      font-size: 15px;
+      line-height: 1.5rem;
+      color: #000000;
+      margin:0;
+    }
+  
+  }
+
+  .announcement-footer {
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .announcement-page-counter {
+      font-size: 14px;
+      line-height: 20px;
+      font-family: 'Segoe UI';
+    }
+
+    .announcement-navigation-buttons {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      width: 170px;
+      justify-content: flex-end;
+    
+      .announcement-previous-button {
+        width: 93px;
+        height: 32px;
+        background: #ffffff;
+        border: 1px solid #646464;
+        border-radius: 2px;
+        box-sizing: border-box;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+      }
+
+      .announcement-next-button {
+        width: 69px;
+        height: 32px;
+        background: #0078D4;
+        border-radius: 2px;
+        border: 1px solid #0078D4;
+        box-sizing: border-box;
+        color: #ffffff;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        margin-left: 10px;
+      }
+    }
+  }
+ 
+}
 
 /* Annoucement Box Popup end*/
