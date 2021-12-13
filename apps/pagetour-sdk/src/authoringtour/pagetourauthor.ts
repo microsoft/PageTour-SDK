@@ -14,7 +14,7 @@ import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { SpeechConfig, AudioConfig, SpeechSynthesizer, SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk';
+// import { SpeechConfig, AudioConfig, SpeechSynthesizer, SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk';
 
 
 declare const $: any
@@ -686,10 +686,12 @@ class PageTourAuthor {
     event.stopPropagation()
     if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
       const editingStep = this.stepList[this.editStepIndex]
-      document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
-      document.getElementById('anno-message-editor').innerHTML = editingStep.message;
+      document.getElementById("announcementboxtitle-preview").innerText = document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
+      document.getElementById("announcementboxdescription").innerHTML= document.getElementById('anno-message-editor').innerHTML = editingStep.message;
+
       if (editingStep.mediaUrl)
         document.getElementById('input-announcement-image-video').innerText = editingStep.mediaUrl;
+        this.livePreviewMediaHeader();
       if (editingStep.transcript)
         document.getElementById('transcript-message-for-announcement').innerText = editingStep.transcript;
     }
@@ -1058,43 +1060,113 @@ class PageTourAuthor {
       announcementPageModal.style.display = 'block'
     }
     announcementPageModal = document.getElementById('announcement-page-modal')
-    announcementPageModal.style.display = 'block'
-
-    ClassicEditor
-    .create(document.getElementById('anno-message-editor'), {
-      toolbar: ['heading','|', 'bold','italic','link','bulletedList', 'numberedList'],
-      heading: {
-        options:[
-          { model: 'heading3', view: 'h4', title: 'Heading', class: 'ck-heading_heading3' },
-          { model:'paragraph', title: "Paragraph", class: 'ck-heading_paragraph'}
-        ]
-      },
-      link: {
-        addTargetToExternalLinks: true
-      }
-    })
-    .then( (editor: any) => {
-      this.ckEditor = editor; 
-    })
-    .then((error:any) => {
-      console.log(error);
-    });
+    announcementPageModal.style.display = 'block';
+    (document.getElementById("videoHeaderContainer") as HTMLVideoElement).style.display ='none'
+    this.setDefaultImage();
+    this.initiateCkEditor();
 
     let announcementPageForm = document.getElementById('announcement-page-form')
     DomUtils.manageTabbing(announcementPageForm)
 
     const closeBtn = document.getElementById('announcement-page-close-btn')
     closeBtn.onclick = this.closeAnnouncementPageModal
+    
+    // document.getElementById('record-announcement-page-btn').onclick = this.recordAnnouncementPage
 
-    const cancelChooseElement = document.getElementById('cancel-announcement-page-btn')
-    cancelChooseElement.onclick = this.closeAnnouncementPageModal
+    document.getElementById('input-announcement-header-text').onkeyup = this.livePreviewHeader
+    document.getElementById('input-announcement-image-video').onkeyup = this.livePreviewMediaHeader
+    document.getElementById('input-announcement-image-video').onblur = this.setDefaultImage
 
-    const saveAnnouncementPageElement = document.getElementById('save-announcement-page-btn')
-    saveAnnouncementPageElement.onclick = this.saveAnnouncementPage
+    document.getElementById('cancel-announcement-page-btn').onclick = this.closeAnnouncementPageModal 
+    document.getElementById('save-announcement-page-btn').onclick = this.saveAnnouncementPage
+  }
 
-    const recordAnnouncementPageElement = document.getElementById('record-announcement-page-btn')
-    recordAnnouncementPageElement.onclick = this.recordAnnouncementPage
+  private async initiateCkEditor() {
+    ClassicEditor
+    .create(document.getElementById('anno-message-editor'), {
+      toolbar: ['bold','italic','link','bulletedList', 'numberedList'],
+      link: {
+        addTargetToExternalLinks: true
+      }
+    })
+    .then((editor: any) => {
+      this.ckEditor = editor;
+      this.checkCharacterLength($(editor.getData()).text().length);
+      editor.model.document.on('change:data', (evt : any, data : any) => {
+        document.getElementById("announcementboxdescription").innerHTML = editor.getData();
+        this.checkCharacterLength($(editor.getData()).text().length, evt);
+      });
+    })
+    .catch((error:any) => {
+      console.log(error);
+    });
+  }
 
+  private checkCharacterLength(currentCharacterLength: number, event: any = null) {
+    console.log("current Character length", currentCharacterLength);
+    // Todo: make this value configurable
+    let maxCharacterLength = 500;
+    if(currentCharacterLength >= maxCharacterLength) {
+      console.log(event);
+      // event.preventDefault();
+    }
+    const remaining = maxCharacterLength - currentCharacterLength;
+    (document.getElementById("character-remaining-text")).textContent = `${remaining} characters remaining`
+    
+  }
+
+  private setDefaultImage() {
+    let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    if(mediaUrl.value == "") {
+      document.getElementById('anno-media-error').style.display = 'none'
+      let mediaDiv = document.getElementById("imgHeaderContainer") as HTMLImageElement;
+      // Todo: make this url injection dynamic
+      mediaDiv.src = "https://fxpsit.azureedge.net/perfectfit.jpg";
+    }
+  }
+
+  private livePreviewHeader() {
+    let headerValue = (document.getElementById('input-announcement-header-text') as HTMLInputElement).value;
+    if(headerValue == "") {
+      document.getElementById('anno-header-error').style.display = "contents";
+    } else {
+      document.getElementById('anno-header-error').style.display = "none";
+      document.getElementById("announcementboxtitle-preview").innerText = headerValue;
+    }
+  }
+
+  private livePreviewMediaHeader() {
+    let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    // put it into a separate method
+    let imgPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
+    let videoPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:mp4|mov|wmv|avi|)+$/;
+    let isValidUrl, isValidImageUrl, isValidVideoUrl;
+    isValidUrl = isValidImageUrl = !!imgPattern.test(mediaUrl.value);
+    if(!isValidUrl) {
+      isValidUrl = isValidVideoUrl = !!videoPattern.test(mediaUrl.value);
+    }
+
+    //check if it is image or video url
+    if (!isValidUrl) {
+      document.getElementById('anno-media-error').style.display = 'contents'
+      return;
+    } else {
+      document.getElementById('anno-media-error').style.display = 'none'
+      let imgHeaderContainer = document.getElementById("imgHeaderContainer") as HTMLImageElement;
+      let videoHeaderContainer = document.getElementById("videoHeaderContainer") as HTMLVideoElement;
+      if(isValidImageUrl) {
+        videoHeaderContainer.style.display ='none'
+        imgHeaderContainer.style.display = 'block'
+        imgHeaderContainer.src = mediaUrl.value;
+        imgHeaderContainer.className = 'loadingImage'
+      } 
+      else if(isValidVideoUrl) {
+        imgHeaderContainer.style.display = 'none'
+        videoHeaderContainer.style.display = 'block'
+        videoHeaderContainer.src = mediaUrl.value;
+        videoHeaderContainer.load();
+      }
+    }
   }
 
   /// Validates input in CoverPage Position Select Box
@@ -1184,22 +1256,23 @@ class PageTourAuthor {
   private saveAnnouncementPage = () => {
     let announcementHeader = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
     if (announcementHeader.value === '') {
-      document.getElementById('anno-header-error').style.display = 'block'
+      document.getElementById('anno-header-error').style.display = 'contents'
       return;
     } else {
       document.getElementById('anno-header-error').style.display = 'none'
     }
 
     let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
-    if (mediaUrl.value !== '' && !this.validateUrl(mediaUrl.value)) {
-      document.getElementById('anno-media-error').style.display = 'block'
+    let isValidUrl = this.validateUrl(mediaUrl.value);
+    if (mediaUrl.value !== '' && !isValidUrl) {
+      document.getElementById('anno-media-error').style.display = 'contents'
       return;
     } else {
       document.getElementById('anno-media-error').style.display = 'none'
     }
     let messageContent = this.ckEditor.getData();
     if(messageContent === ''){
-      document.getElementById('anno-message-error').style.display = 'block'
+      document.getElementById('anno-message-error').style.display = 'contents'
       return;
     } else {
       document.getElementById('anno-message-error').style.display = 'none'
@@ -1210,30 +1283,7 @@ class PageTourAuthor {
     this.closeAnnouncementPageModal()
   }
 
-  private recordAnnouncementPage = () => {
-    let speechConfig = SpeechConfig.fromSubscription("", "");
-    let transcriptDiv = document.getElementById('transcript-message-for-announcement');
-    speechConfig.speechRecognitionLanguage = "en-US";
-    let audioConfig  = AudioConfig.fromDefaultMicrophoneInput();
-    let recognizer = new SpeechRecognizer(speechConfig, audioConfig);
-
-    recognizer.recognizeOnceAsync(
-      function (result) {
-        transcriptDiv.innerHTML += result.text;
-        window.console.log(result);
-
-        recognizer.close();
-        recognizer = undefined;
-      },
-      function (err) {
-        transcriptDiv.innerHTML += err;
-        window.console.log(err);
-
-        recognizer.close();
-        recognizer = undefined;
-      });
-  }
-  private validateUrl(text: string) {
+  private validateUrl = (text: string) => {
     let imgPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
     let result = !!imgPattern.test(text);
     if(!result) {
@@ -1242,6 +1292,31 @@ class PageTourAuthor {
     }
     return result;
   }
+
+  // private recordAnnouncementPage = () => {
+  //   let speechConfig = SpeechConfig.fromSubscription("", "");
+  //   let transcriptDiv = document.getElementById('transcript-message-for-announcement');
+  //   speechConfig.speechRecognitionLanguage = "en-US";
+  //   let audioConfig  = AudioConfig.fromDefaultMicrophoneInput();
+  //   let recognizer = new SpeechRecognizer(speechConfig, audioConfig);
+
+  //   recognizer.recognizeOnceAsync(
+  //     function (result) {
+  //       transcriptDiv.innerHTML += result.text;
+  //       window.console.log(result);
+
+  //       recognizer.close();
+  //       recognizer = undefined;
+  //     },
+  //     function (err) {
+  //       transcriptDiv.innerHTML += err;
+  //       window.console.log(err);
+
+  //       recognizer.close();
+  //       recognizer = undefined;
+  //     });
+  // }
+
   private getAnnouncementPageDetails = () => {
     let headerElement = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
     let mediaUrlElement = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
