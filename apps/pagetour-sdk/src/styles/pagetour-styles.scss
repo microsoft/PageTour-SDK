@@ -687,6 +687,15 @@ $input-text-focus-outline: 1px dotted black;
       content: '\E104';
     }
 
+    &.icon-microphone:before {
+      content: '\E720';
+      color: #0078d1;
+      font-size: larger;
+    }
+    &.icon-microphoneListening:before {
+      content: '\F12E';
+    }
+
     &.icon-recyclebin:before {
       content: '\E107';
     }
@@ -1225,6 +1234,13 @@ $input-text-focus-outline: 1px dotted black;
   &--search:focus {
     outline: #000000 dotted 1px;
   }
+}
+
+.btn-transcript {
+  margin-top: 5%;
+  margin-right: 0px;
+  background-color: transparent;
+  font-weight: 600;
 }
 
 /* The Close Button */
