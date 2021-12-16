@@ -1166,32 +1166,50 @@ class PageTourPlay {
   }
 
   private addTourOutline = (element: HTMLElement) => {
-    // if (element && !element.getAttribute('disabled')) {
-    //   this.datastore['pagetour_lastoutline'] = element.style.outline
-    //   element.style.outline = '#f00 solid 1px'
+    if (element && !element.getAttribute('disabled')) {
+      if(!this.configStore.Options.theme.enableGrayScreen)
+      {
+          this.datastore['pagetour_lastoutline'] = element.style.outline;
+          //element.className += " tutorial-bubble";
+          element.style.outline = this.configStore.Options.theme.primaryColor + ' solid 5px';
+          element.style.transition = 'outline 0.6s linear';
+          let teachingBubble = document.createElement('div');
+          var rect = element.getBoundingClientRect();
+          teachingBubble.style.width = element.offsetWidth.toString() + "px";
+          teachingBubble.style.height = element.offsetHeight.toString() + "px";
+          //teachingBubble.style.left = rect.left.toString() + 'px';
+          //teachingBubble.style.top = rect.top.toString() + 'px';
+          teachingBubble.className = "tutorial-bubble";
 
-    //   let elementOnRemovedListener = this.datastore['pagetour_nodeRemovedListener']
-    //   if (elementOnRemovedListener) {
-    //     elementOnRemovedListener.removeEventListener('DOMNodeRemoved', this.elementDomRemoved)
-    //     this.datastore['pagetour_nodeRemovedListener'] = null
-    //   }
+          //div.innerHTML = "<div class='tutorial-bubble' style='width:" + element.offsetWidth.toString() + "px;height:" + element.offsetHeight.toString() + "px'></div>";
+          //element.appendChild(teachingBubble);
 
-    //   element.addEventListener('DOMNodeRemoved', this.elementDomRemoved)
+          let elementOnRemovedListener = this.datastore['pagetour_nodeRemovedListener']
+          if (elementOnRemovedListener) {
+            elementOnRemovedListener.removeEventListener('DOMNodeRemoved', this.elementDomRemoved)
+            this.datastore['pagetour_nodeRemovedListener'] = null
+          }
 
-    //   this.datastore['pagetour_nodeRemovedListener'] = element
-    // }
+          element.addEventListener('DOMNodeRemoved', this.elementDomRemoved)
 
-    if(element && !element.getAttribute('disabled'))
-    {
-      let width = element.offsetWidth;
-      let height = element.offsetHeight;
-      var rect = element.getBoundingClientRect();
-      let pagetourHelperLayer = document.getElementById("pagetour-elementLayer");
-      
-      pagetourHelperLayer.style.left = rect.left.toString() + 'px';
-      pagetourHelperLayer.style.top = rect.top.toString() + 'px';
-      pagetourHelperLayer.style.height = height.toString() + 'px';
-      pagetourHelperLayer.style.width = width.toString() + 'px';
+          this.datastore['pagetour_nodeRemovedListener'] = element
+          document.getElementById("pagetour-greyLayer").style.display = 'none'
+          document.getElementById("pagetour-elementLayer").style.display = 'none'
+      }
+      else
+      {
+        let width = element.offsetWidth;
+        let height = element.offsetHeight;
+        var rect = element.getBoundingClientRect();
+        let pagetourHelperLayer = document.getElementById("pagetour-elementLayer");
+        
+        pagetourHelperLayer.style.left = (rect.left - 10).toString() + 'px';
+        pagetourHelperLayer.style.top = rect.top.toString() + 'px';
+        pagetourHelperLayer.style.height = height.toString() + 'px';
+        pagetourHelperLayer.style.width = (width + 20).toString() + 'px';
+        document.getElementById("pagetour-greyLayer").style.display = 'inline'
+        document.getElementById("pagetour-elementLayer").style.display = 'inline'
+      }
     }
   }
 

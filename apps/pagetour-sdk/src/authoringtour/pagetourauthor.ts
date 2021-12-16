@@ -18,6 +18,11 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 declare const $: any
 
+interface IWindow extends Window {
+  webkitSpeechRecognition: any;
+  SpeechRecognition: any;
+}
+
 class PageTourAuthor {
   // private modal: any = null;
   private selectedElement: HTMLElement = null
@@ -1303,8 +1308,9 @@ class PageTourAuthor {
 
   private GenerateTranscript(type: string) {
     // new speech recognition object
-    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-    var recognition = new SpeechRecognition();
+    const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
+    //var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    let recognition = new webkitSpeechRecognition();
     let transcriptDiv = document.getElementById('transcript-message-for-'+ type) as HTMLTextAreaElement;
     let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
                 
