@@ -1241,6 +1241,7 @@ $input-text-focus-outline: 1px dotted black;
   margin-right: 0px;
   background-color: transparent;
   font-weight: 600;
+  width: 5%;
 }
 
 /* The Close Button */
@@ -2043,7 +2044,7 @@ div#announcement-page-modal {
 }
 
 .textarea-transcript{
-  width: 100%;
+  width: 94%;
   height: 100px;
   resize: none;
   overflow-y: scroll;
@@ -2204,12 +2205,11 @@ div#announcement-page-modal {
 
   }
 
-  
   .announcement-content {
     padding: 1.3rem 2rem;
     height: 202px;
     max-height: 100%;
-    overflow: hidden;
+    overflow: auto;
 
     .card-title{
       font-size: 18px;
@@ -2224,10 +2224,27 @@ div#announcement-page-modal {
       font-family: "Segoe UI";
       font-size: 14px;
       font-weight: 400;
+
+      ul {
+        padding-left: 5%;
+
+        li {
+          list-style: disc;
+        }
+
+      }
+
+      ol {
+        padding-left: 5%;
+
+        li {
+          list-style-type: decimal;
+        }
+
+      }
     }
   
   }
-
   .announcement-footer {
     padding: 1.5rem 2rem;
     display: flex;
@@ -2301,86 +2318,88 @@ div#announcement-page-modal {
     border-radius: 2px !important;
     transition:0.3s;
     box-shadow: 0 0px 30px 18px rgba(34,68,123,0.2);
+
+    .announcement-header {
+      margin: 0;
+      padding: 0;
+      width: 576px;
+      max-width: 576px;
+      height: 216px;
+      max-height: 216px;
+      
+      .close-button-div {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-direction: row;
+      }
+  
+      .close-button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0px 3px;
+        align-self: flex-start;
+        outline: inherit;
+        position: fixed;
+        float: right;
+        align-items: flex-end;
+        z-index: 100;
+      }
+  
+      .loadingImage {
+        background: transparent url('https://fxpsitstoragenew.z13.web.core.windows.net/loader.gif') center no - repeat;
+      }
+  
+      .noLoadingImage {
+        background: none;
+      }
+  
+      .close-button:focus {
+        outline: #000000 dotted 1px;
+      }
+  
+      .announcement-heading {
+        font-size:18px;
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 2rem;
+        padding: 1rem 0;
+        height: 100%;
+        display: flex !important;
+        align-items: flex-end;
+        // Todo: make this color contrast to background
+        color: white;
+      }
+  
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 2px 2px 0px 0px;
+        object-fit: contain;
+        backdrop-filter: blur(4px);
+      }
+  
+      video {
+        width: 100%;
+        height: 100%;
+        border-radius: 2px 2px 0px 0px;
+        object-fit: contain;
+        backdrop-filter: blur(4px);
+      }
+  
+    }
   }
   
-  .announcement-header {
-    margin: 0;
-    padding: 0;
-    width: 576px;
-    max-width: 576px;
-    height: 216px;
-    max-height: 216px;
-    
-    .close-button-div {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      flex-direction: row;
-    }
-
-    .close-button {
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 0px 3px;
-      align-self: flex-start;
-      outline: inherit;
-      position: fixed;
-      float: right;
-      align-items: flex-end;
-      z-index: 100;
-    }
-
-    .loadingImage {
-      background: transparent url('https://fxpsitstoragenew.z13.web.core.windows.net/loader.gif') center no - repeat;
-    }
-
-    .noLoadingImage {
-      background: none;
-    }
-
-    .close-button:focus {
-      outline: #000000 dotted 1px;
-    }
-
-    .announcement-heading {
-      font-size:18px;
-      font-weight: 500;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin: 0 2rem;
-      padding: 1rem 0;
-      height: 100%;
-      display: flex !important;
-      align-items: flex-end;
-      // Todo: make this color contrast to background
-      color: white;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      border-radius: 2px 2px 0px 0px;
-      object-fit: contain;
-      backdrop-filter: blur(4px);
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      border-radius: 2px 2px 0px 0px;
-      object-fit: contain;
-      backdrop-filter: blur(4px);
-    }
-
-  }
+  
 
   
   .announcement-content {
     padding: 1.3rem 2rem;
     height: 202px;
     max-height: 100%;
-    overflow: hidden;
+    overflow: auto;
 
     .card-title{
       font-size: 18px;
@@ -2393,6 +2412,33 @@ div#announcement-page-modal {
       line-height: 1.5rem;
       color: #000000;
       margin:0;
+    }
+
+    .anno-text{
+      line-height: 1.5;
+      color: #000000;
+      margin:0;
+      font-family: "Segoe UI";
+      font-size: 14px;
+      font-weight: 400;
+
+      ul {
+        padding-left: 5%;
+
+        li {
+          list-style: disc;
+        }
+
+      }
+
+      ol {
+        padding-left: 5%;
+
+        li {
+          list-style-type: decimal;
+        }
+
+      }
     }
   
   }

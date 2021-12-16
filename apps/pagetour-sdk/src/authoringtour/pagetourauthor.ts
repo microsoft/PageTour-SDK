@@ -18,6 +18,12 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 declare const $: any
 
+interface IWindow extends Window {
+  webkitSpeechRecognition: any;
+  SpeechRecognition: any;
+}
+
+
 class PageTourAuthor {
   // private modal: any = null;
   private selectedElement: HTMLElement = null
@@ -1121,7 +1127,10 @@ class PageTourAuthor {
       document.getElementById('anno-media-error').style.display = 'none'
       let mediaDiv = document.getElementById("imgHeaderContainer") as HTMLImageElement;
       // Todo: make this url injection dynamic
-      mediaDiv.src = "https://fxpsit.azureedge.net/perfectfit.jpg";
+      if(this.configStore.Options.announcementDefaultImage)
+        mediaDiv.src = this.configStore.Options.announcementDefaultImage;
+      else
+        mediaDiv.alt = "Default Image not configured"
     }
   }
 
@@ -1303,8 +1312,8 @@ class PageTourAuthor {
 
   private GenerateTranscript(type: string) {
     // new speech recognition object
-    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-    var recognition = new SpeechRecognition();
+    const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
+    var recognition = new webkitSpeechRecognition();
     let transcriptDiv = document.getElementById('transcript-message-for-'+ type) as HTMLTextAreaElement;
     let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
                 
