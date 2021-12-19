@@ -1,6 +1,8 @@
 import { ConfigStore } from '../common/configstore'
 import * as tourBoxHtml from './tour-box.html'
 import * as AnnouncementBoxHtml from './announcement-page.html'
+import * as SmartTipBoxHtml from './smarttip.html'
+import * as SmartTipPopperHtml from './smarttip-popper.html'
 import { DomUtils } from '../common/domutils'
 import * as viewCoverPageModalTemplate from './view-cover-page-modal.html'
 import { RunTourAction } from '../models/runtouraction'
@@ -29,7 +31,8 @@ class PageTourPlay {
 
   // Template Functions
   private tourBoxHtmlFn: any = tourBoxHtml
-
+  private smartTipFn: any = SmartTipBoxHtml
+  private smartTipPopperFn: any = SmartTipPopperHtml
   private announcementBoxFn: any = AnnouncementBoxHtml
   private viewCoverPageTemplateFn: any = viewCoverPageModalTemplate
   public isTourPlaying: boolean
@@ -103,29 +106,71 @@ class PageTourPlay {
       let selectedElement = document.querySelector(element.selector) as HTMLElement;
       if(selectedElement && !selectedElement.getAttribute('disabled'))
       {
-        var rect = selectedElement.getBoundingClientRect();
+        let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
+        smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
+        (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
+        (smartTipPopup.getElementsByClassName("smarttip-dismiss-all")[0] as HTMLButtonElement).addEventListener('click', this.dismissAllSmartTips);
+        (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`${objTour.id}_${i}`) } );
+
+
         let div = document.createElement('div');
-        div.style.top = rect.top.toString() + 'px';
-        div.style.left = (rect.left + rect.width).toString() + 'px';
         div.className = "smart-tip-hint";
-        div.addEventListener("mouseover", function() {
-          let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
-          availableSmartTips.forEach((tips) => {
-            tips.className = "triangle-border top";
-          });
-          let smartTip = document.getElementById("smarttip_" + objTour.id + "_" + i)
-          smartTip.className = "triangle-border top active"
-        });
-        // div.addEventListener("mouseout", function() {
-        //   let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
-        //   availableSmartTips.forEach((tips) => {
-        //     tips.className = "triangle-border top";
-        //   });
-        // });
-        div.innerHTML = "<a href='#' role='button' class='smarttip hrw-focusable' aria-label='Smart tip'><div class='smarttip-bubble'></div><div class='smarttip-bubble-out'></div></a><div id=smarttip_" + objTour.id + "_" + i +"  class='triangle-border top'><div style='padding:24px;'>"+ element.message +"</div>";
+        div.id = `smarttip_${objTour.id}_${i}`;
+        div.insertAdjacentHTML('beforeend', this.smartTipFn());
         selectedElement.appendChild(div);
+
+        div.addEventListener("mouseover", function() {
+          console.log(objTour);
+          const targetDom = document.querySelector(element.selector);
+          let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
+          toolTipPopper.style.display = "flex";
+
+          let popperInstance = new Popper(targetDom, toolTipPopper, {
+            placement: 'top-end'
+          });
+          popperInstance.enableEventListeners();
+          popperInstance.scheduleUpdate();
+        });
       }
     });
+  }
+
+  
+  private async dismissAllSmartTips() {
+    // remove all the tips and popper from the dom.
+    let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
+    availableSmartTips.forEach(node => {
+      node.remove();
+    });
+
+    // record the action for the specific user and store in local storage.
+    try {
+      let response = await this.configStore.Options.userActionProvider.recordUserAction(
+        null,
+        null,
+        null,
+        null,
+      )
+    } catch (err) {}
+    
+  }
+
+  private async dismissSmartTip(id: string) {
+    // remove that specific tips and popper from the domutils.
+    let availableSmartTips = document.querySelectorAll(`[id^="smarttip_${id}"]`);
+    availableSmartTips.forEach(node => {
+      node.remove();
+    });
+
+    // record the action for the specific user and store in local storage.
+    try {
+      let response = await this.configStore.Options.userActionProvider.recordUserAction(
+        null,
+        null,
+        null,
+        null,
+      )
+    } catch (err) {}
   }
 
   public runAnnouncement = (
