@@ -134,9 +134,9 @@ class PageTourPlay {
           switch (element.position) {
             case 'top':
               arrowDiv.className = 'arrow-pointer arrow-down'
+              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
-            smartTipPopup.style.flexDirection = 'column'
               // todo : apply as per the theme color
               arrowDiv.style.borderTopColor = '#0078D4'
               arrowDiv.style.borderLeftColor = 'transparent'
@@ -156,6 +156,7 @@ class PageTourPlay {
               break
 
             case 'top-start':
+              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
@@ -167,6 +168,7 @@ class PageTourPlay {
               break
 
             case 'top-end':
+              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'flex-end'
               arrowDiv.style.margin = '0px 0px'
@@ -179,6 +181,7 @@ class PageTourPlay {
 
               
             case 'bottom-start':
+              smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
@@ -202,6 +205,7 @@ class PageTourPlay {
 
 
             case 'left':
+              smartTipPopup.style.flexDirection = 'row'
               arrowDiv.className = 'arrow-pointer arrow-right'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
@@ -212,6 +216,7 @@ class PageTourPlay {
               break
 
             case 'right':
+              smartTipPopup.style.flexDirection = 'row-reverse'
               arrowDiv.className = 'arrow-pointer arrow-left'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
