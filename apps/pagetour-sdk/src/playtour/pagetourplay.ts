@@ -110,7 +110,7 @@ class PageTourPlay {
         smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
         (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
         (smartTipPopup.getElementsByClassName("smarttip-dismiss-all")[0] as HTMLButtonElement).addEventListener('click', this.dismissAllSmartTips);
-        (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`${objTour.id}_${i}`) } );
+        (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`${objTour.id}_${i}`)});
 
 
         let div = document.createElement('div');
@@ -119,14 +119,124 @@ class PageTourPlay {
         div.insertAdjacentHTML('beforeend', this.smartTipFn());
         selectedElement.appendChild(div);
 
+        let arrowDiv = document.createElement('div');
+        arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
+        smartTipPopup.appendChild(arrowDiv);
+
         div.addEventListener("mouseover", function() {
-          console.log(objTour);
           const targetDom = document.querySelector(element.selector);
           let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
           toolTipPopper.style.display = "flex";
 
+          let popperPlacement: Placement = 'auto';
+          switch (element.position) {
+            case 'top':
+              popperPlacement = 'top'
+              arrowDiv.className = 'arrow-pointer arrow-down'
+              arrowDiv.style.alignSelf = 'center'
+              arrowDiv.style.margin = '0px 0px'
+              smartTipPopup.style.flexDirection = 'column'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = '#0078D4'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+            case 'bottom':
+              popperPlacement = 'bottom'
+              arrowDiv.className = 'arrow-pointer arrow-up'
+              arrowDiv.style.alignSelf = 'center'
+              arrowDiv.style.margin = '0px 0px'
+              smartTipPopup.style.flexDirection = 'column-reverse'
+              arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              break
+
+            case 'top-start':
+              popperPlacement = 'top-start'
+              arrowDiv.className = 'arrow-pointer arrow-down'
+              arrowDiv.style.alignSelf = 'flex-start'
+              arrowDiv.style.margin = '0px 0px'
+              smartTipPopup.style.flexDirection = 'column'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = '#0078D4'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+            case 'top-end':
+              popperPlacement = 'top-end'
+              arrowDiv.className = 'arrow-pointer arrow-down'
+              arrowDiv.style.alignSelf = 'flex-end'
+              arrowDiv.style.margin = '0px 0px'
+              smartTipPopup.style.flexDirection = 'column'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = '#0078D4'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+              
+            case 'bottom-start':
+              popperPlacement = 'bottom-start'
+              arrowDiv.className = 'arrow-pointer arrow-up'
+              arrowDiv.style.alignSelf = 'flex-start'
+              arrowDiv.style.margin = '0px 0px'
+              smartTipPopup.style.flexDirection = 'column-reverse'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = '#0078D4'
+              break
+
+            case 'bottom-end':
+              popperPlacement = 'bottom-end'
+              arrowDiv.className = 'arrow-pointer arrow-up'
+              arrowDiv.style.alignSelf = 'flex-end'
+              arrowDiv.style.margin = '0px 0px'
+              smartTipPopup.style.flexDirection = 'column-reverse'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = '#0078D4'
+              break
+
+
+            case 'left':
+              popperPlacement = 'left'
+              arrowDiv.className = 'arrow-pointer arrow-right'
+              arrowDiv.style.alignSelf = 'center'
+              arrowDiv.style.margin = '0px 0px'
+              smartTipPopup.style.flexDirection = 'row'
+              arrowDiv.style.borderLeftColor = '#0078D4'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+            case 'right':
+              popperPlacement = 'right'
+              arrowDiv.className = 'arrow-pointer arrow-left'
+              arrowDiv.style.alignSelf = 'center'
+              arrowDiv.style.margin = '0px 0px'
+              smartTipPopup.style.flexDirection = 'row-reverse'
+              arrowDiv.style.borderRightColor = '#0078D4'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+          }
+
           let popperInstance = new Popper(targetDom, toolTipPopper, {
-            placement: 'top-end'
+            placement: popperPlacement
           });
           popperInstance.enableEventListeners();
           popperInstance.scheduleUpdate();
