@@ -104,7 +104,8 @@ class PageTourPlay {
   ) => {
     objTour.steps.forEach((element,i) => {
       let selectedElement = document.querySelector(element.selector) as HTMLElement;
-      if(selectedElement && !selectedElement.getAttribute('disabled'))
+      let smartTipElement = document.getElementById(`smarttip_${objTour.id}_${i}`);
+      if(selectedElement && !selectedElement.getAttribute('disabled') && !smartTipElement)
       {
         let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
         smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
@@ -127,11 +128,9 @@ class PageTourPlay {
           const targetDom = document.querySelector(element.selector);
           let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
           toolTipPopper.style.display = "flex";
-
-          let popperPlacement: Placement = 'auto';
+          let popperPlacement = element.position as Placement
           switch (element.position) {
             case 'top':
-              popperPlacement = 'top'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
@@ -144,7 +143,6 @@ class PageTourPlay {
               break
 
             case 'bottom':
-              popperPlacement = 'bottom'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
@@ -156,7 +154,6 @@ class PageTourPlay {
               break
 
             case 'top-start':
-              popperPlacement = 'top-start'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
@@ -169,7 +166,6 @@ class PageTourPlay {
               break
 
             case 'top-end':
-              popperPlacement = 'top-end'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'flex-end'
               arrowDiv.style.margin = '0px 0px'
@@ -183,7 +179,6 @@ class PageTourPlay {
 
               
             case 'bottom-start':
-              popperPlacement = 'bottom-start'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
@@ -196,7 +191,6 @@ class PageTourPlay {
               break
 
             case 'bottom-end':
-              popperPlacement = 'bottom-end'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'flex-end'
               arrowDiv.style.margin = '0px 0px'
@@ -210,7 +204,6 @@ class PageTourPlay {
 
 
             case 'left':
-              popperPlacement = 'left'
               arrowDiv.className = 'arrow-pointer arrow-right'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
@@ -222,7 +215,6 @@ class PageTourPlay {
               break
 
             case 'right':
-              popperPlacement = 'right'
               arrowDiv.className = 'arrow-pointer arrow-left'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
@@ -245,7 +237,6 @@ class PageTourPlay {
     });
   }
 
-  
   private async dismissAllSmartTips() {
     // remove all the tips and popper from the dom.
     let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
