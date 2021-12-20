@@ -19,7 +19,7 @@
           </div>
           <div class="row row-8">
             <div>
-              <label class="font-caption-alt margin-bottom-12">Position of message to element*:</label>
+              <label class="font-caption-alt margin-bottom-12"> <strong>Position of message to element (*) :</strong></label>
               <div class="select-box-holder">
                 <select
                   class="select-box font-body"
@@ -42,21 +42,24 @@
             </div>
           </div>
           <div class="row row-28">
-            <label class="font-caption-alt margin-bottom-12">Message to user*:</label>
+            <label class="font-caption-alt margin-bottom-12"><strong>Message to user (*):</strong></label>
             <div class="textarea-messagetouser-group">
               <textarea
                 class="textarea-messagetouser"
-                id="message-for-step"
+                id="message-for-smart-tip"
                 title="Message to user"
                 aria-required="true"
                 aria-label="Please enter message to user"
                 type="text"
                 placeholder="Enter the message user will see during this step"
-                maxlength="1000"
+                maxlength="100"
                 required
               ></textarea>
+              <span  aria-live="assertive" class="textarea-character-limit pull-right" id="smart-tip-message-character-limit">
+                100 characters remaining.
+              </span>
               <div>
-                <span class="textarea-error" role="alert" aria-live="assertive" id="message-for-step-error">
+                <span class="textarea-error" role="alert" aria-live="assertive" id="message-for-smart-tip-error">
                   Message to user is required.
                 </span>
               </div>

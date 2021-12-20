@@ -64,6 +64,7 @@ class ConfigStore {
     tags: {
       includedTags: [],
       excludedTags: [],
+      tagHelpText: "Enter the tag values"
     },
   }
   constructor(options: PageTourOptions) {

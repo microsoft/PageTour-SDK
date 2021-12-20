@@ -134,7 +134,7 @@ class PageTourPlay {
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'column'
+            smartTipPopup.style.flexDirection = 'column'
               // todo : apply as per the theme color
               arrowDiv.style.borderTopColor = '#0078D4'
               arrowDiv.style.borderLeftColor = 'transparent'
@@ -1351,10 +1351,10 @@ class PageTourPlay {
         var rect = element.getBoundingClientRect();
         let pagetourHelperLayer = document.getElementById("pagetour-elementLayer");
         
-        pagetourHelperLayer.style.left = (rect.left - 10).toString() + 'px';
-        pagetourHelperLayer.style.top = rect.top.toString() + 'px';
-        pagetourHelperLayer.style.height = height.toString() + 'px';
-        pagetourHelperLayer.style.width = (width + 20).toString() + 'px';
+        pagetourHelperLayer.style.left = (rect.left - 14).toString() + 'px';
+        pagetourHelperLayer.style.top = (rect.top - 4).toString() + 'px';
+        pagetourHelperLayer.style.height = (height + 4).toString() + 'px';
+        pagetourHelperLayer.style.width = (width + 24).toString() + 'px';
         document.getElementById("pagetour-greyLayer").style.display = 'inline'
         document.getElementById("pagetour-elementLayer").style.display = 'inline'
       }

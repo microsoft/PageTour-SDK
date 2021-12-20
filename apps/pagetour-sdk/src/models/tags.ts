@@ -1,7 +1,9 @@
 interface Tags {
-  includedTags: string[]
+  includedTags?: string[]
 
-  excludedTags: string[]
+  excludedTags?: string[]
+
+  tagHelpText?: string
 }
 
 export { Tags }
