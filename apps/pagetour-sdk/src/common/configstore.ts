@@ -16,6 +16,7 @@ class ConfigStore {
       textColor: '#252423',
       navigationButtonColor: '#0063b1',
       isRounded: false,
+      enableGrayScreen: false
     },
     navigator: {
       navigateToContext: (context: PageContext) => {
@@ -63,6 +64,7 @@ class ConfigStore {
     tags: {
       includedTags: [],
       excludedTags: [],
+      tagHelpText: "Enter the tag values"
     },
   }
   constructor(options: PageTourOptions) {

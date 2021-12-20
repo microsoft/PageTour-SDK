@@ -163,6 +163,7 @@ class PageTourManager {
 
     let manageTourFormModal = document.getElementById('tour-form')
     DomUtils.manageTabbing(manageTourFormModal)
+    this.hideOptions()
     try {
       const tours: Tutorial[] = await this.dataStore.GetToursByPageContext(null, true)
       this.toursList = this.sortItems(tours, 'desc')
@@ -313,11 +314,11 @@ class PageTourManager {
 
   // Opens the option
   private showOptions = () => {
-    document.getElementById("add-new-dropdown").classList.add("show");
+    document.getElementById("add-new-dropdown").style.display = 'inline'
   }
 
   private hideOptions = () => {
-    document.getElementById("add-new-dropdown").classList.remove("show");
+    document.getElementById("add-new-dropdown").style.display = 'none'
   }
 
   
@@ -1053,6 +1054,8 @@ class PageTourManager {
     this.hideManagePageTourModal()
     if(tour.tourtype.toLowerCase() == "announcement")
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0)
+    else if(tour.tourtype.toLowerCase() == "smarttip")
+        this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0)
     else
       this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
   }

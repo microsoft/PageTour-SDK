@@ -18,7 +18,7 @@ interface PageTourOptions {
   autoPlayEnabled?: boolean
   userActionProvider?: UserActionProvider
   isCoverPageTourStart?:Boolean
-  announcementDefaultImage?: string
+  announcementDefaultImage?: string,
   enableTranscript?: boolean
 }
 

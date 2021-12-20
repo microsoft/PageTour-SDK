@@ -28,7 +28,19 @@ export class AppComponent implements OnInit {
   private pageTourInit = () => {
     PageTour.init(this.repository, {
       announcementDefaultImage : 'https://fxpsitstoragenew.z13.web.core.windows.net/perfectfit.jpg',
-      enableTranscript: false
+      enableTranscript: true,
+      theme: {
+        primaryColor: '#0063b1',
+        secondaryColor: '#fdfdfd',
+        textColor: '#252423',
+        navigationButtonColor: '#0063b1',
+        isRounded: false,
+        enableGrayScreen: true
+      },
+      tags: {
+        tagHelpText: 'This is from sample app'
+      }
+
     });
   }
 

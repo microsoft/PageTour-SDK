@@ -19,6 +19,11 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 declare const $: any
 
+interface IWindow extends Window {
+  webkitSpeechRecognition: any;
+  SpeechRecognition: any;
+}
+
 class PageTourAuthor {
   // private modal: any = null;
   private selectedElement: HTMLElement = null
@@ -111,6 +116,7 @@ class PageTourAuthor {
       .toISOString()
       .split('T')[0];
     (document.getElementById("tour-type") as HTMLSelectElement).value = tourType;
+    (document.getElementById("tour-tags-info") as HTMLSpanElement).innerText = this.configStore.Options.tags.tagHelpText;
 
     document.getElementById('tour-title').onkeyup = this.checkTourTitle
     document.getElementById('tour-description').onkeyup = this.checkTourDescription
@@ -168,7 +174,7 @@ class PageTourAuthor {
   private checkTourTags = () => {
     const tourTagsTextArea: HTMLTextAreaElement = document.getElementById('tour-tags') as HTMLTextAreaElement
     let value = tourTagsTextArea.value
-    document.getElementById('tour-tags-character-limit').innerText = 74 - value.length + ' characters remaining.'
+    document.getElementById('tour-tags-character-limit').innerText = 200 - value.length + ' characters remaining.'
   }
 
   /*# EndRegion: Tour Dialogue Validations */
@@ -325,7 +331,7 @@ class PageTourAuthor {
       autoPlayCheckbox.checked = true;
       autoPlayCheckbox.disabled = true;
     }
-    if(tourtype.toLowerCase() == "smarttip"){
+    else if(tourtype.toLowerCase() == "smarttip"){
       document.getElementById("add-announcement-btn").style.display = 'none'
       document.getElementById("add-step-btn").style.display = 'inline'
       document.getElementById("cover-page-btn").style.display = 'none'
@@ -472,7 +478,7 @@ class PageTourAuthor {
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
+      let tourType = this.tour.tourtype ? this.tour.tourtype : (document.getElementById('tour-type') as HTMLSelectElement).value;
       if(tourType.toLowerCase() == 'announcement') {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         document.getElementById("step-tourtype-header").style.width = '250px'
@@ -480,7 +486,7 @@ class PageTourAuthor {
         tr.appendChild(tdStepHeader)
         tr.appendChild(tdStepMediaUrl)
       }
-      if(tourType.toLowerCase() == 'smarttip') {
+      else if(tourType.toLowerCase() == 'smarttip') {
         document.getElementById("step-tourtype-header").style.display = 'none'
         document.getElementById("step-announcement-image-url").style.display = 'none'
       }
@@ -727,9 +733,11 @@ class PageTourAuthor {
     if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
       const editingStep = this.stepList[this.editStepIndex]
       document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
-      document.getElementById('anno-message-editor').innerHTML = editingStep.message;
+      document.getElementById("announcementboxdescription").innerHTML= document.getElementById('anno-message-editor').innerHTML = editingStep.message;
+      this.announcementHeaderChange()
       if (editingStep.mediaUrl)
         document.getElementById('input-announcement-image-video').innerText = editingStep.mediaUrl;
+        this.livePreviewMediaHeader();
       if (editingStep.transcript)
         document.getElementById('transcript-message-for-announcement').innerText = editingStep.transcript;
     }
@@ -1099,45 +1107,119 @@ class PageTourAuthor {
       announcementPageModal.style.display = 'block'
     }
     announcementPageModal = document.getElementById('announcement-page-modal')
-    announcementPageModal.style.display = 'block'
-
-    ClassicEditor
-    .create(document.getElementById('anno-message-editor'), {
-      toolbar: ['heading','|', 'bold','italic','link','bulletedList', 'numberedList'],
-      heading: {
-        options:[
-          { model: 'heading3', view: 'h4', title: 'Heading', class: 'ck-heading_heading3' },
-          { model:'paragraph', title: "Paragraph", class: 'ck-heading_paragraph'}
-        ]
-      },
-      link: {
-        addTargetToExternalLinks: true
-      }
-    })
-    .then( (editor: any) => {
-      this.ckEditor = editor; 
-    })
-    .then((error:any) => {
-      console.log(error);
-    });
+    announcementPageModal.style.display = 'block';
+    (document.getElementById("videoHeaderContainer") as HTMLVideoElement).style.display ='none'
+    this.setDefaultImage();
+    this.initiateCkEditor();
 
     let announcementPageForm = document.getElementById('announcement-page-form')
     DomUtils.manageTabbing(announcementPageForm)
 
     const closeBtn = document.getElementById('announcement-page-close-btn')
     closeBtn.onclick = this.closeAnnouncementPageModal
+    
+    document.getElementById('record-announcement-page-btn').onclick = this.recordAnnouncement
 
-    const cancelChooseElement = document.getElementById('cancel-announcement-page-btn')
-    cancelChooseElement.onclick = this.closeAnnouncementPageModal
+    document.getElementById('input-announcement-header-text').onkeyup = this.announcementHeaderChange
+    document.getElementById('input-announcement-image-video').onkeyup = this.livePreviewMediaHeader
+    document.getElementById('input-announcement-image-video').onblur = this.setDefaultImage
 
-    const saveAnnouncementPageElement = document.getElementById('save-announcement-page-btn')
-    saveAnnouncementPageElement.onclick = this.saveAnnouncementPage
+    document.getElementById('cancel-announcement-page-btn').onclick = this.closeAnnouncementPageModal 
+    document.getElementById('save-announcement-page-btn').onclick = this.saveAnnouncementPage
 
     if(!this.configStore.Options.enableTranscript)
       document.getElementById('transcript-announcement-area').style.display = 'none'
-    // const recordAnnouncementPageElement = document.getElementById('record-announcement-page-btn')
-    // recordAnnouncementPageElement.onclick = this.recordAnnouncementPage
+  }
 
+  private async initiateCkEditor() {
+    ClassicEditor
+    .create(document.getElementById('anno-message-editor'), {
+      toolbar: ['bold','italic','link','bulletedList', 'numberedList'],
+      link: {
+        addTargetToExternalLinks: true
+      }
+    })
+    .then((editor: any) => {
+      this.ckEditor = editor;
+      this.checkCharacterLength($(editor.getData()).text().length);
+      editor.model.document.on('change:data', (evt : any, data : any) => {
+        document.getElementById("announcementboxdescription").innerHTML = editor.getData();
+        this.checkCharacterLength($(editor.getData()).text().length, evt);
+      });
+    })
+    .catch((error:any) => {
+      console.log(error);
+    });
+  }
+
+  private checkCharacterLength(currentCharacterLength: number, event: any = null) {
+    // Todo: make this value configurable
+    let maxCharacterLength = 500;
+    if(currentCharacterLength >= maxCharacterLength) {
+      // event.preventDefault();
+    }
+    const remaining = maxCharacterLength - currentCharacterLength;
+    (document.getElementById("character-remaining-text")).textContent = `${remaining} characters remaining`
+    
+  }
+
+  private setDefaultImage() {
+    let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    if(mediaUrl.value == "") {
+      document.getElementById('anno-media-error').style.display = 'none'
+      let mediaDiv = document.getElementById("imgHeaderContainer") as HTMLImageElement;
+      // Todo: make this url injection dynamic
+      if(this.configStore.Options.announcementDefaultImage)
+        mediaDiv.src = this.configStore.Options.announcementDefaultImage;
+      else
+        mediaDiv.alt = "Default Image not configured"
+    }
+  }
+
+  private announcementHeaderChange(){
+    let headerValue = (document.getElementById('input-announcement-header-text') as HTMLInputElement).value;
+    if(headerValue == "") {
+      document.getElementById('anno-header-error').style.display = "contents";
+    } else {
+      document.getElementById('anno-header-error').style.display = "none";
+      document.getElementById("announcementboxtitle-preview").innerText = headerValue;
+    }
+    document.getElementById("announcement-header-character-limit").innerText =
+      100 - headerValue.length + ' characters remaining.'
+  }
+
+  private livePreviewMediaHeader() {
+    let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    // put it into a separate method
+    let imgPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
+    let videoPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:mp4|mov|wmv|avi|)+$/;
+    let isValidUrl, isValidImageUrl, isValidVideoUrl;
+    isValidUrl = isValidImageUrl = !!imgPattern.test(mediaUrl.value);
+    if(!isValidUrl) {
+      isValidUrl = isValidVideoUrl = !!videoPattern.test(mediaUrl.value);
+    }
+
+    //check if it is image or video url
+    if (!isValidUrl && mediaUrl.value !== '') {
+      document.getElementById('anno-media-error').style.display = 'contents'
+      return;
+    } else {
+      document.getElementById('anno-media-error').style.display = 'none'
+      let imgHeaderContainer = document.getElementById("imgHeaderContainer") as HTMLImageElement;
+      let videoHeaderContainer = document.getElementById("videoHeaderContainer") as HTMLVideoElement;
+      if(isValidImageUrl) {
+        videoHeaderContainer.style.display ='none'
+        imgHeaderContainer.style.display = 'block'
+        imgHeaderContainer.src = mediaUrl.value;
+        imgHeaderContainer.className = 'loadingImage'
+      } 
+      else if(isValidVideoUrl) {
+        imgHeaderContainer.style.display = 'none'
+        videoHeaderContainer.style.display = 'block'
+        videoHeaderContainer.src = mediaUrl.value;
+        videoHeaderContainer.load();
+      }
+    }
   }
 
   /// Validates input in CoverPage Position Select Box
@@ -1227,22 +1309,23 @@ class PageTourAuthor {
   private saveAnnouncementPage = () => {
     let announcementHeader = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
     if (announcementHeader.value === '') {
-      document.getElementById('anno-header-error').style.display = 'block'
+      document.getElementById('anno-header-error').style.display = 'contents'
       return;
     } else {
       document.getElementById('anno-header-error').style.display = 'none'
     }
 
     let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
-    if (mediaUrl.value !== '' && !this.validateUrl(mediaUrl.value)) {
-      document.getElementById('anno-media-error').style.display = 'block'
+    let isValidUrl = this.validateUrl(mediaUrl.value);
+    if (mediaUrl.value !== '' && !isValidUrl) {
+      document.getElementById('anno-media-error').style.display = 'contents'
       return;
     } else {
       document.getElementById('anno-media-error').style.display = 'none'
     }
     let messageContent = this.ckEditor.getData();
     if(messageContent === ''){
-      document.getElementById('anno-message-error').style.display = 'block'
+      document.getElementById('anno-message-error').style.display = 'contents'
       return;
     } else {
       document.getElementById('anno-message-error').style.display = 'none'
@@ -1253,30 +1336,7 @@ class PageTourAuthor {
     this.closeAnnouncementPageModal()
   }
 
-  private recordAnnouncementPage = () => {
-    // let speechConfig = SpeechConfig.fromSubscription("", "");
-    // let transcriptDiv = document.getElementById('transcript-message-for-announcement');
-    // speechConfig.speechRecognitionLanguage = "en-US";
-    // let audioConfig  = AudioConfig.fromDefaultMicrophoneInput();
-    // let recognizer = new SpeechRecognizer(speechConfig, audioConfig);
-
-    // recognizer.recognizeOnceAsync(
-    //   function (result) {
-    //     transcriptDiv.innerHTML += result.text;
-    //     window.console.log(result);
-
-    //     recognizer.close();
-    //     recognizer = undefined;
-    //   },
-    //   function (err) {
-    //     transcriptDiv.innerHTML += err;
-    //     window.console.log(err);
-
-    //     recognizer.close();
-    //     recognizer = undefined;
-    //   });
-  }
-  private validateUrl(text: string) {
+  private validateUrl = (text: string) => {
     let imgPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
     let result = !!imgPattern.test(text);
     if(!result) {
@@ -1284,6 +1344,46 @@ class PageTourAuthor {
       result = !!videoPattern.test(text);
     }
     return result;
+  }
+
+  private recordAnnouncement = () => {
+    this.GenerateTranscript('announcement');
+  }
+
+  private recordTutorial = () => {
+    this.GenerateTranscript('step');
+  }
+
+  private GenerateTranscript(type: string) {
+    // new speech recognition object
+    const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
+    //var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    let recognition = new webkitSpeechRecognition();
+    let transcriptDiv = document.getElementById('transcript-message-for-'+ type) as HTMLTextAreaElement;
+    let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
+                
+    // This runs when the speech recognition service starts
+    recognition.onstart = function() {
+      transcriptBtnIcon.disabled = true
+        
+    };
+
+    recognition.onspeechend = function() {
+        // when user is done speaking
+        recognition.stop();
+        transcriptBtnIcon.disabled = false
+    }
+                  
+    // This runs when the speech recognition service returns result
+    recognition.onresult = function(event: any) {
+      if(transcriptDiv.value)
+        transcriptDiv.value += event.results[0][0].transcript;
+      else
+      transcriptDiv.value = event.results[0][0].transcript;
+    };
+                  
+    // start recognition
+    recognition.start();
   }
   private getAnnouncementPageDetails = () => {
     let headerElement = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
@@ -1301,7 +1401,7 @@ class PageTourAuthor {
     newStep.pagecontext = pageContext.url
     newStep.pagestatename = pageContext.state
     if(transcriptElement)
-      newStep.transcript = transcriptElement.value;
+    newStep.transcript = transcriptElement.value;
 
     if (this.editStepIndex !== -1) {
       this.stepList[this.editStepIndex] = newStep
@@ -1346,6 +1446,9 @@ class PageTourAuthor {
 
       let stepDetailCloseBtn = document.getElementById('step-detail-close-btn')
       stepDetailCloseBtn.onclick = this.stopPagetourRecording
+
+      let stepAudioContent = document.getElementById('record-step-page-btn')
+      stepAudioContent.onclick = this.recordTutorial
 
       let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
       let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
@@ -1393,10 +1496,13 @@ class PageTourAuthor {
       let stepDetailCloseBtn = document.getElementById('step-detail-close-btn')
       stepDetailCloseBtn.onclick = this.stopSmartTipRecording
 
+      document.getElementById('message-for-smart-tip').onkeyup = this.checkSmartTipMessage
+
       /// Loads Step details in a Record box during Edit.
       if (this.editStepIndex !== -1) {
-        document.getElementById('tip-detail-modal-title').innerText = 'Edit Step - Details'
+        document.getElementById('tip-detail-modal-title').innerText = 'Edit Smart Tip - Details'
         this.populateTipDetails()
+        this.checkSmartTipMessage()
       }
     } else {
       stepDetailModal.style.display = 'block'
@@ -1405,6 +1511,16 @@ class PageTourAuthor {
     DomUtils.manageTabbing(stepDetailForm)
   }
 
+  private checkSmartTipMessage() {
+    let messageValue = (document.getElementById('message-for-smart-tip') as HTMLInputElement).value;
+    if(messageValue == "") {
+      document.getElementById('message-for-smart-tip-error').style.display = "contents";
+    } else {
+      document.getElementById('message-for-smart-tip-error').style.display = "none";
+    }
+    document.getElementById("smart-tip-message-character-limit").innerText =
+      100 - messageValue.length + ' characters remaining.'
+  }
   /*#BeginRegion: Step Details validations*/
 
   /// Validates input in Event Type Select Box
@@ -1452,11 +1568,11 @@ class PageTourAuthor {
   }
 
   /// Validates the input in Message to User Text Box
-  private checkMessageForStep = () => {
+  private checkMessageForStep = (tourtype: string) => {
     let messageForStepErrorElement: HTMLTextAreaElement = document.getElementById(
-      'message-for-step',
+      `message-for-${tourtype}`,
     ) as HTMLTextAreaElement
-    document.getElementById('message-for-step-error').style.display =
+    document.getElementById(`message-for-${tourtype}-error`).style.display =
       messageForStepErrorElement.value === '' ? 'block' : 'none'
   }
 
@@ -1484,7 +1600,7 @@ class PageTourAuthor {
   private checkRecordBoxInputs = () => {
     this.checkEventType()
     this.checkPositionSelect()
-    this.checkMessageForStep()
+    this.checkMessageForStep('step')
     this.checkValueForStep()
     this.checkDelayValue()
 
@@ -1501,9 +1617,9 @@ class PageTourAuthor {
 
   /// Executes inputs of all controls in Step Details Record Dialog
   private checkSmartTipInputs = () => {
-    this.checkMessageForStep()
+    this.checkMessageForStep('smart-tip')
 
-    let controlsList = ['message-for-step']
+    let controlsList = ['message-for-smart-tip']
 
     if (!this.validateandSetFocus(controlsList)) {
       event.preventDefault()
@@ -1695,7 +1811,7 @@ class PageTourAuthor {
       newStep.ignoreStepIf = false
     }
     if(transcriptForStepElement)
-      newStep.transcript = transcriptForStepElement.value;
+    newStep.transcript = transcriptForStepElement.value;
 
     /// Updates the step in stepDetails during edit of a step or pushes a new step to the stepDetails array.
     if (this.editStepIndex !== -1) {
@@ -1709,7 +1825,7 @@ class PageTourAuthor {
     /// Extracts the content from Step Details Record box and pushes to new step to StepDetials array
     private getTipDetails = () => {
       let positionSelectElement: HTMLSelectElement = document.getElementById("position-select") as HTMLSelectElement
-      let messageForStepElement: HTMLTextAreaElement = document.getElementById('message-for-step') as HTMLTextAreaElement
+      let messageForStepElement: HTMLTextAreaElement = document.getElementById('message-for-smart-tip') as HTMLTextAreaElement
       
       let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
       let message = messageForStepElement.value
@@ -1788,7 +1904,8 @@ class PageTourAuthor {
 
   private populateTipDetails = () => {
     let step = this.stepList[this.editStepIndex];
-    (document.getElementById('message-for-step') as HTMLTextAreaElement).value = step.message
+    (document.getElementById('message-for-smart-tip') as HTMLTextAreaElement).value = step.message;
+    (document.getElementById("position-select") as HTMLSelectElement).value = step.position;
   }
 
   private getPageContext = () => {

@@ -104,7 +104,8 @@ class PageTourPlay {
   ) => {
     objTour.steps.forEach((element,i) => {
       let selectedElement = document.querySelector(element.selector) as HTMLElement;
-      if(selectedElement && !selectedElement.getAttribute('disabled'))
+      let smartTipElement = document.getElementById(`smarttip_${objTour.id}_${i}`);
+      if(selectedElement && !selectedElement.getAttribute('disabled') && !smartTipElement)
       {
         let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
         smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
@@ -129,15 +130,13 @@ class PageTourPlay {
           const targetDom = document.querySelector(element.selector);
           let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
           toolTipPopper.style.display = "flex";
-
-          let popperPlacement: Placement = 'auto';
+          let popperPlacement = element.position as Placement
           switch (element.position) {
             case 'top':
-              popperPlacement = 'top'
-              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
+            smartTipPopup.style.flexDirection = 'column'
               // todo : apply as per the theme color
               arrowDiv.style.borderTopColor = '#0078D4'
               arrowDiv.style.borderLeftColor = 'transparent'
@@ -146,7 +145,6 @@ class PageTourPlay {
               break
 
             case 'bottom':
-              popperPlacement = 'bottom'
               arrowDiv.className = 'arrow-pointer arrow-up'
               smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.style.alignSelf = 'center'
@@ -158,8 +156,6 @@ class PageTourPlay {
               break
 
             case 'top-start':
-              popperPlacement = 'top-start'
-              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
@@ -171,8 +167,6 @@ class PageTourPlay {
               break
 
             case 'top-end':
-              popperPlacement = 'top-end'
-              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'flex-end'
               arrowDiv.style.margin = '0px 0px'
@@ -185,8 +179,6 @@ class PageTourPlay {
 
               
             case 'bottom-start':
-              popperPlacement = 'bottom-start'
-              smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
@@ -198,8 +190,6 @@ class PageTourPlay {
               break
 
             case 'bottom-end':
-              popperPlacement = 'bottom-end'
-              smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'flex-end'
               arrowDiv.style.margin = '0px 0px'
@@ -212,8 +202,6 @@ class PageTourPlay {
 
 
             case 'left':
-              popperPlacement = 'left'
-              smartTipPopup.style.flexDirection = 'row'
               arrowDiv.className = 'arrow-pointer arrow-right'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
@@ -224,8 +212,6 @@ class PageTourPlay {
               break
 
             case 'right':
-              popperPlacement = 'right'
-              smartTipPopup.style.flexDirection = 'row-reverse'
               arrowDiv.className = 'arrow-pointer arrow-left'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
@@ -664,7 +650,7 @@ class PageTourPlay {
   private setupTourBox = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.tourBoxHtmlFn())
-    this.tourBox.style.zIndex = '20000'
+    //this.tourBox.style.zIndex = '20000'
   }
 
   private setupAnnouncementBox = (tour: any) => {
@@ -1139,6 +1125,7 @@ class PageTourPlay {
         )
         tourboxdata.style.boxShadow = this.getBoxShadowCSSString(0, 4, 0, -12)
     }
+    tourBoxElement.style.zIndex = '9999999'
   }
 
   private ApplyAnnouncementTheme(stepCount: number) {
@@ -1305,18 +1292,49 @@ class PageTourPlay {
 
   private addTourOutline = (element: HTMLElement) => {
     if (element && !element.getAttribute('disabled')) {
-      this.datastore['pagetour_lastoutline'] = element.style.outline
-      element.style.outline = '#f00 solid 1px'
+      if(!this.configStore.Options.theme.enableGrayScreen)
+      {
+          this.datastore['pagetour_lastoutline'] = element.style.outline;
+          //element.className += " tutorial-bubble";
+          element.style.outline = this.configStore.Options.theme.primaryColor + ' solid 5px';
+          element.style.transition = 'outline 0.6s linear';
+          let teachingBubble = document.createElement('div');
+          var rect = element.getBoundingClientRect();
+          teachingBubble.style.width = element.offsetWidth.toString() + "px";
+          teachingBubble.style.height = element.offsetHeight.toString() + "px";
+          //teachingBubble.style.left = rect.left.toString() + 'px';
+          //teachingBubble.style.top = rect.top.toString() + 'px';
+          teachingBubble.className = "tutorial-bubble";
 
-      let elementOnRemovedListener = this.datastore['pagetour_nodeRemovedListener']
-      if (elementOnRemovedListener) {
-        elementOnRemovedListener.removeEventListener('DOMNodeRemoved', this.elementDomRemoved)
-        this.datastore['pagetour_nodeRemovedListener'] = null
+          //div.innerHTML = "<div class='tutorial-bubble' style='width:" + element.offsetWidth.toString() + "px;height:" + element.offsetHeight.toString() + "px'></div>";
+          //element.appendChild(teachingBubble);
+
+          let elementOnRemovedListener = this.datastore['pagetour_nodeRemovedListener']
+          if (elementOnRemovedListener) {
+            elementOnRemovedListener.removeEventListener('DOMNodeRemoved', this.elementDomRemoved)
+            this.datastore['pagetour_nodeRemovedListener'] = null
+          }
+
+          element.addEventListener('DOMNodeRemoved', this.elementDomRemoved)
+
+          this.datastore['pagetour_nodeRemovedListener'] = element
+          document.getElementById("pagetour-greyLayer").style.display = 'none'
+          document.getElementById("pagetour-elementLayer").style.display = 'none'
       }
-
-      element.addEventListener('DOMNodeRemoved', this.elementDomRemoved)
-
-      this.datastore['pagetour_nodeRemovedListener'] = element
+      else
+      {
+        let width = element.offsetWidth;
+        let height = element.offsetHeight;
+        var rect = element.getBoundingClientRect();
+        let pagetourHelperLayer = document.getElementById("pagetour-elementLayer");
+        
+        pagetourHelperLayer.style.left = (rect.left - 14).toString() + 'px';
+        pagetourHelperLayer.style.top = (rect.top - 4).toString() + 'px';
+        pagetourHelperLayer.style.height = (height + 4).toString() + 'px';
+        pagetourHelperLayer.style.width = (width + 24).toString() + 'px';
+        document.getElementById("pagetour-greyLayer").style.display = 'inline'
+        document.getElementById("pagetour-elementLayer").style.display = 'inline'
+      }
     }
   }
 
