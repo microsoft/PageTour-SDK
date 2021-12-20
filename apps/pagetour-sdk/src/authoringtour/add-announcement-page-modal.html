@@ -3,125 +3,156 @@
       <div class="announcement-page-modal">
         <form id="announcement-page-form">
           <div class="announcement-page-content">
-            <div class="row-24">
-              <div class="pull-right">
-                <button
-                  id="announcement-page-close-btn"
-                  type="button"
-                  class="icon-holder-36-close-with-margin"
-                  tabindex="0"
-                  title="Close"
-                  aria-label="Close announcement page dialog"
-                >
-                  <i class="pagetour__icon icon-close"></i>
-                </button>
-              </div>
-              <h1 class="font-subtitle" id="announcement-page-modal-title">Add Announcement Page</h1>
-            </div>
-
-            <div class="row-8">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
-                <label class="font-caption-alt margin-bottom-12" for="cover-location-select">
-                  <strong> Header Text (*): </strong>
-                </label>
-                <textarea
-                  class="textarea"
-                  id="input-announcement-header-text"
-                  type="text"
-                  title="Announcement Header"
-                  required
-                  placeholder="Enter Header of Announcement"
-                ></textarea>
-                <span class="textarea-error" aria-live="assertive" id="anno-header-error">
-                  Header is required
-                </span>
-              </div>
-            </div>
-
-            <div class="row-8">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
-                <label class="font-caption-alt margin-bottom-12">
-                  <strong> Add Image/Video url: </strong>
-                </label>
-                <textarea
-                  class="textarea"
-                  id="input-announcement-image-video"
-                  type="text"
-                  title="Image/Video url"
-                  placeholder="Enter Image/Video url(If url is not entered it will take default image)"
-                ></textarea>
-                <span class="textarea-error" aria-live="assertive" id="anno-media-error">
-                  Media url is not valid
-                </span>
+            <div class="row announcement-modal-header">
+              <div class="col-lg-12">
+                <div class="pull-right">
+                  <button
+                    id="announcement-page-close-btn"
+                    type="button"
+                    class="icon-holder-36-close-with-margin"
+                    tabindex="0"
+                    title="Close"
+                    aria-label="Close announcement page dialog"
+                  >
+                    <i class="pagetour__icon icon-close"></i>
+                  </button>
+                </div>
+                <h1 class="font-subtitle" id="announcement-page-modal-title">Add Announcement Page</h1>
               </div>
             </div>
             
-            <div class="row-8">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
-                <label class="font-caption-alt margin-bottom-12 margin-top-12">
-                  <strong> Body Content (*): </strong>
-                </label>
-              </div>
-              <div class="cover-page-editor col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
-                <div id="anno-message-editor">
-                  <p>Initial content of the editor</p>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6 input-block">
+                  <label class="font-caption-alt" for="cover-location-select">
+                    <strong> Header Text (*): </strong>
+                  </label>
+                  <textarea
+                    class="textarea"
+                    id="input-announcement-header-text"
+                    type="text"
+                    title="Announcement Header"
+                    required
+                    placeholder="Enter Header of Announcement"
+                  ></textarea>
+                  <span class="textarea-error" aria-live="assertive" id="anno-header-error">
+                    Header is required
+                  </span>
                 </div>
-                <span class="bodytext-textarea-error" role="alert" aria-live="assertive" id="anno-message-error">
-                  Body is required.
-                </span>
-              </div>
-            </div>
 
-            <div class="row-8" id="transcript-announcement-area">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
-                <label class="font-caption-alt margin-bottom-12 margin-top-12">
-                  <strong> Transcript Content: </strong>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6 input-block">
+                  <label class="font-caption-alt">
+                    <strong> Add Image/Video url: </strong>
+                  </label>
+                  <textarea
+                    class="textarea"
+                    id="input-announcement-image-video"
+                    type="text"
+                    title="Image/Video url"
+                    placeholder="Enter Image/Video url (If url is not entered it will take default image)"
+                  ></textarea>
+                  <span class="textarea-error" aria-live="assertive" id="anno-media-error">
+                    Media url is not valid
+                  </span>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
+                  <label class="font-caption-alt">
+                    <strong> Body Content (*): </strong>
+                  </label>
+                </div>
+                <div class="announcement-editor col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
+                  <div id="anno-message-editor">
+                  
+                  </div>
+                  <div id="word-count">
+                    <span class="bodytext-textarea-error" role="alert" aria-live="assertive" id="anno-message-error">
+                      Body is required.
+                    </span>
+                    <p class="character-remaining" id="character-remaining-text">
+                    </p>
+                  </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6" id="transcript-announcement-area">
+                  <label class="font-caption-alt">
+                    <strong> Audio Instruction: </strong>
+                  </label>
+                  <div>
+                      <textarea
+                      class="textarea-transcript"
+                      id="transcript-message-for-announcement"
+                      title="Transcript"
+                      aria-label="Transcript"
+                      type="text"
+                      placeholder="Enter transcript user will hear during the step"
+                      maxlength="1000"
+                    ></textarea>
+                    <button class="btn-transcript pagetour-btn--secondary footer-btn"
+                      id="record-announcement-page-btn"
+                      title="Record announcement"
+                      type="button"><i id="record-announcement-page-btn-icon" class="pagetour__icon icon-microphone"></i></button>
+            </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-6">
+                <label class="font-caption-alt" for="cover-location-select">
+                  <strong> Preview </strong>
                 </label>
-                <p class="font-para" id="event-type-info">
-                  Add the transcript to be announced while running the announcement or if you want to generate the transcript click <a href="https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/#features" target="_blank">here</a>
-                </p>
-              </div>
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
-                <textarea
-                class="textarea-transcript"
-                id="transcript-message-for-announcement"
-                title="Transcript"
-                aria-label="Transcript"
-                type="text"
-                placeholder="Enter transcript user will hear during the step"
-                maxlength="1000"
-              ></textarea>
-              <!-- <button class="pagetour-btn--primary footer-btn-big"
-              id="record-announcement-page-btn"
-              title="Record announcement"
-              type="button">Record</button> -->
-              </div>
-            </div>
 
-            <div class="announcement-page-footer-btn">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-left-6">
-                <div class="pull-right">
-                  <button
-                    class="pagetour-btn--secondary footer-btn-big"
-                    id="cancel-announcement-page-btn"
-                    title="Cancel"
-                    type="button"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    class="pagetour-btn--primary footer-btn-big"
-                    id="save-announcement-page-btn"
-                    title="Save announcement Page"
-                    type="button"
-                  >
-                    Save
-                  </button>
+                <div class="announcement-container-preview" id="anno-tourBox">
+                  <div class="announcement-card" id="announcementboxdata" >
+                      <div class="announcement-header" id="announcementheader">
+                          <img id= "imgHeaderContainer" alt="image of the announcement">
+                          <video id="videoHeaderContainer" oncontextmenu="return false;" disablePictureInPicture controls controlsList="nodownload noremoteplayback">
+                              <source id="videoSourceContainer" type="video/mp4">
+                              Your browser does not support the video tag. Please use Edge or chrome
+                          </video>
+                      </div>
+                      <div class="announcement-content"  id="annobodybox">
+                        <h4 id="announcementboxtitle-preview" class="announcement-heading">
+                          
+                        </h4>
+                        <div id="announcementboxdescription" class="anno-text">
+                        
+                        </div>
+                      </div>
+                
+                      <div class="announcement-footer">
+                      </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-          </div>
+            <div class="row footer-row ">
+              <div class="col-lg-12">
+                <div class="announcement-page-footer-btn">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-left-6">
+                    <div class="pull-right">
+                      <button
+                        class="pagetour-btn--secondary footer-btn-big"
+                        id="cancel-announcement-page-btn"
+                        title="Cancel"
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        class="pagetour-btn--primary footer-btn-big"
+                        id="save-announcement-page-btn"
+                        title="Save announcement Page"
+                        type="button"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
         </form>
       </div>
     </div>
