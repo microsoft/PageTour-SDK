@@ -109,13 +109,15 @@ class PageTourPlay {
         let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
         smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
         (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
-        (smartTipPopup.getElementsByClassName("smarttip-dismiss-all")[0] as HTMLButtonElement).addEventListener('click', this.dismissAllSmartTips);
         (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`${objTour.id}_${i}`)});
-
+        (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; });
 
         let div = document.createElement('div');
         div.className = "smart-tip-hint";
         div.id = `smarttip_${objTour.id}_${i}`;
+        var rect = selectedElement.getBoundingClientRect();
+         div.style.top = rect.top.toString() + 'px';
+         div.style.left = (rect.left + rect.width).toString() + 'px';
         div.insertAdjacentHTML('beforeend', this.smartTipFn());
         selectedElement.appendChild(div);
 
@@ -132,10 +134,10 @@ class PageTourPlay {
           switch (element.position) {
             case 'top':
               popperPlacement = 'top'
+              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'column'
               // todo : apply as per the theme color
               arrowDiv.style.borderTopColor = '#0078D4'
               arrowDiv.style.borderLeftColor = 'transparent'
@@ -146,9 +148,9 @@ class PageTourPlay {
             case 'bottom':
               popperPlacement = 'bottom'
               arrowDiv.className = 'arrow-pointer arrow-up'
+              smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
               arrowDiv.style.borderLeftColor = 'transparent'
               arrowDiv.style.borderTopColor = 'transparent'
@@ -157,10 +159,10 @@ class PageTourPlay {
 
             case 'top-start':
               popperPlacement = 'top-start'
+              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'column'
               // todo : apply as per the theme color
               arrowDiv.style.borderTopColor = '#0078D4'
               arrowDiv.style.borderLeftColor = 'transparent'
@@ -170,10 +172,10 @@ class PageTourPlay {
 
             case 'top-end':
               popperPlacement = 'top-end'
+              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
               arrowDiv.style.alignSelf = 'flex-end'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'column'
               // todo : apply as per the theme color
               arrowDiv.style.borderTopColor = '#0078D4'
               arrowDiv.style.borderLeftColor = 'transparent'
@@ -184,10 +186,10 @@ class PageTourPlay {
               
             case 'bottom-start':
               popperPlacement = 'bottom-start'
+              smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'column-reverse'
               // todo : apply as per the theme color
               arrowDiv.style.borderTopColor = 'transparent'
               arrowDiv.style.borderLeftColor = 'transparent'
@@ -197,10 +199,10 @@ class PageTourPlay {
 
             case 'bottom-end':
               popperPlacement = 'bottom-end'
+              smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'flex-end'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'column-reverse'
               // todo : apply as per the theme color
               arrowDiv.style.borderTopColor = 'transparent'
               arrowDiv.style.borderLeftColor = 'transparent'
@@ -211,10 +213,10 @@ class PageTourPlay {
 
             case 'left':
               popperPlacement = 'left'
+              smartTipPopup.style.flexDirection = 'row'
               arrowDiv.className = 'arrow-pointer arrow-right'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'row'
               arrowDiv.style.borderLeftColor = '#0078D4'
               arrowDiv.style.borderRightColor = 'transparent'
               arrowDiv.style.borderTopColor = 'transparent'
@@ -223,10 +225,10 @@ class PageTourPlay {
 
             case 'right':
               popperPlacement = 'right'
+              smartTipPopup.style.flexDirection = 'row-reverse'
               arrowDiv.className = 'arrow-pointer arrow-left'
               arrowDiv.style.alignSelf = 'center'
               arrowDiv.style.margin = '0px 0px'
-              smartTipPopup.style.flexDirection = 'row-reverse'
               arrowDiv.style.borderRightColor = '#0078D4'
               arrowDiv.style.borderLeftColor = 'transparent'
               arrowDiv.style.borderTopColor = 'transparent'
@@ -243,26 +245,6 @@ class PageTourPlay {
         });
       }
     });
-  }
-
-  
-  private async dismissAllSmartTips() {
-    // remove all the tips and popper from the dom.
-    let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
-    availableSmartTips.forEach(node => {
-      node.remove();
-    });
-
-    // record the action for the specific user and store in local storage.
-    try {
-      let response = await this.configStore.Options.userActionProvider.recordUserAction(
-        null,
-        null,
-        null,
-        null,
-      )
-    } catch (err) {}
-    
   }
 
   private async dismissSmartTip(id: string) {
