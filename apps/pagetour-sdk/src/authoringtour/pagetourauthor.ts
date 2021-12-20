@@ -1808,11 +1808,14 @@ class PageTourAuthor {
 
     /// Extracts the content from Step Details Record box and pushes to new step to StepDetials array
     private getTipDetails = () => {
+      let positionSelectElement: HTMLSelectElement = document.getElementById("position-select") as HTMLSelectElement
       let messageForStepElement: HTMLTextAreaElement = document.getElementById('message-for-step') as HTMLTextAreaElement
-  
+      
+      let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
       let message = messageForStepElement.value
       let newStep: any = {}
       newStep.message = message
+      newStep.position = position
       let id = this.lastSelectedElement.getAttribute('id')
       newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
       newStep.selector = ''

@@ -1877,11 +1877,13 @@ $input-text-focus-outline: 1px dotted black;
 
 .smarttip {
   box-sizing: content-box;
-    position: absolute;
-    background: transparent;
-    width: 20px;
-    height: 15px;
-    cursor: pointer;
+  position: fixed;
+  background: transparent;
+  width: 20px;
+  height: 15px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 1000000;
 }
 
 .smarttip-bubble {
@@ -1930,22 +1932,6 @@ $input-text-focus-outline: 1px dotted black;
   transition: all 0.2s ease-out;
 }
 
-.smart-tip-hint .triangle-border.active {
-  display: block;
-}
-
-.triangle-border {
-  width: 300px;
-    left: -230px;
-    top: 26px;
-    display: none;
-    position: absolute;
-    margin: 1em 0 3em;
-    color: white;
-    background-color:#0078D4;
-    text-align: left;
-}
-
 @keyframes smarttippulse {
   0% {
     opacity: 0;
@@ -1964,6 +1950,78 @@ $input-text-focus-outline: 1px dotted black;
   }
 }
 
+.smarttip-container {
+  display: none;
+  flex-direction: column;
+
+  .arrow {
+    width: 0;
+    height: 0;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 16px solid #0078D4;
+  }
+  
+  .smarttip-box-container {
+    max-width: 330px;
+    max-height: 140px;
+    width: 100%;
+    height: 100%;
+    background: #0078D4;
+    color: #fff;
+    border-radius: 2px;
+    position: relative;
+    padding: 18px 24px;
+     
+  .smarttip-content {
+    font-size: 14px;
+    margin: 0;
+    max-height: 100%;
+    height: 60px;
+    overflow: hidden;
+  }
+  
+  .smarttip-footer {
+    float: right;
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    
+    .smarttip-dismiss-all {
+      width: 80px;
+      height: 30px;
+      background: #0078D4;
+      border-radius: 2px;
+      border: 1px solid #ffffff;
+      box-sizing: border-box;
+      color: #ffffff;
+      font-family: 'Segoe UI';
+      font-size: 12px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+    
+    .smarttip-dismiss {
+      width: 75px;
+      height: 30px;
+      background: #ffffff;
+      border: 1px solid #0078D4;
+      color: #0078D4;
+      border-radius: 2px;
+      box-sizing: border-box;
+      font-family: 'Segoe UI';
+      font-size: 12px;
+      line-height: 20px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+  }
+}
+  
+}
 /* Announcement popup section start*/
 div#announcement-page-modal {
   z-index: 999;
