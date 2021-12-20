@@ -113,7 +113,7 @@ $input-text-focus-outline: 1px dotted black;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 20500;
+  z-index: 205000;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -1362,7 +1362,7 @@ $input-text-focus-outline: 1px dotted black;
 
 .step-detail-modal {
   display: block; /* Hidden by default */
-  z-index: 20500 !important; /* Sit on top */
+  z-index: 205000 !important; /* Sit on top */
   margin: 80px auto; /* Location of the box */
   left: 0;
   top: 0;
