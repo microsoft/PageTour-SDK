@@ -1126,7 +1126,10 @@ class PageTourAuthor {
       document.getElementById('anno-media-error').style.display = 'none'
       let mediaDiv = document.getElementById("imgHeaderContainer") as HTMLImageElement;
       // Todo: make this url injection dynamic
-      mediaDiv.src = "https://fxpsit.azureedge.net/perfectfit.jpg";
+      if(this.configStore.Options.announcementDefaultImage)
+        mediaDiv.src = this.configStore.Options.announcementDefaultImage;
+      else
+        mediaDiv.alt = "Default Image not configured"
     }
   }
 
