@@ -125,8 +125,37 @@ class PageTourPlay {
           let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
           toolTipPopper.style.display = "flex";
 
+          let popperPlacement: Placement = 'auto'
+          
+          switch (element.position) {
+            case 'top':
+              popperPlacement = 'top'
+
+            case 'bottom':
+              popperPlacement = 'bottom'
+
+            case 'top-start':
+              popperPlacement = 'top-start'
+            
+            case 'top-end':
+              popperPlacement = 'top-end'
+            
+            case 'left':
+              popperPlacement = 'left'
+            
+            case 'right':
+              popperPlacement = 'right'
+            
+            case 'bottom-start':
+              popperPlacement = 'bottom-start'
+            
+            case 'bottom-end':
+              popperPlacement = 'bottom-end'
+            
+          }
+
           let popperInstance = new Popper(targetDom, toolTipPopper, {
-            placement: 'top-end'
+            placement: popperPlacement
           });
           popperInstance.enableEventListeners();
           popperInstance.scheduleUpdate();
