@@ -1335,7 +1335,7 @@ class PageTourPlay {
         
         pagetourHelperLayer.style.left = (rect.left - 14).toString() + 'px';
         pagetourHelperLayer.style.top = (rect.top - 4).toString() + 'px';
-        pagetourHelperLayer.style.height = (height + 4).toString() + 'px';
+        pagetourHelperLayer.style.height = (height + 8).toString() + 'px';
         pagetourHelperLayer.style.width = (width + 24).toString() + 'px';
         document.getElementById("pagetour-greyLayer").style.display = 'inline'
         document.getElementById("pagetour-elementLayer").style.display = 'inline'
