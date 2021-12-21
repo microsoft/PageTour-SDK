@@ -1405,7 +1405,7 @@ $input-text-focus-outline: 1px dotted black;
 .select-element-modal {
   display: block; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 20000 !important; /* Sit on top */
+  z-index: 200000 !important; /* Sit on top */
   left: 35%;
   top: 30%;
   font-family: 'Segoe UI';
