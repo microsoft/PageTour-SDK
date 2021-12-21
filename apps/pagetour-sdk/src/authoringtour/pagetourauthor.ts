@@ -478,7 +478,7 @@ class PageTourAuthor {
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      let tourType = this.tour.tourtype ? this.tour.tourtype : (document.getElementById('tour-type') as HTMLSelectElement).value;
+      let tourType = (this.tour && this.tour.tourtype) ? this.tour.tourtype : (document.getElementById('tour-type') as HTMLSelectElement).value;
       if(tourType.toLowerCase() == 'announcement') {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         document.getElementById("step-tourtype-header").style.width = '250px'
