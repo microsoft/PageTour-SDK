@@ -75,10 +75,10 @@ class PageTourAuthor {
     document.getElementById('add-tour-modal-cancel-btn').setAttribute('aria-label', 'cancel and close Edit Tour dialog')
     document.getElementById('tour-type').setAttribute('disabled', 'true')
     this.tour = objTour
+    this.tourTypeChanged()
     this.loadTour()
     this.validateTourInputs()
     this.resetIsTourPlaying()
-    this.tourTypeChanged()
   }
 
 
@@ -914,7 +914,7 @@ class PageTourAuthor {
   private unHideChooseElementModal = () => {
     const authoringDeck = document.getElementById('authoringDock')
     authoringDeck.style.display = 'block'
-    authoringDeck.style.zIndex = '20000'
+    authoringDeck.style.zIndex = '200000'
     if (this.lastSelectedElement != null) {
       this.toggleChooseElement(this.chooseState.Chosen, null)
     }

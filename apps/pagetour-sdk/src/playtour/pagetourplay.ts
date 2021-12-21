@@ -661,7 +661,7 @@ class PageTourPlay {
   private setupAnnouncementBox = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.announcementBoxFn())
-    this.tourBox.style.zIndex = '20000'
+    this.tourBox.style.zIndex = '200000'
   }
 
   private executeAction = (tour: Tutorial, action: any, element: HTMLElement, step: number) => {
