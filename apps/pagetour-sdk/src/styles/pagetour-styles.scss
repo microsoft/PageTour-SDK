@@ -1914,13 +1914,13 @@ $input-text-focus-outline: 1px dotted black;
 
 .smarttip-bubble {
   box-sizing: content-box;
-  border: 10px solid rgba(146, 146, 146, 0.36);
+  border: 5px solid #0078d3;
   background: transparent;
-  -webkit-border-radius: 60px;
-  -moz-border-radius: 60px;
-  border-radius: 60px;
-  height: 50px;
-  width: 50px;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
+  border-radius: 40px;
+  height: 40px;
+  width: 40px;
   -webkit-animation: smarttippulse 3s ease-out;
   -moz-animation: smarttippulse 3s ease-out;
   animation: smarttippulse 3s ease-out;
@@ -1928,8 +1928,8 @@ $input-text-focus-outline: 1px dotted black;
   -moz-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
   position: absolute;
-  top: -25px;
-  left: -25px;
+  top: -15px;
+  left: -15px;
   z-index: 1;
   opacity: 0;
 }
@@ -1941,21 +1941,19 @@ $input-text-focus-outline: 1px dotted black;
 }
 
 .smarttip-bubble-out {
-  box-sizing: content-box;
-  width: 10px;
-  height: 10px;
-  border: 5px solid rgba(60, 60, 60, 0.27);
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  border-radius: 30px;
-  background-color: rgba(136, 136, 136, 0.24);
-  z-index: 10;
-  position: absolute;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -ms-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
+  position:relative;
+	padding: 0;
+	background-color: #0078d3;
+	bottom: 0px;
+	margin: 0 auto;
+	width: 20px;
+	height: 20px;		
+	border-radius:0% 100% 100% 100%;
+	-webkit-transform: rotate(45deg);
+  -moz-transition: rotate(45deg);
+  -ms-transition: rotate(45deg);
+  -o-transition: rotate(45deg);
+  transition: rotate(45deg);
 }
 
 @keyframes smarttippulse {
