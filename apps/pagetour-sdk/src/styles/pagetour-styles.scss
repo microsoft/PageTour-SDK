@@ -1985,6 +1985,7 @@ $input-text-focus-outline: 1px dotted black;
       align-self: end;
       color: white;
       cursor: pointer;
+      padding: 3px;
     }
 
   .smarttip-content {
@@ -2353,6 +2354,7 @@ div#announcement-page-modal {
 .announcement-container-preview {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   width: 100%;
   height: 50vh;
