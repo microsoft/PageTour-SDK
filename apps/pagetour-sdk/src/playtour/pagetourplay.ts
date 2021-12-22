@@ -271,8 +271,8 @@ class PageTourPlay {
     this.LaunchAnnouncement(this.tour,action, startInterval, callback, autoPlayTest)(
       objTour,
       action,
-      callback,
       startInterval,
+      callback,
       autoPlayTest,
     );
   }
@@ -310,14 +310,6 @@ class PageTourPlay {
         if (opts.navigator.callbackOnTourStart != null) {
           opts.navigator.callbackOnTourStart(self.tour)
         }
-        let tourEndsWithCoverPage = tour.coverPage && tour.coverPage.location.toLowerCase() === 'end'
-        self.executeNextStep(tour, action, 0, 0, tourEndsWithCoverPage, callback, startInterval)
-        setInterval(() => {
-          self.goToNextStep(StepAction.Next, tour, action, callback, startInterval)
-          if (self.currentStep === self.totalSteps - 1) {
-            clearInterval()
-          }
-        }, startInterval)
       } else {
         setTimeout(() => {
           const opts = self.configStore.Options
@@ -484,7 +476,7 @@ class PageTourPlay {
       let element = document.querySelector(self.getElementSelector(self.currentStep))
       self.cleanupAction(element)
       self.removeTether()
-      if (callback != null) callback()
+      if (callback != null) callback(tour.tourtype)
       if (opts.navigator.callbackAfterTourEnd != null) {
         opts.navigator.callbackAfterTourEnd(self.tour)
       }
@@ -577,7 +569,7 @@ class PageTourPlay {
       let element = document.querySelector(self.getElementSelector(self.currentStep))
       self.cleanupAction(element)
       self.removeTether()
-      if (callback != null) callback()
+      if (callback != null) callback(tour.tourtype)
       if (opts.navigator.callbackAfterTourEnd != null) {
         opts.navigator.callbackAfterTourEnd(self.tour)
       }

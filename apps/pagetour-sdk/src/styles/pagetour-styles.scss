@@ -970,7 +970,6 @@ $input-text-focus-outline: 1px dotted black;
     &__select {
       height: 36px;
       padding: 0 12px;
-      -webkit-appearance: none;
       border: 1px solid black;
 
       &:focus {
@@ -998,18 +997,6 @@ $input-text-focus-outline: 1px dotted black;
       &::-ms-value {
         background: none;
         color: balck;
-      }
-
-      &--icon {
-        font-weight: normal;
-
-        &:after {
-          content: '\e70d';
-          font-family: 'SegoeUI MDL2 Assets';
-          position: absolute;
-          bottom: 8px;
-          right: 32px;
-        }
       }
     }
   }
@@ -1295,18 +1282,7 @@ $input-text-focus-outline: 1px dotted black;
   font-size: 14pt;
   height: 36px;
   padding: 0 12px;
-  -webkit-appearance: none;
   border: 1px solid #000;
-}
-
-.select-box-holder {
-  &::after {
-    content: '\e70d';
-    font-family: 'SegoeUI MDL2 Assets';
-    position: absolute;
-    bottom: 8px;
-    right: 12px;
-  }
 }
 
 .textarea-messagetouser {

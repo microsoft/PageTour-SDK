@@ -69,7 +69,7 @@ class PageTourAuthor {
   /// Edit Tour
   public EditTour = (objTour: any) => {
     this.InitAuthoringDock(objTour.tourtype)
-    document.getElementById('tutorial-modal-title').innerText = 'Edit Tour'
+    document.getElementById('tutorial-modal-title').innerText = 'Edit'
     let addTourDialogCloseBtn = document.getElementById('add-tour-modal-close')
     addTourDialogCloseBtn.setAttribute('aria-label', 'Close Edit Tour dialog')
     document.getElementById('add-tour-modal-cancel-btn').setAttribute('aria-label', 'cancel and close Edit Tour dialog')
@@ -409,14 +409,17 @@ class PageTourAuthor {
         steps: [],
       }
       tour.steps = this.stepList
-      tour.coverPage = {}
       tour.title = (document.getElementById('tour-title') as HTMLTextAreaElement).value
       tour.description = (document.getElementById('tour-description') as HTMLTextAreaElement).value
-      tour.coverPage.location = this.tourCoverPageLocation
-      tour.coverPage.content = this.tourCoverPageContent
-      if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == "announcement")
+      tour.tourtype = (document.getElementById('tour-type') as HTMLSelectElement).value
+      if(tour.tourtype.toLowerCase() == "pagetour") {
+        tour.coverPage = {}
+        tour.coverPage.location = this.tourCoverPageLocation
+        tour.coverPage.content = this.tourCoverPageContent
+      }
+      if(tour.tourtype.toLowerCase() == "announcement")
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
-      else if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == "smarttip")
+      else if(tour.tourtype.toLowerCase() == "smarttip")
         this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0, this.addTourDialog)
       else
         this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
@@ -508,8 +511,15 @@ class PageTourAuthor {
       ;(document.getElementById('save-tour-modal-btn') as HTMLButtonElement).disabled = false
       ;(document.getElementById('preview-tour-step-btn') as HTMLButtonElement).disabled = false
     } else {
-      document.getElementById('save-tour-modal-btn').setAttribute('disabled', 'disabled')
-      document.getElementById('preview-tour-step-btn').setAttribute('disabled', 'disabled')
+      ;document.getElementById('save-tour-modal-btn').setAttribute('disabled', 'disabled')
+      ;document.getElementById('preview-tour-step-btn').setAttribute('disabled', 'disabled')
+    }
+
+    if (this.tourCoverPageLocation || this.stepList.length > 0) {
+      (document.getElementById('tour-type') as HTMLSelectElement).disabled = true
+    }
+    else {
+      (document.getElementById('tour-type') as HTMLSelectElement).disabled = false
     }
     let tourForm = document.getElementById('add-tour-form')
     DomUtils.manageTabbing(tourForm)
@@ -1292,7 +1302,7 @@ class PageTourAuthor {
     // changes made for editing cover page
     let addCoverPageButton = document.getElementById('cover-page-btn')
     addCoverPageButton.innerHTML = '<i class="pagetour__icon icon-pencil icon-inline"></i>Edit Cover Page'
-    addCoverPageButton.title = 'Edit Cover Page'
+    addCoverPageButton.title = 'Edit Cover Page';
 
     this.closeCoverPageModal()
   }
