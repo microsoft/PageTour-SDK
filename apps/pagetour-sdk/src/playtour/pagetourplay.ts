@@ -117,8 +117,8 @@ class PageTourPlay {
         div.className = "smart-tip-hint";
         div.id = `smarttip_${objTour.id}_${i}`;
         var rect = selectedElement.getBoundingClientRect();
-         div.style.top = (rect.top + 10).toString() + 'px';
-         div.style.left = (rect.left + rect.width).toString() + 'px';
+        div.style.top = (rect.top + 10).toString() + 'px';
+        div.style.left = (rect.left + rect.width).toString() + 'px';
         div.insertAdjacentHTML('beforeend', this.smartTipFn());
         selectedElement.appendChild(div);
 
@@ -128,6 +128,9 @@ class PageTourPlay {
 
         div.addEventListener("mouseover", function() {
           const targetDom = document.querySelector(element.selector);
+          Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+            element.style.display = "none"
+          });
           let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
           toolTipPopper.style.display = "flex";
           let popperPlacement = element.position as Placement
@@ -156,8 +159,8 @@ class PageTourPlay {
               break
 
             case 'top-start':
-              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.className = 'arrow-pointer arrow-down'
+              smartTipPopup.style.flexDirection = 'column'
               arrowDiv.style.alignSelf = 'flex-start'
               arrowDiv.style.margin = '0px 0px'
               // todo : apply as per the theme color
@@ -193,6 +196,7 @@ class PageTourPlay {
               break
 
             case 'bottom-end':
+              smartTipPopup.style.flexDirection = 'column-reverse'
               arrowDiv.className = 'arrow-pointer arrow-up'
               arrowDiv.style.alignSelf = 'flex-end'
               arrowDiv.style.margin = '0px 0px'
