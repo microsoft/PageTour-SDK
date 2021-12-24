@@ -42,6 +42,15 @@ class PageTourPlay {
   constructor(private configStore: ConfigStore, private dataStore: DataStore) {
     this.isTourPlaying = false
     this.tourTheme = configStore.Options.theme
+    this.hideSmartTipOnClick();
+  }
+
+  private hideSmartTipOnClick() {
+    window.addEventListener("mouseup", function() {
+      Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+        element.style.display = "none"
+      });
+    });
   }
 
   public playTour = async (tourId: any, action: RunTourAction, startInterval: any, autoPlayTest: boolean = false) => {
@@ -116,9 +125,6 @@ class PageTourPlay {
         let div = document.createElement('div');
         div.className = "smart-tip-hint";
         div.id = `smarttip_${objTour.id}_${i}`;
-        var rect = selectedElement.getBoundingClientRect();
-        div.style.top = (rect.top + 10).toString() + 'px';
-        div.style.left = (rect.left + rect.width).toString() + 'px';
         div.insertAdjacentHTML('beforeend', this.smartTipFn());
         selectedElement.appendChild(div);
 
