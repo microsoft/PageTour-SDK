@@ -42,6 +42,15 @@ class PageTourPlay {
   constructor(private configStore: ConfigStore, private dataStore: DataStore) {
     this.isTourPlaying = false
     this.tourTheme = configStore.Options.theme
+    this.hideSmartTipOnClick();
+  }
+
+  private hideSmartTipOnClick() {
+    window.addEventListener("mouseup", function() {
+      Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+        element.style.display = "none"
+      });
+    });
   }
 
   public playTour = async (tourId: any, action: RunTourAction, startInterval: any, autoPlayTest: boolean = false) => {
