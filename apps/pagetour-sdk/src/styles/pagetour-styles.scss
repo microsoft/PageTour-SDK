@@ -1907,8 +1907,8 @@ $input-text-focus-outline: 1px dotted black;
   -moz-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
   position: absolute;
-  top: -15px;
-  left: -15px;
+  top: -10px;
+  left: -10px;
   z-index: 1;
   opacity: 0;
 }
@@ -1956,6 +1956,7 @@ $input-text-focus-outline: 1px dotted black;
 .smarttip-container {
   display: none;
   flex-direction: column;
+  z-index: 10000;
 
   .arrow {
     width: 0;
@@ -2006,7 +2007,7 @@ $input-text-focus-outline: 1px dotted black;
     align-items: center;
     
     .smarttip-dismiss {
-      width: 50px;
+      width: 60px;
       height: 26px;
       background: #ffffff;
       border: 1px solid #0078D4;
@@ -2187,6 +2188,8 @@ div#announcement-page-modal {
     border-radius: 2px !important;
     transition:0.3s;
     box-shadow: 0 4px 20px 0 rgba(34,68,123,0.2);
+    word-break: break-all;
+    max-width: 576px;
   }
   
   .announcement-header {
@@ -2375,6 +2378,8 @@ div#announcement-page-modal {
     border-radius: 2px !important;
     transition:0.3s;
     box-shadow: 0 0px 30px 18px rgba(34,68,123,0.2);
+    word-break: break-all;
+    max-width: 576px;
 
     .announcement-header {
       margin: 0;

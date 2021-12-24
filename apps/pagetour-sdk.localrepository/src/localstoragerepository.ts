@@ -140,7 +140,6 @@ class LocalStorageRepository implements IPagetourRepository {
         });     
     }
 
-
     private setItem(key: string, value: any): Boolean {
         try {
             localStorage.setItem(key, value);
