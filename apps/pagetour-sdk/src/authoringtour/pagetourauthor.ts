@@ -322,7 +322,7 @@ class PageTourAuthor {
 
   private tourTypeChanged = () => {
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
-    let autoPlayCheckbox = document.getElementById("isAutoPlayEnabled") as HTMLInputElement
+    let autoPlayCheckbox = document.getElementById("isAutoPlayEnabled") as HTMLInputElement;
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
     if(tourtype.toLowerCase() == "announcement"){
       document.getElementById("add-announcement-btn").style.display = 'inline'

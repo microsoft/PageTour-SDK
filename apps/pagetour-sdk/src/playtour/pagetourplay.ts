@@ -128,6 +128,11 @@ class PageTourPlay {
         div.insertAdjacentHTML('beforeend', this.smartTipFn());
         selectedElement.appendChild(div);
 
+        let smartTipPopperInstance = new Popper(selectedElement, div, {
+          placement: element.position as Placement,
+        });
+        smartTipPopperInstance.update();
+
         let arrowDiv = document.createElement('div');
         arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
         smartTipPopup.appendChild(arrowDiv);
@@ -244,6 +249,12 @@ class PageTourPlay {
           popperInstance.enableEventListeners();
           popperInstance.scheduleUpdate();
         });
+
+        window.addEventListener("mouseup", function() {
+          Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+            element.style.display = "none"
+          });
+        });
       }
     });
   }
@@ -273,10 +284,10 @@ class PageTourPlay {
     callback: any = null,
     autoPlayTest: boolean = false,
   ) => {
-    // if (this.isTourPlaying) {
-    //   return
-    // }
-    // this.isTourPlaying = true
+    if (this.isTourPlaying) {
+      return
+    }
+    this.isTourPlaying = true
     this.tour = objTour
     this.LaunchAnnouncement(this.tour,action, startInterval, callback, autoPlayTest)(
       objTour,
@@ -535,7 +546,6 @@ class PageTourPlay {
   ) => {
     const self = this
     const opts = self.configStore.Options
-    // self.ApplyTheme(self.currentStep)
     if (stepAction === StepAction.Next) {
       const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
       nextButton.classList.add('loadingNextStep')
@@ -545,12 +555,9 @@ class PageTourPlay {
         self.isTourPlaying = false
       }
 
-      // let element = document.querySelector(self.getElementSelector(self.currentStep))
-      // let stepType = self.tour.steps[self.currentStep].type
-      // self.executeAction(tour, stepType, element, self.currentStep)
       if (self.currentStep === self.totalSteps - 1) {
         self.removeTether()
-        // if (callback != null) callback()
+        if (callback != null) callback(tour.tourtype)
 
         if (self.currentStep === this.totalSteps - 1) {
           if (opts.navigator.callbackAfterTourEnd != null) {
@@ -922,7 +929,6 @@ class PageTourPlay {
             videoSourceContainer.src = this.tour.steps[stepCount].mediaUrl;
             videoHeaderContainer.style.display ='block'
             videoHeaderContainer.load();
-            videoHeaderContainer.play();
             imgHeaderContainer.style.display = 'none'
           }
         }

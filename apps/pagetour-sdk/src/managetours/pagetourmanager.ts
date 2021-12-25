@@ -612,7 +612,7 @@ class PageTourManager {
       let title = this.getTextElement('title', tour)
       let tourtype = null;
       if(!tour.tourtype || tour.tourtype == '')
-        tour.tourtype = "pagetour";
+        tour.tourtype = "Pagetour";
       tourtype = this.getTextElement('tourtype', tour)
       let author=null;
       if(tour.lastmodifiedby!=null&&tour.lastmodifiedby!='')
