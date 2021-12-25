@@ -11,10 +11,6 @@
   }
 }
 
-div#cover-page-modal {
-  z-index: 999;
-}
-
 .font-body {
   font-family: 'Segoe UI';
   font-weight: 400;
@@ -1898,8 +1894,8 @@ $input-text-focus-outline: 1px dotted black;
   -webkit-border-radius: 40px;
   -moz-border-radius: 40px;
   border-radius: 40px;
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
   -webkit-animation: smarttippulse 3s ease-out;
   -moz-animation: smarttippulse 3s ease-out;
   animation: smarttippulse 3s ease-out;
@@ -1956,7 +1952,6 @@ $input-text-focus-outline: 1px dotted black;
 .smarttip-container {
   display: none;
   flex-direction: column;
-  z-index: 10000;
 
   .arrow {
     width: 0;
@@ -2025,10 +2020,6 @@ $input-text-focus-outline: 1px dotted black;
   
 }
 /* Announcement popup section start*/
-div#announcement-page-modal {
-  z-index: 999;
-}
-
 .announcement-page-dialog {
     display: block;
     z-index: 10100 !important;

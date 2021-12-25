@@ -66,6 +66,7 @@ class ConfigStore {
       excludedTags: [],
       tagHelpText: "Enter the tag values"
     },
+    zIndex: "100000"
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)

@@ -19,7 +19,8 @@ interface PageTourOptions {
   userActionProvider?: UserActionProvider
   isCoverPageTourStart?:Boolean
   announcementDefaultImage?: string,
-  enableTranscript?: boolean
+  enableTranscript?: boolean,
+  zIndex?: string
 }
 
 export { PageTourOptions }
