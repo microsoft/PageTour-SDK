@@ -20,7 +20,8 @@ interface PageTourOptions {
   isCoverPageTourStart?:Boolean
   announcementDefaultImage?: string,
   enableTranscript?: boolean,
-  zIndex?: string
+  zIndex?: string, 
+  textAreaCharacterLength?: number
 }
 
 export { PageTourOptions }
