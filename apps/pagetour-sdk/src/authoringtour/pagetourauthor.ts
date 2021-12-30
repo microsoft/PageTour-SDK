@@ -1152,9 +1152,14 @@ class PageTourAuthor {
     .then((editor: any) => {
       this.ckEditor = editor;
       this.checkCharacterLength($(editor.getData()).text().length);
-      editor.model.document.on('change:data', (evt : any, data : any) => {
+
+      editor.model.document.on('change:data', () => {
         document.getElementById("announcementboxdescription").innerHTML = editor.getData();
-        this.checkCharacterLength($(editor.getData()).text().length, evt);
+        this.checkCharacterLength($(editor.getData()).text().length);
+      });
+
+      editor.editing.view.document.on('keydown', (event: any, data: any) => {
+        this.checkKeyboardBlocking($(editor.getData()).text().length, event, data);
       });
     })
     .catch((error:any) => {
@@ -1162,15 +1167,18 @@ class PageTourAuthor {
     });
   }
 
-  private checkCharacterLength(currentCharacterLength: number, event: any = null) {
-    // Todo: make this value configurable
-    let maxCharacterLength = 500;
-    if(currentCharacterLength >= maxCharacterLength) {
-      // event.preventDefault();
-    }
+  private checkCharacterLength(currentCharacterLength: number) {
+    let maxCharacterLength = this.configStore.Options.textAreaCharacterLength;
     const remaining = maxCharacterLength - currentCharacterLength;
     (document.getElementById("character-remaining-text")).textContent = `${remaining} characters remaining`
-    
+  }
+
+  private checkKeyboardBlocking(currentCharacterLength: number, event: any, data: any) {
+    let maxCharacterLength = this.configStore.Options.textAreaCharacterLength;
+    if(currentCharacterLength >= maxCharacterLength) {
+      data.preventDefault();
+      event.stop();
+    }
   }
 
   private setDefaultImage() {
@@ -1178,8 +1186,8 @@ class PageTourAuthor {
     if(mediaUrl.value == "") {
       document.getElementById('anno-media-error').style.display = 'none'
       let mediaDiv = document.getElementById("imgHeaderContainer") as HTMLImageElement;
-      // Todo: make this url injection dynamic
-      if(this.configStore.Options.announcementDefaultImage)
+    // Todo: make this url injection dynamic
+      if(this.configStore !== null && this.configStore.Options.announcementDefaultImage)
         mediaDiv.src = this.configStore.Options.announcementDefaultImage;
       else
         mediaDiv.alt = "Default Image not configured"
