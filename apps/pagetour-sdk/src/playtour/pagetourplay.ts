@@ -114,6 +114,7 @@ class PageTourPlay {
     objTour.steps.forEach((element,i) => {
       let selectedElement = document.querySelector(element.selector) as HTMLElement;
       let smartTipElement = document.getElementById(`smarttip_${objTour.id}_${i}`);
+      let zIndex = this.configStore.Options.zIndex;
       if(selectedElement && !selectedElement.getAttribute('disabled') && !smartTipElement)
       {
         let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
@@ -125,6 +126,7 @@ class PageTourPlay {
         let div = document.createElement('div');
         div.className = "smart-tip-hint";
         div.id = `smarttip_${objTour.id}_${i}`;
+        div.style.zIndex = zIndex;
         div.insertAdjacentHTML('beforeend', this.smartTipFn());
         selectedElement.appendChild(div);
 
@@ -144,6 +146,7 @@ class PageTourPlay {
           });
           let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
           toolTipPopper.style.display = "flex";
+          toolTipPopper.style.zIndex = zIndex;
           let popperPlacement = element.position as Placement
           switch (element.position) {
             case 'top':
@@ -248,12 +251,6 @@ class PageTourPlay {
           });
           popperInstance.enableEventListeners();
           popperInstance.scheduleUpdate();
-        });
-
-        window.addEventListener("mouseup", function() {
-          Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
-            element.style.display = "none"
-          });
         });
       }
     });
