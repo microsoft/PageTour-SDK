@@ -997,11 +997,11 @@ class PageTourManager {
   /// Edits the Tour
 
   private openDeletePopup = async (tourId: any) => {
-    await this.openPopup(tourId, 'Delete', 'Do you want to delete this tour', 'Delete', 'Cancel')
+    await this.openPopup(tourId, 'Delete', 'Do you want to delete this tour?', 'Delete', 'Cancel')
   }
 
   private openExportPopup = async (tourId: any) => {
-    await this.openPopup(tourId, 'Export', 'Do you want to export this tour', 'Export', 'Cancel')
+    await this.openPopup(tourId, 'Export', 'Do you want to export this tour?', 'Export', 'Cancel')
   }
 
   /// Deletes Tour
@@ -1067,12 +1067,11 @@ class PageTourManager {
   }
 
   private isExportAvaialable = async (): Promise<Boolean> => {
-    if (this.isExportEnabled == undefined || this.isExportEnabled == null) {
+    if (this.isExportEnabled == undefined || this.isExportEnabled == null || this.isExportEnabled == false) {
       this.isAuthorizedToExportTour = await this.authorizationService.isAuthorizedToExportTour()
       this.isExportEnabled =
         this.isAuthorizedToExportTour &&
-        this.configStore.Options.exportFeatureFlag &&
-        (await this.dataStore.isExportTourImplemented())
+        this.configStore.Options.exportFeatureFlag
     }
     return this.isExportEnabled
   }

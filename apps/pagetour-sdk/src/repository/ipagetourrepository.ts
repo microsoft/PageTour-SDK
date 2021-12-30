@@ -46,7 +46,7 @@ interface IPagetourRepository {
    * @param tutorial
    * @returns Exported tutorial object
    */
-  ExportTour?(tutorial: any, token: string): Promise<Tutorial>
+  ExportTour?(tutorial: any, token: string): Promise<boolean>
 
   InitializeRepository(repositoryConfiguration?: IRepositoryConfiguration): void
 }

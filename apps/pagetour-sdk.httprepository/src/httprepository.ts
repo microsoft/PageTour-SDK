@@ -66,14 +66,11 @@ class HttpRepository implements IPagetourRepository {
         return this.httpRequest<Boolean>(url, this.deleteRequest, token, null);
     }
 
-    ExportTour(tutorial:any, token:string):Promise<Tutorial>{
-        return new Promise<Tutorial>((resolve, reject)=>{
-            if(this.exportEndPoint!=null){
-                let url = this.getRequestUrl(this.baseUrl, this.exportEndPoint);
-                resolve(this.httpRequest(url, this.postRequest, token, tutorial));
-            }
-            reject();
-        })
+    ExportTour(tutorial:any, token:string):Promise<boolean>{
+        if(this.exportEndPoint!=null){
+            let url = this.getRequestUrl(this.baseUrl, this.exportEndPoint);
+            return this.httpRequest<boolean>(url, this.postRequest, token, tutorial);
+        }
     }
 
     private getRequestUrl(baseUrl: string, endPoint: string) {
