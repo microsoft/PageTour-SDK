@@ -127,6 +127,11 @@ class PageTourPlay {
         div.className = "smart-tip-hint";
         div.id = `smarttip_${objTour.id}_${i}`;
         div.style.zIndex = zIndex;
+        //div.style.top = '-15px';
+        //var rect = selectedElement.getBoundingClientRect();
+        //div.style.left = (rect.width + 40).toString() + "px";
+        //div.style.left = "40px";
+        //div.style.position = 'relative';
         div.insertAdjacentHTML('beforeend', this.smartTipFn());
         selectedElement.appendChild(div);
 

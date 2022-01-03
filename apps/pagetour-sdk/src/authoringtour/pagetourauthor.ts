@@ -47,11 +47,18 @@ class PageTourAuthor {
 
   private createAnnouncementTemplateFn: any = createAnnouncementModalTemplate
 
+  private recognition: any;
+  private hasUserStoppedRecording: boolean = false;
+
   // Debounce Functions
   private bodyMouseMoveFunction: any
 
   constructor(private pageTourPlay: PageTourPlay, private configStore: ConfigStore, private dataStore: DataStore) {
     this.bodyMouseMoveFunction = debounce(this.onBodyMouseMove, 50)
+    // new speech recognition object
+    const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
+    //var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    this.recognition = new webkitSpeechRecognition();
   }
 
   public InitAuthoringDock = (tourType : string) => {
@@ -1129,6 +1136,7 @@ class PageTourAuthor {
     closeBtn.onclick = this.closeAnnouncementPageModal
     
     document.getElementById('record-announcement-page-btn').onclick = this.recordAnnouncement
+    document.getElementById('stop-record-announcement-page-btn').onclick = this.stopAnnouncementRecording
 
     document.getElementById('input-announcement-header-text').onkeyup = this.announcementHeaderChange
     document.getElementById('input-announcement-image-video').onkeyup = this.livePreviewMediaHeader
@@ -1368,40 +1376,58 @@ class PageTourAuthor {
     this.GenerateTranscript('announcement');
   }
 
+  private stopAnnouncementRecording = () => {
+    this.StopTranscriptGeneration('announcement')
+  }
+
+  private stopTourRecording = () => {
+    this.StopTranscriptGeneration('step')
+  }
+
   private recordTutorial = () => {
     this.GenerateTranscript('step');
   }
 
+  private StopTranscriptGeneration(type: string) {
+    let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
+    let stopTranscriptBtnIcon = document.getElementById('stop-record-' + type + '-page-btn') as HTMLButtonElement;
+    this.recognition.stop();
+    this.hasUserStoppedRecording = true;
+    transcriptBtnIcon.style.display = 'inline';
+    stopTranscriptBtnIcon.style.display = 'none';
+  }
+
   private GenerateTranscript(type: string) {
-    // new speech recognition object
-    const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
-    //var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-    let recognition = new webkitSpeechRecognition();
+    let self = this;
     let transcriptDiv = document.getElementById('transcript-message-for-'+ type) as HTMLTextAreaElement;
     let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
-                
+    let stopTranscriptBtnIcon = document.getElementById('stop-record-' + type + '-page-btn') as HTMLButtonElement;
+          
     // This runs when the speech recognition service starts
-    recognition.onstart = function() {
-      transcriptBtnIcon.disabled = true
-        
+    self.recognition.onstart = function() {
+      transcriptBtnIcon.style.display = 'none'
+      stopTranscriptBtnIcon.style.display = 'inline';     
+      self.hasUserStoppedRecording = false;
     };
 
-    recognition.onspeechend = function() {
+    self.recognition.onend = function() {
         // when user is done speaking
-        recognition.stop();
-        transcriptBtnIcon.disabled = false
+        if(!self.hasUserStoppedRecording)
+          self.recognition.start();
+        else
+        self.recognition.stop();
     }
                   
     // This runs when the speech recognition service returns result
-    recognition.onresult = function(event: any) {
+    self.recognition.onresult = function(event: any) {
       if(transcriptDiv.value)
         transcriptDiv.value += event.results[0][0].transcript;
       else
-      transcriptDiv.value = event.results[0][0].transcript;
+        transcriptDiv.value = event.results[0][0].transcript;
     };
                   
     // start recognition
-    recognition.start();
+    self.recognition.start();
   }
   private getAnnouncementPageDetails = () => {
     let headerElement = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
@@ -1467,6 +1493,9 @@ class PageTourAuthor {
 
       let stepAudioContent = document.getElementById('record-step-page-btn')
       stepAudioContent.onclick = this.recordTutorial
+
+      let stopRecording = document.getElementById('stop-record-step-page-btn')
+      stopRecording.onclick = this.stopTourRecording
 
       let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
       let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
