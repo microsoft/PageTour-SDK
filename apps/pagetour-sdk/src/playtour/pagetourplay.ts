@@ -123,29 +123,19 @@ class PageTourPlay {
         (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`${objTour.id}_${i}`); if (callback != null) callback(objTour.tourtype)});
         (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
 
-        let div = document.createElement('div');
-        div.className = "smart-tip-hint";
-        div.id = `smarttip_${objTour.id}_${i}`;
-        div.style.zIndex = zIndex;
-        //div.style.top = '-15px';
-        //var rect = selectedElement.getBoundingClientRect();
-        //div.style.left = (rect.width + 40).toString() + "px";
-        //div.style.left = "40px";
-        //div.style.position = 'relative';
-        div.insertAdjacentHTML('beforeend', this.smartTipFn());
-        selectedElement.appendChild(div);
+        let smartTip = DomUtils.appendToBody(this.smartTipFn());
+        smartTip.id = `smarttip_${objTour.id}_${i}`;
 
-        let smartTipPopperInstance = new Popper(selectedElement, div, {
+        let smartTipInstance = new Popper(selectedElement, smartTip, {
           placement: element.position as Placement,
         });
-        smartTipPopperInstance.update();
+        smartTipInstance.update();
 
         let arrowDiv = document.createElement('div');
         arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
         smartTipPopup.appendChild(arrowDiv);
 
-        div.addEventListener("mouseover", function() {
-          const targetDom = document.querySelector(element.selector);
+        smartTip.addEventListener("mouseover", function() {
           Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
             element.style.display = "none"
           });
@@ -251,7 +241,7 @@ class PageTourPlay {
 
           }
 
-          let popperInstance = new Popper(targetDom, toolTipPopper, {
+          let popperInstance = new Popper(selectedElement, toolTipPopper, {
             placement: popperPlacement
           });
           popperInstance.enableEventListeners();
