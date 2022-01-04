@@ -1870,28 +1870,60 @@ $input-text-focus-outline: 1px dotted black;
   font-size: 14px;
 }
 
-
-.smarttip-bubble {
-  box-sizing: content-box;
-  border: 5px solid #0078d3;
-  background: transparent;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  border-radius: 25px;
-  height: 25px;
-  width: 25px;
-  -webkit-animation: smarttippulse 3s ease-out;
-  -moz-animation: smarttippulse 3s ease-out;
-  animation: smarttippulse 3s ease-out;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+.smart-tip {
+	background-color: rgba(11, 112, 245, 0.7);
+	border-radius: 50%;
+	animation: pulse-red 2s infinite;
+	height: 17px;
+	width: 17px;
   position: absolute;
+  box-sizing: content-box;
   top: -10px;
   left: -10px;
-  z-index: 1;
-  opacity: 0;
+
 }
+
+@keyframes pulse-red {
+	0% {
+		transform: scale(0.9);
+		box-shadow: 0 0 0 0 rgba(11, 112, 245, 0.7);
+	}
+	
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+	}
+	
+	100% {
+		transform: scale(0.9);
+		box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+	}
+}
+
+
+
+
+// .smarttip-bubble {
+//   box-sizing: content-box;
+//   border: 5px solid #0078d3;
+//   background: transparent;
+//   -webkit-border-radius: 15px;
+//   -moz-border-radius: 15px;
+//   border-radius: 15px;
+//   height: 15px;
+//   width: 15px;
+//   -webkit-animation: smarttippulse 3s ease-out;
+//   -moz-animation: smarttippulse 3s ease-out;
+//   animation: smarttippulse 3s ease-out;
+//   -webkit-animation-iteration-count: infinite;
+//   -moz-animation-iteration-count: infinite;
+//   animation-iteration-count: infinite;
+//   position: absolute;
+//   top: -10px;
+//   left: -10px;
+//   z-index: 1;
+//   opacity: 0;
+// }
 
 .tutorial-bubble {
   outline: solid 5px #0078d1;
