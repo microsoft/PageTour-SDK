@@ -125,6 +125,7 @@ class PageTourPlay {
 
         let smartTip = DomUtils.appendToBody(this.smartTipFn());
         smartTip.id = `smarttip_${objTour.id}_${i}`;
+        smartTip.style.zIndex = zIndex;
 
         let smartTipInstance = new Popper(selectedElement, smartTip, {
           placement: element.position as Placement,
