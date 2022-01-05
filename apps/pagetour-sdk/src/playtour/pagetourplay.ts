@@ -128,6 +128,7 @@ class PageTourPlay {
         let smartTip = DomUtils.appendToBody(this.smartTipFn());
         smartTip.id = `smarttip_${objTour.id}_${i}`;
         smartTip.style.zIndex = zIndex;
+        selectedElement.insertAdjacentElement('afterend', smartTip);
         let smartTipInstance = new Popper(selectedElement, smartTip, {
           placement: element.position as Placement,
         });
@@ -169,56 +170,6 @@ class PageTourPlay {
               arrowDiv.style.borderRightColor = 'transparent'
               break
 
-            case 'top-start':
-              arrowDiv.className = 'arrow-pointer arrow-down'
-              smartTipPopup.style.flexDirection = 'column'
-              arrowDiv.style.alignSelf = 'flex-start'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = '#0078D4'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = 'transparent'
-              break
-
-            case 'top-end':
-              smartTipPopup.style.flexDirection = 'column'
-              arrowDiv.className = 'arrow-pointer arrow-down'
-              arrowDiv.style.alignSelf = 'flex-end'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = '#0078D4'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = 'transparent'
-              break
-
-              
-            case 'bottom-start':
-              smartTipPopup.style.flexDirection = 'column-reverse'
-              arrowDiv.className = 'arrow-pointer arrow-up'
-              arrowDiv.style.alignSelf = 'flex-start'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = 'transparent'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = '#0078D4'
-              break
-
-            case 'bottom-end':
-              smartTipPopup.style.flexDirection = 'column-reverse'
-              arrowDiv.className = 'arrow-pointer arrow-up'
-              arrowDiv.style.alignSelf = 'flex-end'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = 'transparent'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = '#0078D4'
-              break
-
-
             case 'left':
               smartTipPopup.style.flexDirection = 'row'
               arrowDiv.className = 'arrow-pointer arrow-right'
@@ -243,7 +194,7 @@ class PageTourPlay {
 
           }
 
-          let popperInstance = new Popper(selectedElement, toolTipPopper, {
+          let popperInstance = new Popper(smartTip, toolTipPopper, {
             placement: popperPlacement
           });
           popperInstance.enableEventListeners();
