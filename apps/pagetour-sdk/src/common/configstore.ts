@@ -15,8 +15,7 @@ class ConfigStore {
       secondaryColor: '#fdfdfd',
       textColor: '#252423',
       navigationButtonColor: '#0063b1',
-      isRounded: false,
-      enableGrayScreen: false
+      isRounded: false
     },
     navigator: {
       navigateToContext: (context: PageContext) => {

@@ -689,8 +689,8 @@ $input-text-focus-outline: 1px dotted black;
       font-size: larger;
     }
     &.icon-microphoneListening:before {
-      content: '\E725';
-      color: #0078d1;
+      content: '\E7C8';
+      color: red;
       font-size: larger;
     }
 
@@ -743,6 +743,16 @@ $input-text-focus-outline: 1px dotted black;
 
     &.close-button-icon:before {
       content: '\E10A';
+    }
+
+    &.icon-audio:before {
+      content: '\E767';
+      color: #0078d1;
+    }
+
+    &.icon-audio-mute:before {
+      content: '\E992';
+      color: #0078d1;
     }
   }
 
@@ -1256,6 +1266,11 @@ $input-text-focus-outline: 1px dotted black;
   background-color: transparent;
   font-weight: 600;
   width: 5%;
+}
+
+.btn-audio {
+  background-color: transparent;
+  border: transparent;
 }
 
 /* The Close Button */

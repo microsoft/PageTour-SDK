@@ -13,6 +13,7 @@ import { PageContext } from '../models/pagecontext'
 import { Step } from '../models/step'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
+import { TourTypeEnum } from '../models/tourtypeenum'
 
 declare const $: any
 class PageTourPlay {
@@ -58,14 +59,15 @@ class PageTourPlay {
       const tour = await this.dataStore.GetTourById(tourId)
       this.autoPlayTest = autoPlayTest
 
-      switch(tour.tourtype.toLowerCase()){ 
-        case "announcement":
+      switch(tour.tourtype){ 
+        case  TourTypeEnum.Announcement:
           this.runAnnouncement(tour, action, startInterval, null, autoPlayTest)
           break;
-        case "smarttip":
+        case TourTypeEnum.Beacon:
           this.runSmartTip(tour, action, startInterval, null, autoPlayTest)
           break;
-        case "pagetour":
+        case TourTypeEnum.PageTour:
+        case TourTypeEnum.InteractiveGuide:
         case "default":
           this.runTour(tour, action, startInterval, null, autoPlayTest)
           break;
@@ -126,7 +128,6 @@ class PageTourPlay {
         let smartTip = DomUtils.appendToBody(this.smartTipFn());
         smartTip.id = `smarttip_${objTour.id}_${i}`;
         smartTip.style.zIndex = zIndex;
-
         let smartTipInstance = new Popper(selectedElement, smartTip, {
           placement: element.position as Placement,
         });
@@ -353,6 +354,28 @@ class PageTourPlay {
               self.goToAnnouncementNextStep(StepAction.Exit, tour, action, callback, startInterval)
             })
           }
+
+          const audioMuteButton: HTMLButtonElement = document.querySelector('#announcement-audio')
+          if (audioMuteButton) {
+            audioMuteButton.addEventListener('click', () => {
+              document.getElementById('announcement-audio-stop').style.display = 'inline'
+              document.getElementById('announcement-audio').style.display = 'none'
+              if (opts.navigator.callbackOnVolumeMute != null) {
+                opts.navigator.callbackOnVolumeMute()
+              }
+            })
+          }
+
+          const audioUnMuteButton: HTMLButtonElement = document.querySelector('#announcement-audio-stop')
+          if (audioUnMuteButton) {
+            audioUnMuteButton.addEventListener('click', () => {
+              document.getElementById('announcement-audio-stop').style.display = 'none'
+              document.getElementById('announcement-audio').style.display = 'inline'
+              if (opts.navigator.callbackOnVolumeUnmute != null) {
+                opts.navigator.callbackOnVolumeUnmute(self.tour.steps[self.currentStep].transcript)
+              }
+            })
+          }
         }, startInterval)
       }
     }
@@ -432,6 +455,28 @@ class PageTourPlay {
           if (exitButton) {
             exitButton.addEventListener('click', () => {
               self.goToNextStep(StepAction.Exit, tour, action, callback, startInterval)
+            })
+          }
+
+          const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio')
+          if (audioMuteButton) {
+            audioMuteButton.addEventListener('click', () => {
+              document.getElementById('pagetour-audio-stop').style.display = 'inline'
+              document.getElementById('pagetour-audio').style.display = 'none'
+              if (opts.navigator.callbackOnVolumeMute != null) {
+                opts.navigator.callbackOnVolumeMute()
+              }
+            })
+          }
+
+          const audioUnMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop')
+          if (audioUnMuteButton) {
+            audioUnMuteButton.addEventListener('click', () => {
+              document.getElementById('pagetour-audio-stop').style.display = 'none'
+              document.getElementById('pagetour-audio').style.display = 'inline'
+              if (opts.navigator.callbackOnVolumeUnmute != null) {
+                opts.navigator.callbackOnVolumeUnmute(self.tour.steps[self.currentStep].transcript)
+              }
             })
           }
         }, startInterval)
@@ -751,11 +796,15 @@ class PageTourPlay {
     if (this.isValidElement(element)) {
       const previoustButton: HTMLButtonElement = document.querySelector('#pagetour-previous-step')
       const nextButton: HTMLButtonElement = document.querySelector('#pagetour-next-step')
+      const audioButton: HTMLButtonElement = document.querySelector('#pagetour-audio')
+      const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop')
 
       previoustButton.hidden = false
       previoustButton.disabled = false
       nextButton.hidden = false
       nextButton.disabled = false
+      audioButton.style.display = tour.steps[stepCount].transcript === '' ? 'none': 'inline'
+      audioMuteButton.style.display = 'none'
       if (stepCount === 0) {
         // First step with element.
         if (action === RunTourAction.Play && (!opts.isCoverPageTourStart || !tour.coverPage ||tour.coverPage==null || tour.coverPage.location.toLowerCase() != 'start')) {
@@ -794,7 +843,7 @@ class PageTourPlay {
         stepDescriptionElement.innerText = stepDescription
 
         this.tether = this.getTetherObject(stepCount, elementSelector)
-        this.addTourOutline(element)
+        this.addTourOutline(element, tour.tourtype)
         this.scrollIntoView(element)
         this.ApplyTheme(stepCount)
         this.srSpeak(`${this.tour.title} dialog`, 'assertive', 'dialog')
@@ -871,11 +920,16 @@ class PageTourPlay {
       const previoustButton: HTMLButtonElement = document.querySelector('#anno-previous-step')
       const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
       const annoCounter: HTMLButtonElement = document.querySelector('#annoboxcounter')
+      const audioButton: HTMLButtonElement = document.querySelector('#announcement-audio')
+      const audioMuteButton: HTMLButtonElement = document.querySelector('#announcement-audio-stop')
+
 
       previoustButton.hidden = false
       previoustButton.disabled = false
       nextButton.hidden = false
       nextButton.disabled = false
+      audioButton.style.display = tour.steps[stepCount].transcript === '' ? 'none': 'inline'
+      audioMuteButton.style.display = 'none'
       if (stepCount === 0) {
         // First step with element.
         if (action === RunTourAction.Play) {
@@ -883,7 +937,7 @@ class PageTourPlay {
         }
         previoustButton.hidden = true
         previoustButton.disabled = true
-        annoCounter.style.width = '78%'
+        annoCounter.parentElement.style.width = '78%'
       }
       if (opts.navigator.callbackBeforeTourStep != null) {
         opts.navigator.callbackBeforeTourStep(this.tour)
@@ -892,7 +946,7 @@ class PageTourPlay {
         // nextButton.hidden = true
         // nextButton.disabled = true
         nextButton.innerText = "Let's go!"
-        annoCounter.style.width = '78%'
+        annoCounter.parentElement.style.width = '78%'
       }
         nextButton.classList.remove('loadingNextStep')
         previoustButton.classList.remove('loadingNextStep')
@@ -1136,13 +1190,9 @@ class PageTourPlay {
 
   private ApplyAnnouncementTheme(stepCount: number) {
     let tourBoxElement = document.getElementById('anno-tourBox')
-    // let annoClosebtn = document.getElementById('playtourBoxCloseIcon')
-    //let ptnavigationdiv = document.getElementById('annonavigationdiv')
     let previousIcon = document.getElementById('anno-previous-step')
     let nextIcon = document.getElementById('anno-next-step')
     let tourboxdata = document.getElementById('announcementboxdata')
-    // let annoboxHeaderdata = document.getElementById('announcementheader')
-    // let annoboxBodydata = document.getElementById('annobodybox')
 
     if (this.tourTheme.isRounded) {
       tourboxdata.style.borderRadius = this.tourTheme.borderRadius ? `${this.tourTheme.borderRadius}px` : '10px'
@@ -1159,10 +1209,6 @@ class PageTourPlay {
     tourboxdata.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily
     tourBoxElement.style.borderColor = this.tourTheme.primaryColor
     tourBoxElement.style.borderLeftWidth = '3px'
-    // annoboxHeaderdata.style.background = this.tourTheme.primaryColor
-    // annoboxHeaderdata.style.color = this.tourTheme.secondaryColor
-    // annoboxBodydata.style.background = this.tourTheme.secondaryColor
-    // annoClosebtn.style.color = this.tourTheme.secondaryColor
   }
 
   private getBorderWidthCSSString(top: number, right: number, bottom: number, left: number) {
@@ -1296,9 +1342,9 @@ class PageTourPlay {
     }
   }
 
-  private addTourOutline = (element: HTMLElement) => {
+  private addTourOutline = (element: HTMLElement, tourType: string) => {
     if (element && !element.getAttribute('disabled')) {
-      if(!this.configStore.Options.theme.enableGrayScreen)
+      if(tourType.toLocaleLowerCase() === TourTypeEnum.InteractiveGuide.toLowerCase())
       {
           this.datastore['pagetour_lastoutline'] = element.style.outline;
           //element.className += " tutorial-bubble";
