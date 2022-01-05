@@ -2,7 +2,7 @@ enum TourTypeEnum {
     PageTour = 'Pagetour',
     InteractiveGuide = 'InteractiveGuide',
     Announcement = 'Announcement',
-    Beacon = 'Beacon'
+    Beacon = 'SmartTip'
   }
   
   export { TourTypeEnum }

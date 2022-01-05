@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
       tags: {
         tagHelpText: 'This is from sample app'
       },
-      enableBeacon: false
+      enableBeacon: true
 
     });
   }

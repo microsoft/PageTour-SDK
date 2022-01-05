@@ -741,7 +741,6 @@ class PageTourManager {
         break
       case 'tourtype':
         let tourTypeIcon = document.createElement('i');
-        tourTypeIcon.setAttribute('class', "pagetour__icon icon-tourtype-" + tour.tourtype)
         msgElement.appendChild(tourTypeIcon)
         msgElement.appendChild(document.createTextNode(tour.tourtype))
         msgElement.setAttribute('id', 'tour-type_' + tour.id)
