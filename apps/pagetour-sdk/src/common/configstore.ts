@@ -66,7 +66,8 @@ class ConfigStore {
       tagHelpText: "Enter the tag values"
     },
     zIndex: "100000",
-    textAreaCharacterLength: 500
+    textAreaCharacterLength: 500,
+    enableBeacon: false
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)

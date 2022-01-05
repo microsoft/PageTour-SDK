@@ -747,12 +747,10 @@ $input-text-focus-outline: 1px dotted black;
 
     &.icon-audio:before {
       content: '\E767';
-      color: #0078d1;
     }
 
     &.icon-audio-mute:before {
       content: '\E992';
-      color: #0078d1;
     }
   }
 
@@ -1271,6 +1269,8 @@ $input-text-focus-outline: 1px dotted black;
 .btn-audio {
   background-color: transparent;
   border: transparent;
+  font-size: smaller;
+  color: #0078d1;
 }
 
 /* The Close Button */

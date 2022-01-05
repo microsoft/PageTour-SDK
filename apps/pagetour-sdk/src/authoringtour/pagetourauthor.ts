@@ -141,6 +141,10 @@ class PageTourAuthor {
     document.getElementById('tour-type').onchange = this.tourTypeChanged
     this.tourTypeChanged()
     this.resetIsTourPlaying()
+    if(!this.configStore.Options.enableBeacon) {
+      let tourtypeElement = document.getElementById('tour-type') as HTMLSelectElement;
+      tourtypeElement.remove(tourtypeElement.length-1)
+    }
   }
 
   /*# BeginRegion: Tour Dialogue Validations */
