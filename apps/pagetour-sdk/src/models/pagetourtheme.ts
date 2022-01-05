@@ -5,8 +5,7 @@ interface PageTourTheme {
   navigationButtonColor: string
   isRounded: boolean
   borderRadius?: number
-  fontFamily?: string,
-  enableGrayScreen: boolean
+  fontFamily?: string
 }
 
 export { PageTourTheme }

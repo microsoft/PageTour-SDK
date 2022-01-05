@@ -34,8 +34,7 @@ export class AppComponent implements OnInit {
         secondaryColor: '#fdfdfd',
         textColor: '#252423',
         navigationButtonColor: '#0063b1',
-        isRounded: false,
-        enableGrayScreen: true
+        isRounded: false
       },
       tags: {
         tagHelpText: 'This is from sample app'
