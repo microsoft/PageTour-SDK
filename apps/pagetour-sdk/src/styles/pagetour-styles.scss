@@ -1712,6 +1712,12 @@ $input-text-focus-outline: 1px dotted black;
       text-overflow: ellipsis;
     }
 
+    .pt-tourbox-footer {
+      display: flex; 
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
     .pt-navigation-buttons {
       display: flex;
       flex-direction: row;
@@ -2336,6 +2342,13 @@ $input-text-focus-outline: 1px dotted black;
       font-size: 14px;
       line-height: 20px;
       font-family: 'Segoe UI';
+      display:flex;
+      align-items: center;
+
+      .sound-buttons {
+        padding-left: 4px;
+        padding-top: 3px;
+      }
     }
 
     .announcement-navigation-buttons {
@@ -2576,6 +2589,13 @@ $input-text-focus-outline: 1px dotted black;
       font-size: 14px;
       line-height: 20px;
       font-family: 'Segoe UI';
+      display:flex;
+      align-items: center;
+
+      .sound-buttons {
+        padding-left: 4px;
+        padding-top: 3px;
+      }
     }
 
     .announcement-navigation-buttons {
