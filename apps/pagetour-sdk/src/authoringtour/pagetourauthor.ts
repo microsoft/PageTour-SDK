@@ -15,6 +15,7 @@ import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { TourTypeEnum } from '../models/tourtypeenum'
 
 
 declare const $: any
@@ -331,14 +332,14 @@ class PageTourAuthor {
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
     let autoPlayCheckbox = document.getElementById("isAutoPlayEnabled") as HTMLInputElement;
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
-    if(tourtype.toLowerCase() == "announcement"){
+    if(tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase()){
       document.getElementById("add-announcement-btn").style.display = 'inline'
       document.getElementById("add-step-btn").style.display = 'none'
       document.getElementById("cover-page-btn").style.display = 'none'
       autoPlayCheckbox.checked = true;
       autoPlayCheckbox.disabled = true;
     }
-    else if(tourtype.toLowerCase() == "smarttip"){
+    else if(tourtype.toLowerCase() == TourTypeEnum.Beacon.toLocaleLowerCase()){
       document.getElementById("add-announcement-btn").style.display = 'none'
       document.getElementById("add-step-btn").style.display = 'inline'
       document.getElementById("cover-page-btn").style.display = 'none'
@@ -419,14 +420,14 @@ class PageTourAuthor {
       tour.title = (document.getElementById('tour-title') as HTMLTextAreaElement).value
       tour.description = (document.getElementById('tour-description') as HTMLTextAreaElement).value
       tour.tourtype = (document.getElementById('tour-type') as HTMLSelectElement).value
-      if(tour.tourtype.toLowerCase() == "pagetour") {
+      if(tour.tourtype.toLowerCase() == TourTypeEnum.PageTour.toLowerCase()) {
         tour.coverPage = {}
         tour.coverPage.location = this.tourCoverPageLocation
         tour.coverPage.content = this.tourCoverPageContent
       }
-      if(tour.tourtype.toLowerCase() == "announcement")
+      if(tour.tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase())
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
-      else if(tour.tourtype.toLowerCase() == "smarttip")
+      else if(tour.tourtype.toLowerCase() == TourTypeEnum.Beacon.toLocaleLowerCase())
         this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0, this.addTourDialog)
       else
         this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
@@ -489,14 +490,14 @@ class PageTourAuthor {
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
       let tourType = (this.tour && this.tour.tourtype) ? this.tour.tourtype : (document.getElementById('tour-type') as HTMLSelectElement).value;
-      if(tourType.toLowerCase() == 'announcement') {
+      if(tourType.toLowerCase() == TourTypeEnum.Announcement.toLowerCase()) {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         document.getElementById("step-tourtype-header").style.width = '250px'
         document.getElementById("step-announcement-image-url").style.display = 'inline'
         tr.appendChild(tdStepHeader)
         tr.appendChild(tdStepMediaUrl)
       }
-      else if(tourType.toLowerCase() == 'smarttip') {
+      else if(tourType.toLowerCase() == TourTypeEnum.Beacon.toLowerCase()) {
         document.getElementById("step-tourtype-header").style.display = 'none'
         document.getElementById("step-announcement-image-url").style.display = 'none'
       }
@@ -684,13 +685,14 @@ class PageTourAuthor {
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
     switch(tourtype.toLowerCase()) {
-      case "announcement":
+      case TourTypeEnum.Announcement.toLowerCase():
         this.editAnnouncementStep();
         break;
-      case "pagetour":
+      case TourTypeEnum.PageTour.toLowerCase():
+      case TourTypeEnum.InteractiveGuide.toLowerCase():
         this.editTourStep();
         break;
-      case "smarttip":
+      case TourTypeEnum.Beacon.toLowerCase():
         this.editSmartTipStep();
         break;
     }
@@ -849,7 +851,7 @@ class PageTourAuthor {
     let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
     let nextElement = document.getElementById('select-element-next-btn')
 
-    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === "smarttip") ? this.createSmartTipBox : this.createRecordBox)
+    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === TourTypeEnum.Beacon.toLowerCase()) ? this.createSmartTipBox : this.createRecordBox)
     DomUtils.manageTabbing(authoringDeck)
     this.showHideIgnoreKeyElement(false, null)
   }
@@ -1373,11 +1375,11 @@ class PageTourAuthor {
   }
 
   private recordAnnouncement = () => {
-    this.GenerateTranscript('announcement');
+    this.GenerateTranscript(TourTypeEnum.Announcement.toLowerCase());
   }
 
   private stopAnnouncementRecording = () => {
-    this.StopTranscriptGeneration('announcement')
+    this.StopTranscriptGeneration(TourTypeEnum.Announcement.toLowerCase())
   }
 
   private stopTourRecording = () => {
@@ -1436,7 +1438,7 @@ class PageTourAuthor {
     let pageContext = this.getPageContext()
     if(this.tour == null)
       this.tour = {}
-    this.tour.tourtype = 'announcement'
+    this.tour.tourtype = TourTypeEnum.Announcement.toLowerCase()
     
     let newStep: any = {}
     newStep.headerText = headerElement.value;

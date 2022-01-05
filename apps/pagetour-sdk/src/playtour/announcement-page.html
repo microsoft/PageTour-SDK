@@ -19,7 +19,18 @@
       </div>
 
       <div class="announcement-footer">
-          <div class="announcement-page-counter" id="annoboxcounter"></div>
+          <div class="announcement-page-counter" >
+            <div id="annoboxcounter"></div>
+            <div>
+              <button class="nav-buttons btn-audio" id="announcement-audio" title="Stop Audio" aria-label="Stop Audio" style="display: none;">
+                <i class="pagetour__icon icon-audio"></i>
+              </button>
+              <button class="nav-buttons btn-audio" id="announcement-audio-stop" title="Play Audio" aria-label="Play Audio"  style="display: none;">
+                <i class="pagetour__icon icon-audio-mute"></i>
+              </button>
+            </div>
+          </div>
+          
           <div class="announcement-navigation-buttons" id="annonavigationdiv">
               <button class="announcement-previous-button" id="anno-previous-step" aria-label="Previous step">
                   Previous

@@ -10,6 +10,7 @@ import { PageContext } from '../models/pagecontext'
 import { RunTourAction } from '../models/runtouraction'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
+import { TourTypeEnum } from '../models/tourtypeenum'
 declare const navigator: any
 class PageTourManager {
   private toursList: any = [] // This holds an array of tours
@@ -149,6 +150,7 @@ class PageTourManager {
     document.getElementById('option-page-tour').onclick = this.addPageTour
     document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
     document.getElementById('option-smart-tip').onclick = this.addSmartTip
+    document.getElementById('option-guided-tour').onclick = this.addGuidedTour
     document.getElementById('manage-tours-sort').onclick = this.sortTours
     document.getElementById('searchbytitle').onkeyup = this.searchTours
     document.getElementById('showexpiredtours-chkbox').onchange = this.searchTours
@@ -325,18 +327,24 @@ class PageTourManager {
   /// Opens Add Tour Dialog
   private addPageTour = () => {
     this.hideManagePageTourModal();
-    this.pagetourAuthor.AddTour("Pagetour");
+    this.pagetourAuthor.AddTour(TourTypeEnum.PageTour);
   }
 
   // Opens Add system announcement dialog
   private addSystemAnnouncement = () => {
     this.hideManagePageTourModal();
-    this.pagetourAuthor.AddTour("Announcement");
+    this.pagetourAuthor.AddTour(TourTypeEnum.Announcement);
   }
 
   private addSmartTip = () => {
     this.hideManagePageTourModal();
-    this.pagetourAuthor.AddTour("SmartTip");
+    this.pagetourAuthor.AddTour(TourTypeEnum.Beacon);
+  }
+
+  /// Opens Guided Tour Dialog
+  private addGuidedTour = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour(TourTypeEnum.InteractiveGuide);
   }
 
   /*#BeginRegion:Tours Search*/
@@ -612,7 +620,7 @@ class PageTourManager {
       let title = this.getTextElement('title', tour)
       let tourtype = null;
       if(!tour.tourtype || tour.tourtype == '')
-        tour.tourtype = "Pagetour";
+        tour.tourtype = TourTypeEnum.PageTour;
       tourtype = this.getTextElement('tourtype', tour)
       let author=null;
       if(tour.lastmodifiedby!=null&&tour.lastmodifiedby!='')
@@ -1052,9 +1060,9 @@ class PageTourManager {
 
   private playTourByObject = async (tour: any, startInterval: number) => {
     this.hideManagePageTourModal()
-    if(tour.tourtype.toLowerCase() == "announcement")
+    if(tour.tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase())
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0)
-    else if(tour.tourtype.toLowerCase() == "smarttip")
+    else if(tour.tourtype.toLowerCase() == TourTypeEnum.Beacon.toLowerCase())
         this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0)
     else
       this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
