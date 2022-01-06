@@ -689,7 +689,9 @@ $input-text-focus-outline: 1px dotted black;
       font-size: larger;
     }
     &.icon-microphoneListening:before {
-      content: '\F12E';
+      content: '\E7C8';
+      color: red;
+      font-size: larger;
     }
 
     &.icon-recyclebin:before {
@@ -741,6 +743,14 @@ $input-text-focus-outline: 1px dotted black;
 
     &.close-button-icon:before {
       content: '\E10A';
+    }
+
+    &.icon-audio:before {
+      content: '\E767';
+    }
+
+    &.icon-audio-mute:before {
+      content: '\E992';
     }
   }
 
@@ -1167,6 +1177,10 @@ $input-text-focus-outline: 1px dotted black;
   margin: 0 0 28px;
 }
 
+.mt-20 {
+  margin-top: 10px;
+}
+
 .btn {
   border-radius: 0 !important;
   padding: 5px;
@@ -1254,6 +1268,13 @@ $input-text-focus-outline: 1px dotted black;
   background-color: transparent;
   font-weight: 600;
   width: 5%;
+}
+
+.btn-audio {
+  background-color: transparent;
+  border: transparent;
+  font-size: smaller;
+  color: #0078d1;
 }
 
 /* The Close Button */
@@ -1695,6 +1716,13 @@ $input-text-focus-outline: 1px dotted black;
       text-overflow: ellipsis;
     }
 
+    .pt-tourbox-footer {
+      display: flex; 
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+    }
+
     .pt-navigation-buttons {
       display: flex;
       flex-direction: row;
@@ -1868,46 +1896,36 @@ $input-text-focus-outline: 1px dotted black;
   font-size: 14px;
 }
 
-.smart-tip-hint {
-    position: fixed;
-    //top: -30px;
-    //left: 40px;
-    font-size: 14px;
-    z-index: 100000;
-}
-
-.smarttip {
-  box-sizing: content-box;
-  position: fixed;
-  background: transparent;
-  width: 20px;
-  height: 15px;
-  font-size: 14px;
-  cursor: pointer;
-  z-index: 1000000;
-}
-
-.smarttip-bubble {
-  box-sizing: content-box;
-  border: 5px solid #0078d3;
-  background: transparent;
-  -webkit-border-radius: 40px;
-  -moz-border-radius: 40px;
-  border-radius: 40px;
-  height: 30px;
-  width: 30px;
-  -webkit-animation: smarttippulse 3s ease-out;
-  -moz-animation: smarttippulse 3s ease-out;
-  animation: smarttippulse 3s ease-out;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+.smart-tip {
+	background-color: rgba(11, 112, 245, 0.7);
+	border-radius: 50%;
+	animation: pulse-red 2s infinite;
+	height: 17px;
+	width: 17px;
   position: absolute;
+  box-sizing: content-box;
   top: -10px;
   left: -10px;
-  z-index: 1;
-  opacity: 0;
+
 }
+
+@keyframes pulse-red {
+	0% {
+		transform: scale(0.9);
+		box-shadow: 0 0 0 0 rgba(11, 112, 245, 0.7);
+	}
+	
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+	}
+	
+	100% {
+		transform: scale(0.9);
+		box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+	}
+}
+
 
 .tutorial-bubble {
   outline: solid 5px #0078d1;
@@ -1921,8 +1939,8 @@ $input-text-focus-outline: 1px dotted black;
 	background-color: #0078d3;
 	bottom: 0px;
 	margin: 0 auto;
-	width: 20px;
-	height: 20px;		
+	width: 15px;
+	height: 15px;		
 	border-radius:0% 100% 100% 100%;
 	-webkit-transform: rotate(45deg);
   -moz-transition: rotate(45deg);
@@ -1952,6 +1970,18 @@ $input-text-focus-outline: 1px dotted black;
 .smarttip-container {
   display: none;
   flex-direction: column;
+
+  animation: fadeIn 0.7s;
+  opacity: 1;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
   .arrow {
     width: 0;
@@ -2260,6 +2290,7 @@ $input-text-focus-outline: 1px dotted black;
     height: 202px;
     max-height: 100%;
     overflow: auto;
+    border-top: 1px solid lightgrey;
 
     .card-title{
       font-size: 18px;
@@ -2305,6 +2336,13 @@ $input-text-focus-outline: 1px dotted black;
       font-size: 14px;
       line-height: 20px;
       font-family: 'Segoe UI';
+      display:flex;
+      align-items: center;
+
+      .sound-buttons {
+        padding-left: 4px;
+        padding-top: 3px;
+      }
     }
 
     .announcement-navigation-buttons {
@@ -2368,7 +2406,7 @@ $input-text-focus-outline: 1px dotted black;
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-left: 10px solid black;
+  border-left: 10px solid gray;
 }
 
 .line.preview-arrow-left:after {
@@ -2380,7 +2418,7 @@ $input-text-focus-outline: 1px dotted black;
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid black;
+  border-right: 10px solid gray;
 }
 
 
@@ -2492,6 +2530,7 @@ $input-text-focus-outline: 1px dotted black;
     height: 202px;
     max-height: 100%;
     overflow: auto;
+    border-top: 1px solid lightgrey;
 
     .card-title{
       font-size: 18px;
@@ -2545,6 +2584,13 @@ $input-text-focus-outline: 1px dotted black;
       font-size: 14px;
       line-height: 20px;
       font-family: 'Segoe UI';
+      display:flex;
+      align-items: center;
+
+      .sound-buttons {
+        padding-left: 4px;
+        padding-top: 3px;
+      }
     }
 
     .announcement-navigation-buttons {

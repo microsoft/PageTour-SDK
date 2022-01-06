@@ -15,8 +15,7 @@ class ConfigStore {
       secondaryColor: '#fdfdfd',
       textColor: '#252423',
       navigationButtonColor: '#0063b1',
-      isRounded: false,
-      enableGrayScreen: false
+      isRounded: false
     },
     navigator: {
       navigateToContext: (context: PageContext) => {
@@ -67,7 +66,8 @@ class ConfigStore {
       tagHelpText: "Enter the tag values"
     },
     zIndex: "100000",
-    textAreaCharacterLength: 500
+    textAreaCharacterLength: 500,
+    enableBeacon: false
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)

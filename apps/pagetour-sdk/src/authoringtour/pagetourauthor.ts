@@ -15,6 +15,7 @@ import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { TourTypeEnum } from '../models/tourtypeenum'
 
 
 declare const $: any
@@ -47,11 +48,18 @@ class PageTourAuthor {
 
   private createAnnouncementTemplateFn: any = createAnnouncementModalTemplate
 
+  private recognition: any;
+  private hasUserStoppedRecording: boolean = false;
+
   // Debounce Functions
   private bodyMouseMoveFunction: any
 
   constructor(private pageTourPlay: PageTourPlay, private configStore: ConfigStore, private dataStore: DataStore) {
     this.bodyMouseMoveFunction = debounce(this.onBodyMouseMove, 50)
+    // new speech recognition object
+    const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
+    //var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    this.recognition = new webkitSpeechRecognition();
   }
 
   public InitAuthoringDock = (tourType : string) => {
@@ -133,6 +141,10 @@ class PageTourAuthor {
     document.getElementById('tour-type').onchange = this.tourTypeChanged
     this.tourTypeChanged()
     this.resetIsTourPlaying()
+    if(!this.configStore.Options.enableBeacon) {
+      let tourtypeElement = document.getElementById('tour-type') as HTMLSelectElement;
+      tourtypeElement.remove(tourtypeElement.length-1)
+    }
   }
 
   /*# BeginRegion: Tour Dialogue Validations */
@@ -324,14 +336,14 @@ class PageTourAuthor {
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
     let autoPlayCheckbox = document.getElementById("isAutoPlayEnabled") as HTMLInputElement;
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
-    if(tourtype.toLowerCase() == "announcement"){
+    if(tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase()){
       document.getElementById("add-announcement-btn").style.display = 'inline'
       document.getElementById("add-step-btn").style.display = 'none'
       document.getElementById("cover-page-btn").style.display = 'none'
       autoPlayCheckbox.checked = true;
       autoPlayCheckbox.disabled = true;
     }
-    else if(tourtype.toLowerCase() == "smarttip"){
+    else if(tourtype.toLowerCase() == TourTypeEnum.Beacon.toLocaleLowerCase()){
       document.getElementById("add-announcement-btn").style.display = 'none'
       document.getElementById("add-step-btn").style.display = 'inline'
       document.getElementById("cover-page-btn").style.display = 'none'
@@ -412,14 +424,14 @@ class PageTourAuthor {
       tour.title = (document.getElementById('tour-title') as HTMLTextAreaElement).value
       tour.description = (document.getElementById('tour-description') as HTMLTextAreaElement).value
       tour.tourtype = (document.getElementById('tour-type') as HTMLSelectElement).value
-      if(tour.tourtype.toLowerCase() == "pagetour") {
+      if(tour.tourtype.toLowerCase() == TourTypeEnum.PageTour.toLowerCase()) {
         tour.coverPage = {}
         tour.coverPage.location = this.tourCoverPageLocation
         tour.coverPage.content = this.tourCoverPageContent
       }
-      if(tour.tourtype.toLowerCase() == "announcement")
+      if(tour.tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase())
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
-      else if(tour.tourtype.toLowerCase() == "smarttip")
+      else if(tour.tourtype.toLowerCase() == TourTypeEnum.Beacon.toLocaleLowerCase())
         this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0, this.addTourDialog)
       else
         this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
@@ -482,14 +494,14 @@ class PageTourAuthor {
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
       let tourType = (this.tour && this.tour.tourtype) ? this.tour.tourtype : (document.getElementById('tour-type') as HTMLSelectElement).value;
-      if(tourType.toLowerCase() == 'announcement') {
+      if(tourType.toLowerCase() == TourTypeEnum.Announcement.toLowerCase()) {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         document.getElementById("step-tourtype-header").style.width = '250px'
         document.getElementById("step-announcement-image-url").style.display = 'inline'
         tr.appendChild(tdStepHeader)
         tr.appendChild(tdStepMediaUrl)
       }
-      else if(tourType.toLowerCase() == 'smarttip') {
+      else if(tourType.toLowerCase() == TourTypeEnum.Beacon.toLowerCase()) {
         document.getElementById("step-tourtype-header").style.display = 'none'
         document.getElementById("step-announcement-image-url").style.display = 'none'
       }
@@ -677,13 +689,14 @@ class PageTourAuthor {
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
     switch(tourtype.toLowerCase()) {
-      case "announcement":
+      case TourTypeEnum.Announcement.toLowerCase():
         this.editAnnouncementStep();
         break;
-      case "pagetour":
+      case TourTypeEnum.PageTour.toLowerCase():
+      case TourTypeEnum.InteractiveGuide.toLowerCase():
         this.editTourStep();
         break;
-      case "smarttip":
+      case TourTypeEnum.Beacon.toLowerCase():
         this.editSmartTipStep();
         break;
     }
@@ -842,7 +855,7 @@ class PageTourAuthor {
     let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
     let nextElement = document.getElementById('select-element-next-btn')
 
-    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === "smarttip") ? this.createSmartTipBox : this.createRecordBox)
+    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === TourTypeEnum.Beacon.toLowerCase()) ? this.createSmartTipBox : this.createRecordBox)
     DomUtils.manageTabbing(authoringDeck)
     this.showHideIgnoreKeyElement(false, null)
   }
@@ -1129,6 +1142,7 @@ class PageTourAuthor {
     closeBtn.onclick = this.closeAnnouncementPageModal
     
     document.getElementById('record-announcement-page-btn').onclick = this.recordAnnouncement
+    document.getElementById('stop-record-announcement-page-btn').onclick = this.stopAnnouncementRecording
 
     document.getElementById('input-announcement-header-text').onkeyup = this.announcementHeaderChange
     document.getElementById('input-announcement-image-video').onkeyup = this.livePreviewMediaHeader
@@ -1365,43 +1379,61 @@ class PageTourAuthor {
   }
 
   private recordAnnouncement = () => {
-    this.GenerateTranscript('announcement');
+    this.GenerateTranscript(TourTypeEnum.Announcement.toLowerCase());
+  }
+
+  private stopAnnouncementRecording = () => {
+    this.StopTranscriptGeneration(TourTypeEnum.Announcement.toLowerCase())
+  }
+
+  private stopTourRecording = () => {
+    this.StopTranscriptGeneration('step')
   }
 
   private recordTutorial = () => {
     this.GenerateTranscript('step');
   }
 
+  private StopTranscriptGeneration(type: string) {
+    let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
+    let stopTranscriptBtnIcon = document.getElementById('stop-record-' + type + '-page-btn') as HTMLButtonElement;
+    this.recognition.stop();
+    this.hasUserStoppedRecording = true;
+    transcriptBtnIcon.style.display = 'inline';
+    stopTranscriptBtnIcon.style.display = 'none';
+  }
+
   private GenerateTranscript(type: string) {
-    // new speech recognition object
-    const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
-    //var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-    let recognition = new webkitSpeechRecognition();
+    let self = this;
     let transcriptDiv = document.getElementById('transcript-message-for-'+ type) as HTMLTextAreaElement;
     let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
-                
+    let stopTranscriptBtnIcon = document.getElementById('stop-record-' + type + '-page-btn') as HTMLButtonElement;
+          
     // This runs when the speech recognition service starts
-    recognition.onstart = function() {
-      transcriptBtnIcon.disabled = true
-        
+    self.recognition.onstart = function() {
+      transcriptBtnIcon.style.display = 'none'
+      stopTranscriptBtnIcon.style.display = 'inline';     
+      self.hasUserStoppedRecording = false;
     };
 
-    recognition.onspeechend = function() {
+    self.recognition.onend = function() {
         // when user is done speaking
-        recognition.stop();
-        transcriptBtnIcon.disabled = false
+        if(!self.hasUserStoppedRecording)
+          self.recognition.start();
+        else
+        self.recognition.stop();
     }
                   
     // This runs when the speech recognition service returns result
-    recognition.onresult = function(event: any) {
+    self.recognition.onresult = function(event: any) {
       if(transcriptDiv.value)
         transcriptDiv.value += event.results[0][0].transcript;
       else
-      transcriptDiv.value = event.results[0][0].transcript;
+        transcriptDiv.value = event.results[0][0].transcript;
     };
                   
     // start recognition
-    recognition.start();
+    self.recognition.start();
   }
   private getAnnouncementPageDetails = () => {
     let headerElement = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
@@ -1410,7 +1442,7 @@ class PageTourAuthor {
     let pageContext = this.getPageContext()
     if(this.tour == null)
       this.tour = {}
-    this.tour.tourtype = 'announcement'
+    this.tour.tourtype = TourTypeEnum.Announcement.toLowerCase()
     
     let newStep: any = {}
     newStep.headerText = headerElement.value;
@@ -1468,6 +1500,9 @@ class PageTourAuthor {
       let stepAudioContent = document.getElementById('record-step-page-btn')
       stepAudioContent.onclick = this.recordTutorial
 
+      let stopRecording = document.getElementById('stop-record-step-page-btn')
+      stopRecording.onclick = this.stopTourRecording
+
       let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
       let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
       delayBeforeStepValue.value = delayBeforeStepSlider.value
@@ -1501,6 +1536,17 @@ class PageTourAuthor {
       let recordBox = this.smartTipDetailModalFn()
       recordBox = DomUtils.appendToBody(recordBox)
       DomUtils.show(recordBox)
+
+      let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
+      let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
+      delayBeforeStepValue.value = delayBeforeStepSlider.value
+
+      delayBeforeStepValue.oninput = () => {
+        delayBeforeStepSlider.value = delayBeforeStepValue.value
+      }
+      delayBeforeStepSlider.oninput = () => {
+        delayBeforeStepValue.value = delayBeforeStepSlider.value
+      }
 
       let saveAddNewStepBtn = document.getElementById('save-add-new-btn')
       saveAddNewStepBtn.onclick = this.saveAndAddNewTip
@@ -1636,8 +1682,9 @@ class PageTourAuthor {
   /// Executes inputs of all controls in Step Details Record Dialog
   private checkSmartTipInputs = () => {
     this.checkMessageForStep('smart-tip')
+    this.checkDelayValue();
 
-    let controlsList = ['message-for-smart-tip']
+    let controlsList = ['message-for-smart-tip', 'delay-for-step']
 
     if (!this.validateandSetFocus(controlsList)) {
       event.preventDefault()
@@ -1850,6 +1897,10 @@ class PageTourAuthor {
       let newStep: any = {}
       newStep.message = message
       newStep.position = position
+
+      let delayBefore: number = parseInt((document.getElementById('delay-for-step') as HTMLInputElement).value, 10);
+      newStep.delayBefore = delayBefore;
+
       let id = this.lastSelectedElement.getAttribute('id')
       newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
       newStep.selector = ''
@@ -1924,6 +1975,13 @@ class PageTourAuthor {
     let step = this.stepList[this.editStepIndex];
     (document.getElementById('message-for-smart-tip') as HTMLTextAreaElement).value = step.message;
     (document.getElementById("position-select") as HTMLSelectElement).value = step.position;
+
+    if(step.delayBefore) {
+      let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
+      let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
+      delayBeforeStepSlider.value = String(step.delayBefore)
+      delayBeforeStepValue.value = delayBeforeStepSlider.value
+    }
   }
 
   private getPageContext = () => {

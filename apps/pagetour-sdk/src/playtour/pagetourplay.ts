@@ -13,6 +13,7 @@ import { PageContext } from '../models/pagecontext'
 import { Step } from '../models/step'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
+import { TourTypeEnum } from '../models/tourtypeenum'
 
 declare const $: any
 class PageTourPlay {
@@ -58,14 +59,15 @@ class PageTourPlay {
       const tour = await this.dataStore.GetTourById(tourId)
       this.autoPlayTest = autoPlayTest
 
-      switch(tour.tourtype.toLowerCase()){ 
-        case "announcement":
+      switch(tour.tourtype){ 
+        case  TourTypeEnum.Announcement:
           this.runAnnouncement(tour, action, startInterval, null, autoPlayTest)
           break;
-        case "smarttip":
+        case TourTypeEnum.Beacon:
           this.runSmartTip(tour, action, startInterval, null, autoPlayTest)
           break;
-        case "pagetour":
+        case TourTypeEnum.PageTour:
+        case TourTypeEnum.InteractiveGuide:
         case "default":
           this.runTour(tour, action, startInterval, null, autoPlayTest)
           break;
@@ -112,164 +114,114 @@ class PageTourPlay {
     autoPlayTest: boolean = false,
   ) => {
     objTour.steps.forEach((element,i) => {
-      let selectedElement = document.querySelector(element.selector) as HTMLElement;
-      let smartTipElement = document.getElementById(`smarttip_${objTour.id}_${i}`);
-      let zIndex = this.configStore.Options.zIndex;
-      if(selectedElement && !selectedElement.getAttribute('disabled') && !smartTipElement)
-      {
-        let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
-        smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
-        (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
-        (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`${objTour.id}_${i}`); if (callback != null) callback(objTour.tourtype)});
-        (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
-
-        let div = document.createElement('div');
-        div.className = "smart-tip-hint";
-        div.id = `smarttip_${objTour.id}_${i}`;
-        div.style.zIndex = zIndex;
-        div.insertAdjacentHTML('beforeend', this.smartTipFn());
-        selectedElement.appendChild(div);
-
-        let smartTipPopperInstance = new Popper(selectedElement, div, {
-          placement: element.position as Placement,
-        });
-        smartTipPopperInstance.update();
-
-        let arrowDiv = document.createElement('div');
-        arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
-        smartTipPopup.appendChild(arrowDiv);
-
-        div.addEventListener("mouseover", function() {
-          const targetDom = document.querySelector(element.selector);
-          Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
-            element.style.display = "none"
-          });
-          let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
-          toolTipPopper.style.display = "flex";
-          toolTipPopper.style.zIndex = zIndex;
-          let popperPlacement = element.position as Placement
-          switch (element.position) {
-            case 'top':
-              arrowDiv.className = 'arrow-pointer arrow-down'
-              smartTipPopup.style.flexDirection = 'column'
-              arrowDiv.style.alignSelf = 'center'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = '#0078D4'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = 'transparent'
-              break
-
-            case 'bottom':
-              arrowDiv.className = 'arrow-pointer arrow-up'
-              smartTipPopup.style.flexDirection = 'column-reverse'
-              arrowDiv.style.alignSelf = 'center'
-              arrowDiv.style.margin = '0px 0px'
-              arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderTopColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              break
-
-            case 'top-start':
-              arrowDiv.className = 'arrow-pointer arrow-down'
-              smartTipPopup.style.flexDirection = 'column'
-              arrowDiv.style.alignSelf = 'flex-start'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = '#0078D4'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = 'transparent'
-              break
-
-            case 'top-end':
-              smartTipPopup.style.flexDirection = 'column'
-              arrowDiv.className = 'arrow-pointer arrow-down'
-              arrowDiv.style.alignSelf = 'flex-end'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = '#0078D4'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = 'transparent'
-              break
-
-              
-            case 'bottom-start':
-              smartTipPopup.style.flexDirection = 'column-reverse'
-              arrowDiv.className = 'arrow-pointer arrow-up'
-              arrowDiv.style.alignSelf = 'flex-start'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = 'transparent'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = '#0078D4'
-              break
-
-            case 'bottom-end':
-              smartTipPopup.style.flexDirection = 'column-reverse'
-              arrowDiv.className = 'arrow-pointer arrow-up'
-              arrowDiv.style.alignSelf = 'flex-end'
-              arrowDiv.style.margin = '0px 0px'
-              // todo : apply as per the theme color
-              arrowDiv.style.borderTopColor = 'transparent'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderBottomColor = '#0078D4'
-              break
-
-
-            case 'left':
-              smartTipPopup.style.flexDirection = 'row'
-              arrowDiv.className = 'arrow-pointer arrow-right'
-              arrowDiv.style.alignSelf = 'center'
-              arrowDiv.style.margin = '0px 0px'
-              arrowDiv.style.borderLeftColor = '#0078D4'
-              arrowDiv.style.borderRightColor = 'transparent'
-              arrowDiv.style.borderTopColor = 'transparent'
-              arrowDiv.style.borderBottomColor = 'transparent'
-              break
-
-            case 'right':
-              smartTipPopup.style.flexDirection = 'row-reverse'
-              arrowDiv.className = 'arrow-pointer arrow-left'
-              arrowDiv.style.alignSelf = 'center'
-              arrowDiv.style.margin = '0px 0px'
-              arrowDiv.style.borderRightColor = '#0078D4'
-              arrowDiv.style.borderLeftColor = 'transparent'
-              arrowDiv.style.borderTopColor = 'transparent'
-              arrowDiv.style.borderBottomColor = 'transparent'
-              break
-
-          }
-
-          let popperInstance = new Popper(targetDom, toolTipPopper, {
-            placement: popperPlacement
-          });
-          popperInstance.enableEventListeners();
-          popperInstance.scheduleUpdate();
-        });
-      }
+        setTimeout(() => this.makeSmartTipVisible(element, i, objTour, callback), element.delayBefore * 1000)
     });
   }
 
-  private async dismissSmartTip(id: string) {
+  private makeSmartTipVisible(element : any, i: number, objTour: Tutorial, callback: any) {
+    let selectedElement = document.querySelector(element.selector) as HTMLElement;
+      let zIndex = this.configStore.Options.zIndex;
+        if(selectedElement && !selectedElement.getAttribute('disabled'))
+        {
+          let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
+          smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
+          (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
+          (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`smarttip_${objTour.id}_${i}`, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
+          (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
+
+          let smartTip = DomUtils.appendToBody(this.smartTipFn());
+          smartTip.id = `smarttip_${objTour.id}_${i}`;
+          smartTip.style.zIndex = zIndex;
+          selectedElement.insertAdjacentElement('afterend', smartTip);
+          let smartTipInstance = new Popper(selectedElement, smartTip, {
+            placement: element.position as Placement,
+          });
+          smartTipInstance.update();
+
+          let arrowDiv = document.createElement('div');
+          arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
+          smartTipPopup.appendChild(arrowDiv);
+
+          smartTip.addEventListener("mouseover", function() {
+            Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+              element.style.display = "none"
+            });
+            let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
+            toolTipPopper.style.display = "flex";
+            toolTipPopper.style.zIndex = zIndex;
+            let popperPlacement = element.position as Placement
+            switch (element.position) {
+              case 'top':
+                arrowDiv.className = 'arrow-pointer arrow-down'
+                smartTipPopup.style.flexDirection = 'column'
+                arrowDiv.style.alignSelf = 'center'
+                arrowDiv.style.margin = '0px 0px'
+                // todo : apply as per the theme color
+                arrowDiv.style.borderTopColor = '#0078D4'
+                arrowDiv.style.borderLeftColor = 'transparent'
+                arrowDiv.style.borderRightColor = 'transparent'
+                arrowDiv.style.borderBottomColor = 'transparent'
+                break
+
+              case 'bottom':
+                arrowDiv.className = 'arrow-pointer arrow-up'
+                smartTipPopup.style.flexDirection = 'column-reverse'
+                arrowDiv.style.alignSelf = 'center'
+                arrowDiv.style.margin = '0px 0px'
+                arrowDiv.style.borderTopColor = 'transparent'
+                arrowDiv.style.borderLeftColor = 'transparent'
+                arrowDiv.style.borderRightColor = 'transparent'
+                arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
+                break
+
+              case 'left':
+                smartTipPopup.style.flexDirection = 'row'
+                arrowDiv.className = 'arrow-pointer arrow-right'
+                arrowDiv.style.alignSelf = 'center'
+                arrowDiv.style.margin = '0px 0px'
+                arrowDiv.style.borderTopColor = 'transparent'
+                arrowDiv.style.borderLeftColor = '#0078D4'
+                arrowDiv.style.borderRightColor = 'transparent'
+                arrowDiv.style.borderBottomColor = 'transparent'
+                break
+
+              case 'right':
+                smartTipPopup.style.flexDirection = 'row-reverse'
+                arrowDiv.className = 'arrow-pointer arrow-left'
+                arrowDiv.style.alignSelf = 'center'
+                arrowDiv.style.margin = '0px 0px'
+                arrowDiv.style.borderTopColor = 'transparent'
+                arrowDiv.style.borderLeftColor = 'transparent'
+                arrowDiv.style.borderRightColor = '#0078D4'
+                arrowDiv.style.borderBottomColor = 'transparent'
+                break
+
+            }
+
+            let popperInstance = new Popper(smartTip, toolTipPopper, {
+              placement: popperPlacement
+            });
+            popperInstance.enableEventListeners();
+            popperInstance.scheduleUpdate();
+          });
+        }
+  }
+
+  private async dismissSmartTip(id: string, tour: Tutorial, userAction: string, step: string, operation: string) {
     // remove that specific tips and popper from the domutils.
-    let availableSmartTips = document.querySelectorAll(`[id^="smarttip_${id}"]`);
-    availableSmartTips.forEach(node => {
-      node.remove();
-    });
+    let availableSmartTips = document.getElementById(id);
+    if(availableSmartTips)
+    {
+      availableSmartTips.remove();
+    }
 
     // record the action for the specific user and store in local storage.
     try {
       let response = await this.configStore.Options.userActionProvider.recordUserAction(
-        null,
-        null,
-        null,
-        null,
+        tour,
+        userAction,
+        step,
+        operation,
       )
     } catch (err) {}
   }
@@ -357,6 +309,28 @@ class PageTourPlay {
               self.goToAnnouncementNextStep(StepAction.Exit, tour, action, callback, startInterval)
             })
           }
+
+          const audioMuteButton: HTMLButtonElement = document.querySelector('#announcement-audio')
+          if (audioMuteButton) {
+            audioMuteButton.addEventListener('click', () => {
+              document.getElementById('announcement-audio-stop').style.display = 'inline'
+              document.getElementById('announcement-audio').style.display = 'none'
+              if (opts.navigator.callbackOnVolumeMute != null) {
+                opts.navigator.callbackOnVolumeMute()
+              }
+            })
+          }
+
+          const audioUnMuteButton: HTMLButtonElement = document.querySelector('#announcement-audio-stop')
+          if (audioUnMuteButton) {
+            audioUnMuteButton.addEventListener('click', () => {
+              document.getElementById('announcement-audio-stop').style.display = 'none'
+              document.getElementById('announcement-audio').style.display = 'inline'
+              if (opts.navigator.callbackOnVolumeUnmute != null) {
+                opts.navigator.callbackOnVolumeUnmute(self.tour.steps[self.currentStep].transcript)
+              }
+            })
+          }
         }, startInterval)
       }
     }
@@ -436,6 +410,28 @@ class PageTourPlay {
           if (exitButton) {
             exitButton.addEventListener('click', () => {
               self.goToNextStep(StepAction.Exit, tour, action, callback, startInterval)
+            })
+          }
+
+          const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio')
+          if (audioMuteButton) {
+            audioMuteButton.addEventListener('click', () => {
+              document.getElementById('pagetour-audio-stop').style.display = 'inline'
+              document.getElementById('pagetour-audio').style.display = 'none'
+              if (opts.navigator.callbackOnVolumeMute != null) {
+                opts.navigator.callbackOnVolumeMute()
+              }
+            })
+          }
+
+          const audioUnMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop')
+          if (audioUnMuteButton) {
+            audioUnMuteButton.addEventListener('click', () => {
+              document.getElementById('pagetour-audio-stop').style.display = 'none'
+              document.getElementById('pagetour-audio').style.display = 'inline'
+              if (opts.navigator.callbackOnVolumeUnmute != null) {
+                opts.navigator.callbackOnVolumeUnmute(self.tour.steps[self.currentStep].transcript)
+              }
             })
           }
         }, startInterval)
@@ -755,11 +751,15 @@ class PageTourPlay {
     if (this.isValidElement(element)) {
       const previoustButton: HTMLButtonElement = document.querySelector('#pagetour-previous-step')
       const nextButton: HTMLButtonElement = document.querySelector('#pagetour-next-step')
+      const audioButton: HTMLButtonElement = document.querySelector('#pagetour-audio')
+      const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop')
 
       previoustButton.hidden = false
       previoustButton.disabled = false
       nextButton.hidden = false
       nextButton.disabled = false
+      audioButton.style.display = tour.steps[stepCount].transcript === '' ? 'none': 'inline'
+      audioMuteButton.style.display = 'none'
       if (stepCount === 0) {
         // First step with element.
         if (action === RunTourAction.Play && (!opts.isCoverPageTourStart || !tour.coverPage ||tour.coverPage==null || tour.coverPage.location.toLowerCase() != 'start')) {
@@ -798,7 +798,7 @@ class PageTourPlay {
         stepDescriptionElement.innerText = stepDescription
 
         this.tether = this.getTetherObject(stepCount, elementSelector)
-        this.addTourOutline(element)
+        this.addTourOutline(element, tour.tourtype)
         this.scrollIntoView(element)
         this.ApplyTheme(stepCount)
         this.srSpeak(`${this.tour.title} dialog`, 'assertive', 'dialog')
@@ -875,11 +875,16 @@ class PageTourPlay {
       const previoustButton: HTMLButtonElement = document.querySelector('#anno-previous-step')
       const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
       const annoCounter: HTMLButtonElement = document.querySelector('#annoboxcounter')
+      const audioButton: HTMLButtonElement = document.querySelector('#announcement-audio')
+      const audioMuteButton: HTMLButtonElement = document.querySelector('#announcement-audio-stop')
+
 
       previoustButton.hidden = false
       previoustButton.disabled = false
       nextButton.hidden = false
       nextButton.disabled = false
+      audioButton.style.display = tour.steps[stepCount].transcript === '' ? 'none': 'inline'
+      audioMuteButton.style.display = 'none'
       if (stepCount === 0) {
         // First step with element.
         if (action === RunTourAction.Play) {
@@ -887,7 +892,7 @@ class PageTourPlay {
         }
         previoustButton.hidden = true
         previoustButton.disabled = true
-        annoCounter.style.width = '78%'
+        annoCounter.parentElement.style.width = '78%'
       }
       if (opts.navigator.callbackBeforeTourStep != null) {
         opts.navigator.callbackBeforeTourStep(this.tour)
@@ -896,7 +901,7 @@ class PageTourPlay {
         // nextButton.hidden = true
         // nextButton.disabled = true
         nextButton.innerText = "Let's go!"
-        annoCounter.style.width = '78%'
+        annoCounter.parentElement.style.width = '78%'
       }
         nextButton.classList.remove('loadingNextStep')
         previoustButton.classList.remove('loadingNextStep')
@@ -1140,13 +1145,9 @@ class PageTourPlay {
 
   private ApplyAnnouncementTheme(stepCount: number) {
     let tourBoxElement = document.getElementById('anno-tourBox')
-    // let annoClosebtn = document.getElementById('playtourBoxCloseIcon')
-    //let ptnavigationdiv = document.getElementById('annonavigationdiv')
     let previousIcon = document.getElementById('anno-previous-step')
     let nextIcon = document.getElementById('anno-next-step')
     let tourboxdata = document.getElementById('announcementboxdata')
-    // let annoboxHeaderdata = document.getElementById('announcementheader')
-    // let annoboxBodydata = document.getElementById('annobodybox')
 
     if (this.tourTheme.isRounded) {
       tourboxdata.style.borderRadius = this.tourTheme.borderRadius ? `${this.tourTheme.borderRadius}px` : '10px'
@@ -1163,10 +1164,6 @@ class PageTourPlay {
     tourboxdata.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily
     tourBoxElement.style.borderColor = this.tourTheme.primaryColor
     tourBoxElement.style.borderLeftWidth = '3px'
-    // annoboxHeaderdata.style.background = this.tourTheme.primaryColor
-    // annoboxHeaderdata.style.color = this.tourTheme.secondaryColor
-    // annoboxBodydata.style.background = this.tourTheme.secondaryColor
-    // annoClosebtn.style.color = this.tourTheme.secondaryColor
   }
 
   private getBorderWidthCSSString(top: number, right: number, bottom: number, left: number) {
@@ -1300,9 +1297,9 @@ class PageTourPlay {
     }
   }
 
-  private addTourOutline = (element: HTMLElement) => {
+  private addTourOutline = (element: HTMLElement, tourType: string) => {
     if (element && !element.getAttribute('disabled')) {
-      if(!this.configStore.Options.theme.enableGrayScreen)
+      if(tourType.toLocaleLowerCase() === TourTypeEnum.InteractiveGuide.toLowerCase())
       {
           this.datastore['pagetour_lastoutline'] = element.style.outline;
           //element.className += " tutorial-bubble";

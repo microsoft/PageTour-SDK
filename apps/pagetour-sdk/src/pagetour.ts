@@ -11,6 +11,7 @@ import { ContextChangeHandler } from './eventhandlers/contextchangehandler'
 import { PageContext } from './models/pagecontext'
 import { IPagetourRepository } from './repository/ipagetourrepository'
 import { DataStore } from './common/datastore'
+import { TourTypeEnum } from './models/tourtypeenum'
 class PageTour {
   public static ContextChangeEvent = 'PageTour:ContextChangeEvent'
 
@@ -98,7 +99,7 @@ class PageTour {
    * Creates PageTour Author Dialog and attaches it to the DOM
    */
   public openPageTourAuthorDialog = () => {
-    this.pageTourAuthor.AddTour("Pagetour")
+    this.pageTourAuthor.AddTour(TourTypeEnum.PageTour)
   }
 
   /**

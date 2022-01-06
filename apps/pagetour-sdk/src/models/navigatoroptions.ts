@@ -19,6 +19,8 @@ interface NavigatorOptions {
   callbackOnTourExported?: (tour: Tutorial) => void
   callbackOnTourDeleted?: (tour: Tutorial) => void
   callbackForTags?: () => Promise<Tags>
+  callbackOnVolumeMute?: () => void
+  callbackOnVolumeUnmute?: (transcript: string) => void
 }
 
 export { NavigatorOptions }

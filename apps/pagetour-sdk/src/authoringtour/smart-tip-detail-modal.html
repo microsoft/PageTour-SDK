@@ -31,13 +31,30 @@
                   <option value="">Select</option>
                   <option value="top" selected="selected">Above</option>
                   <option value="bottom">Below</option>
-                  <option value="top-start">Above Left</option>
-                  <option value="top-end">Above Right</option>
                   <option value="left">Left</option>
                   <option value="right" selected="selected">Right</option>
-                  <option value="bottom-start">Below Left</option>
-                  <option value="bottom-end">Below Right</option>
                 </select>
+              </div>
+            </div>
+          </div>
+          <div class="row row-8 mt-20">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 pad-right-6">
+              <label class="font-caption-alt margin-bottom-12">
+                <strong> Delay before this step </strong>
+                </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 pad-right-6 slidecontainer">
+              <input type="range" min="0" max="30" value="0" class="slider" 
+                id="delayBeforeStepSlider" aria-label="Slider to set delay (in seconds) before steps"
+              />
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 delayInputBox">
+              <input id="delay-for-step" type="number" class="font-caption-alt" aria-label="Delay before steps (in seconds)" style="width: 10;"></span>
+              <span class="font-caption-alt"> Seconds</span>
+              <div class="textarea-errormessage-setter">
+                <span class="textarea-error" role="alert" aria-live="assertive" id="delay-for-step-error">
+                  Delay must be between 0 to 30
+                </span>
               </div>
             </div>
           </div>
