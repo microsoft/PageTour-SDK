@@ -98,7 +98,7 @@ class PageTour {
    * Creates PageTour Author Dialog and attaches it to the DOM
    */
   public openPageTourAuthorDialog = () => {
-    this.pageTourAuthor.AddTour()
+    this.pageTourAuthor.AddTour("Pagetour")
   }
 
   /**

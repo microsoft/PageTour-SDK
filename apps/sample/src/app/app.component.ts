@@ -26,10 +26,10 @@ export class AppComponent implements OnInit {
   }
 
   private pageTourInit = () => {
-    PageTour.init(this.repository, {    
+    PageTour.init(this.repository, {
+      announcementDefaultImage : 'https://fxpsitstoragenew.z13.web.core.windows.net/perfectfit.jpg',
+      enableTranscript: true
     });
-
-    
   }
 
   public openAuthorTourDialog = () => {

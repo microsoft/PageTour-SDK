@@ -59,7 +59,7 @@
               </div>
             </div>
           </div>
-          <div class="row row-16">
+          <div class="row row-8">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pad-right-6 font-para-box">
               <span class="textarea-error" role="alert" aria-live="assertive" id="event-type-select-error">
                 Required.
@@ -76,7 +76,7 @@
               </span>
             </div>
           </div>
-          <div class="row row-28">
+          <div class="row row-8">
             <label class="font-caption-alt margin-bottom-12">Message to user*:</label>
             <div class="textarea-messagetouser-group">
               <textarea
@@ -95,6 +95,26 @@
                   Message to user is required.
                 </span>
               </div>
+            </div>
+          </div>
+          <div class="row row-8" id="transcript-pagetour-area">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-right-6">
+              <label class="font-caption-alt margin-bottom-12">Audio Instruction:</label>
+              <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <textarea
+                class="textarea-transcript col-lg-11 col-md-11 col-sm-11 col-xs-11"
+                id="transcript-message-for-step"
+                title="Audio Instruction"
+                aria-label="Audio Instruction"
+                type="text"
+                placeholder="Enter transcript user will hear during the step"
+                maxlength="1000"
+              ></textarea>
+                <button class="btn-transcript pagetour-btn--secondary footer-btn col-lg-1 col-md-1 col-sm-1 col-xs-1"
+                  id="record-step-page-btn"
+                  title="Record Audio Instruction"
+                  type="button"><i id="record-step-page-btn-icon" class="pagetour__icon icon-microphone"></i></button>
+            </div>
             </div>
           </div>
           <div class="row row-8">
@@ -151,7 +171,8 @@
               </div>
             </div>
           </div>
-          <div class="row row-24">
+         
+          <div class="row row-8">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 pad-right-6">
               <button
                 class="pagetour-btn--secondary footer-btn"

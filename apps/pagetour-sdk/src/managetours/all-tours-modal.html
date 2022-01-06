@@ -4,7 +4,7 @@
     <div class="tour-modal">
       <form id="tour-form" method="" onsubmit="return false;">
         <div class="all-tour-list-modal tour-content">
-          <div class="row margin-bottom-12 display-block">
+          <div class="row margin-bottom-24 display-block">
             <div class="pull-right">
               <button
                 id="all-list-x-btn"
@@ -17,17 +17,6 @@
               </button>
             </div>
             <h1 class="font-subtitle-alt" id="alltutorials-modal-title">Page Tour</h1>
-          </div>
-          <div class="action-panel">
-            <button
-              id="manage-tours-modal-add-tour-btn"
-              type="button"
-              class="action-trigger-13 cell-button pull-right"
-              title="Add new page tour"
-            >
-              <i class="pagetour__icon icon-plus icon-inline"></i>
-              Add Tour
-            </button>
           </div>
           <div class="row margin-bottom-12">
             <div class="col-lg-4 col-sm-6 search-box">
@@ -69,7 +58,7 @@
                 </select>
               </span>
             </div>
-            <div class="col-lg-4 col-sm-5 items-to-display-box">
+            <div class="col-lg-2 col-sm-5 items-to-display-box">
               <div style="min-height: 30px;"></div>
               <div>
                 <input id="showexpiredtours-chkbox" title="Check" type="checkbox" aria-label="Show Expired Tours" />
@@ -78,6 +67,18 @@
                 </label>
               </div>
             </div>
+
+            <div class="dropdown col-lg-2 col-sm-5 items-to-display-box add-new" id="manage-tours-modal-add-tour-div">
+              <button class="btn pull-right btn-outline-primary" type="button" id="manage-tours-modal-add-tour-btn" data-toggle="dropdown" >
+                <i class="pagetour__icon icon-plus icon-inline"></i>
+                Add New
+              </button>
+              <div class="dropdown-menu" id="add-new-dropdown" aria-labelledby="manage-tours-modal-add-tour-btn" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <a class="dropdown-item" id="option-page-tour" style="cursor: pointer;">Page Tour</a>
+                <a class="dropdown-item" id="option-system-announcement" style="cursor: pointer;">System Announcement</a>
+              </div>
+            </div>
+
           </div>
           <div class="row margin-bottom-12">
             <div class="col-lg-12 col-sm-12 button-col pull-right">
@@ -122,6 +123,7 @@
                 <thead>
                   <tr>
                     <th class="expander-column-header">Expand or collapse tour description</th>
+                    <th class="title-column-header">Tour Type</th>
                     <th class="title-column-header">Title</th>
                     <th class="desc-column-header">Description</th>
                     <th class="title-column-header">Start Page Name</th>
@@ -147,7 +149,7 @@
                     <th class="button-column-header" id="delete_button_header">
                       Delete
                     </th>
-                    <th class="button-column-header">Play Tour</th>
+                    <th class="button-column-header">Play</th>
                   </tr>
                 </thead>
                 <tbody id="all-tours-table-body" class="font-caption-alt"></tbody>
