@@ -2290,6 +2290,7 @@ $input-text-focus-outline: 1px dotted black;
     height: 202px;
     max-height: 100%;
     overflow: auto;
+    border-top: 1px solid gray;
 
     .card-title{
       font-size: 18px;
@@ -2405,7 +2406,7 @@ $input-text-focus-outline: 1px dotted black;
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-left: 10px solid black;
+  border-left: 10px solid gray;
 }
 
 .line.preview-arrow-left:after {
@@ -2417,7 +2418,7 @@ $input-text-focus-outline: 1px dotted black;
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid black;
+  border-right: 10px solid gray;
 }
 
 
@@ -2529,6 +2530,7 @@ $input-text-focus-outline: 1px dotted black;
     height: 202px;
     max-height: 100%;
     overflow: auto;
+    border-top: 1px solid gray;
 
     .card-title{
       font-size: 18px;
