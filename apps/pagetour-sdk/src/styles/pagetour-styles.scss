@@ -1927,30 +1927,6 @@ $input-text-focus-outline: 1px dotted black;
 }
 
 
-
-
-// .smarttip-bubble {
-//   box-sizing: content-box;
-//   border: 5px solid #0078d3;
-//   background: transparent;
-//   -webkit-border-radius: 15px;
-//   -moz-border-radius: 15px;
-//   border-radius: 15px;
-//   height: 15px;
-//   width: 15px;
-//   -webkit-animation: smarttippulse 3s ease-out;
-//   -moz-animation: smarttippulse 3s ease-out;
-//   animation: smarttippulse 3s ease-out;
-//   -webkit-animation-iteration-count: infinite;
-//   -moz-animation-iteration-count: infinite;
-//   animation-iteration-count: infinite;
-//   position: absolute;
-//   top: -10px;
-//   left: -10px;
-//   z-index: 1;
-//   opacity: 0;
-// }
-
 .tutorial-bubble {
   outline: solid 5px #0078d1;
   transition: outline 1s linear;
@@ -1994,6 +1970,18 @@ $input-text-focus-outline: 1px dotted black;
 .smarttip-container {
   display: none;
   flex-direction: column;
+
+  animation: fadeIn 0.7s;
+  opacity: 1;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
   .arrow {
     width: 0;
@@ -2302,6 +2290,7 @@ $input-text-focus-outline: 1px dotted black;
     height: 202px;
     max-height: 100%;
     overflow: auto;
+    border-top: 1px solid gray;
 
     .card-title{
       font-size: 18px;
@@ -2417,7 +2406,7 @@ $input-text-focus-outline: 1px dotted black;
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-left: 10px solid black;
+  border-left: 10px solid gray;
 }
 
 .line.preview-arrow-left:after {
@@ -2429,7 +2418,7 @@ $input-text-focus-outline: 1px dotted black;
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid black;
+  border-right: 10px solid gray;
 }
 
 
@@ -2541,6 +2530,7 @@ $input-text-focus-outline: 1px dotted black;
     height: 202px;
     max-height: 100%;
     overflow: auto;
+    border-top: 1px solid gray;
 
     .card-title{
       font-size: 18px;
