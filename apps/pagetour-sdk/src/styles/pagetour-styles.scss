@@ -1927,30 +1927,6 @@ $input-text-focus-outline: 1px dotted black;
 }
 
 
-
-
-// .smarttip-bubble {
-//   box-sizing: content-box;
-//   border: 5px solid #0078d3;
-//   background: transparent;
-//   -webkit-border-radius: 15px;
-//   -moz-border-radius: 15px;
-//   border-radius: 15px;
-//   height: 15px;
-//   width: 15px;
-//   -webkit-animation: smarttippulse 3s ease-out;
-//   -moz-animation: smarttippulse 3s ease-out;
-//   animation: smarttippulse 3s ease-out;
-//   -webkit-animation-iteration-count: infinite;
-//   -moz-animation-iteration-count: infinite;
-//   animation-iteration-count: infinite;
-//   position: absolute;
-//   top: -10px;
-//   left: -10px;
-//   z-index: 1;
-//   opacity: 0;
-// }
-
 .tutorial-bubble {
   outline: solid 5px #0078d1;
   transition: outline 1s linear;
@@ -1994,6 +1970,18 @@ $input-text-focus-outline: 1px dotted black;
 .smarttip-container {
   display: none;
   flex-direction: column;
+
+  animation: fadeIn 0.7s;
+  opacity: 1;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
   .arrow {
     width: 0;

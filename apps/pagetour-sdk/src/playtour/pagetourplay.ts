@@ -114,11 +114,11 @@ class PageTourPlay {
     autoPlayTest: boolean = false,
   ) => {
     objTour.steps.forEach((element,i) => {
-        setTimeout(() => this.makeSmartTipVisible(element, i, objTour), element.delayBefore * 1000)
+        setTimeout(() => this.makeSmartTipVisible(element, i, objTour, callback), element.delayBefore * 1000)
     });
   }
 
-  private makeSmartTipVisible(element : any, i: number, objTour: Tutorial) {
+  private makeSmartTipVisible(element : any, i: number, objTour: Tutorial, callback: any) {
     let selectedElement = document.querySelector(element.selector) as HTMLElement;
       let zIndex = this.configStore.Options.zIndex;
         if(selectedElement && !selectedElement.getAttribute('disabled'))
@@ -168,10 +168,10 @@ class PageTourPlay {
                 smartTipPopup.style.flexDirection = 'column-reverse'
                 arrowDiv.style.alignSelf = 'center'
                 arrowDiv.style.margin = '0px 0px'
-                arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
-                arrowDiv.style.borderLeftColor = 'transparent'
                 arrowDiv.style.borderTopColor = 'transparent'
+                arrowDiv.style.borderLeftColor = 'transparent'
                 arrowDiv.style.borderRightColor = 'transparent'
+                arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
                 break
 
               case 'left':
@@ -179,9 +179,9 @@ class PageTourPlay {
                 arrowDiv.className = 'arrow-pointer arrow-right'
                 arrowDiv.style.alignSelf = 'center'
                 arrowDiv.style.margin = '0px 0px'
+                arrowDiv.style.borderTopColor = 'transparent'
                 arrowDiv.style.borderLeftColor = '#0078D4'
                 arrowDiv.style.borderRightColor = 'transparent'
-                arrowDiv.style.borderTopColor = 'transparent'
                 arrowDiv.style.borderBottomColor = 'transparent'
                 break
 
@@ -190,9 +190,9 @@ class PageTourPlay {
                 arrowDiv.className = 'arrow-pointer arrow-left'
                 arrowDiv.style.alignSelf = 'center'
                 arrowDiv.style.margin = '0px 0px'
-                arrowDiv.style.borderRightColor = '#0078D4'
-                arrowDiv.style.borderLeftColor = 'transparent'
                 arrowDiv.style.borderTopColor = 'transparent'
+                arrowDiv.style.borderLeftColor = 'transparent'
+                arrowDiv.style.borderRightColor = '#0078D4'
                 arrowDiv.style.borderBottomColor = 'transparent'
                 break
 
