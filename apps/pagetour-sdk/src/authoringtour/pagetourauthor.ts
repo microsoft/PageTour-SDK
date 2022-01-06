@@ -1537,6 +1537,17 @@ class PageTourAuthor {
       recordBox = DomUtils.appendToBody(recordBox)
       DomUtils.show(recordBox)
 
+      let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
+      let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
+      delayBeforeStepValue.value = delayBeforeStepSlider.value
+
+      delayBeforeStepValue.oninput = () => {
+        delayBeforeStepSlider.value = delayBeforeStepValue.value
+      }
+      delayBeforeStepSlider.oninput = () => {
+        delayBeforeStepValue.value = delayBeforeStepSlider.value
+      }
+
       let saveAddNewStepBtn = document.getElementById('save-add-new-btn')
       saveAddNewStepBtn.onclick = this.saveAndAddNewTip
 
@@ -1671,8 +1682,9 @@ class PageTourAuthor {
   /// Executes inputs of all controls in Step Details Record Dialog
   private checkSmartTipInputs = () => {
     this.checkMessageForStep('smart-tip')
+    this.checkDelayValue();
 
-    let controlsList = ['message-for-smart-tip']
+    let controlsList = ['message-for-smart-tip', 'delay-for-step']
 
     if (!this.validateandSetFocus(controlsList)) {
       event.preventDefault()
@@ -1885,6 +1897,10 @@ class PageTourAuthor {
       let newStep: any = {}
       newStep.message = message
       newStep.position = position
+
+      let delayBefore: number = parseInt((document.getElementById('delay-for-step') as HTMLInputElement).value, 10);
+      newStep.delayBefore = delayBefore;
+
       let id = this.lastSelectedElement.getAttribute('id')
       newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
       newStep.selector = ''
@@ -1959,6 +1975,13 @@ class PageTourAuthor {
     let step = this.stepList[this.editStepIndex];
     (document.getElementById('message-for-smart-tip') as HTMLTextAreaElement).value = step.message;
     (document.getElementById("position-select") as HTMLSelectElement).value = step.position;
+
+    if(step.delayBefore) {
+      let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
+      let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
+      delayBeforeStepSlider.value = String(step.delayBefore)
+      delayBeforeStepValue.value = delayBeforeStepSlider.value
+    }
   }
 
   private getPageContext = () => {
