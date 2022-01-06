@@ -148,6 +148,7 @@ class PageTourManager {
     document.getElementById('manage-tours-modal-add-tour-btn').onblur = this.hideOptions
     document.getElementById('option-page-tour').onclick = this.addPageTour
     document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
+    document.getElementById('option-smart-tip').onclick = this.addSmartTip
     document.getElementById('manage-tours-sort').onclick = this.sortTours
     document.getElementById('searchbytitle').onkeyup = this.searchTours
     document.getElementById('showexpiredtours-chkbox').onchange = this.searchTours
@@ -162,6 +163,7 @@ class PageTourManager {
 
     let manageTourFormModal = document.getElementById('tour-form')
     DomUtils.manageTabbing(manageTourFormModal)
+    this.hideOptions()
     try {
       const tours: Tutorial[] = await this.dataStore.GetToursByPageContext(null, true)
       this.toursList = this.sortItems(tours, 'desc')
@@ -312,11 +314,11 @@ class PageTourManager {
 
   // Opens the option
   private showOptions = () => {
-    document.getElementById("add-new-dropdown").classList.add("show");
+    document.getElementById("add-new-dropdown").style.display = 'inline'
   }
 
   private hideOptions = () => {
-    document.getElementById("add-new-dropdown").classList.remove("show");
+    document.getElementById("add-new-dropdown").style.display = 'none'
   }
 
   
@@ -330,6 +332,11 @@ class PageTourManager {
   private addSystemAnnouncement = () => {
     this.hideManagePageTourModal();
     this.pagetourAuthor.AddTour("Announcement");
+  }
+
+  private addSmartTip = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour("SmartTip");
   }
 
   /*#BeginRegion:Tours Search*/
@@ -605,7 +612,7 @@ class PageTourManager {
       let title = this.getTextElement('title', tour)
       let tourtype = null;
       if(!tour.tourtype || tour.tourtype == '')
-        tour.tourtype = "pagetour";
+        tour.tourtype = "Pagetour";
       tourtype = this.getTextElement('tourtype', tour)
       let author=null;
       if(tour.lastmodifiedby!=null&&tour.lastmodifiedby!='')
@@ -1047,6 +1054,8 @@ class PageTourManager {
     this.hideManagePageTourModal()
     if(tour.tourtype.toLowerCase() == "announcement")
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0)
+    else if(tour.tourtype.toLowerCase() == "smarttip")
+        this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0)
     else
       this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
   }

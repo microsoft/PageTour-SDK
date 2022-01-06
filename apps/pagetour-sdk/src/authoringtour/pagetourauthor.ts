@@ -2,6 +2,7 @@ import { PageTourPlay } from '../playtour/pagetourplay'
 import * as stepModalTemplate from './step-detail-modal.html'
 import * as chooseElementTemplate from './chose-element-modal.html'
 import * as addTourModalTemplate from './add-tour-modal.html'
+import * as smartTipDetailModal from './smart-tip-detail-modal.html'
 import * as createCoverPageModalTemplate from './create-cover-page-modal.html'
 import * as createAnnouncementModalTemplate from './add-announcement-page-modal.html'
 import { DomUtils } from '../common/domutils'
@@ -39,6 +40,7 @@ class PageTourAuthor {
   private ckEditor: any = null;
   // Template Functions
   private stepModalTemplateFn: any = stepModalTemplate
+  private smartTipDetailModalFn: any = smartTipDetailModal
   private chooseElementTemplateFn: any = chooseElementTemplate
   private addTourModalTemplateFn: any = addTourModalTemplate
   private createCoverPageTemplateFn: any = createCoverPageModalTemplate
@@ -67,16 +69,16 @@ class PageTourAuthor {
   /// Edit Tour
   public EditTour = (objTour: any) => {
     this.InitAuthoringDock(objTour.tourtype)
-    document.getElementById('tutorial-modal-title').innerText = 'Edit Tour'
+    document.getElementById('tutorial-modal-title').innerText = 'Edit'
     let addTourDialogCloseBtn = document.getElementById('add-tour-modal-close')
     addTourDialogCloseBtn.setAttribute('aria-label', 'Close Edit Tour dialog')
     document.getElementById('add-tour-modal-cancel-btn').setAttribute('aria-label', 'cancel and close Edit Tour dialog')
     document.getElementById('tour-type').setAttribute('disabled', 'true')
     this.tour = objTour
+    this.tourTypeChanged()
     this.loadTour()
     this.validateTourInputs()
     this.resetIsTourPlaying()
-    this.tourTypeChanged()
   }
 
 
@@ -114,6 +116,7 @@ class PageTourAuthor {
       .toISOString()
       .split('T')[0];
     (document.getElementById("tour-type") as HTMLSelectElement).value = tourType;
+    (document.getElementById("tour-tags-info") as HTMLSpanElement).innerText = this.configStore.Options.tags.tagHelpText;
 
     document.getElementById('tour-title').onkeyup = this.checkTourTitle
     document.getElementById('tour-description').onkeyup = this.checkTourDescription
@@ -171,7 +174,7 @@ class PageTourAuthor {
   private checkTourTags = () => {
     const tourTagsTextArea: HTMLTextAreaElement = document.getElementById('tour-tags') as HTMLTextAreaElement
     let value = tourTagsTextArea.value
-    document.getElementById('tour-tags-character-limit').innerText = 74 - value.length + ' characters remaining.'
+    document.getElementById('tour-tags-character-limit').innerText = 200 - value.length + ' characters remaining.'
   }
 
   /*# EndRegion: Tour Dialogue Validations */
@@ -319,11 +322,18 @@ class PageTourAuthor {
 
   private tourTypeChanged = () => {
     let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
-    let autoPlayCheckbox = document.getElementById("isAutoPlayEnabled") as HTMLInputElement
+    let autoPlayCheckbox = document.getElementById("isAutoPlayEnabled") as HTMLInputElement;
     var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
     if(tourtype.toLowerCase() == "announcement"){
       document.getElementById("add-announcement-btn").style.display = 'inline'
       document.getElementById("add-step-btn").style.display = 'none'
+      document.getElementById("cover-page-btn").style.display = 'none'
+      autoPlayCheckbox.checked = true;
+      autoPlayCheckbox.disabled = true;
+    }
+    else if(tourtype.toLowerCase() == "smarttip"){
+      document.getElementById("add-announcement-btn").style.display = 'none'
+      document.getElementById("add-step-btn").style.display = 'inline'
       document.getElementById("cover-page-btn").style.display = 'none'
       autoPlayCheckbox.checked = true;
       autoPlayCheckbox.disabled = true;
@@ -399,13 +409,18 @@ class PageTourAuthor {
         steps: [],
       }
       tour.steps = this.stepList
-      tour.coverPage = {}
       tour.title = (document.getElementById('tour-title') as HTMLTextAreaElement).value
       tour.description = (document.getElementById('tour-description') as HTMLTextAreaElement).value
-      tour.coverPage.location = this.tourCoverPageLocation
-      tour.coverPage.content = this.tourCoverPageContent
-      if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == "announcement")
+      tour.tourtype = (document.getElementById('tour-type') as HTMLSelectElement).value
+      if(tour.tourtype.toLowerCase() == "pagetour") {
+        tour.coverPage = {}
+        tour.coverPage.location = this.tourCoverPageLocation
+        tour.coverPage.content = this.tourCoverPageContent
+      }
+      if(tour.tourtype.toLowerCase() == "announcement")
         this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
+      else if(tour.tourtype.toLowerCase() == "smarttip")
+        this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0, this.addTourDialog)
       else
         this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
     }
@@ -466,12 +481,17 @@ class PageTourAuthor {
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      if(this.tour && this.tour.tourtype && this.tour.tourtype.toLowerCase() == 'announcement') {
+      let tourType = (this.tour && this.tour.tourtype) ? this.tour.tourtype : (document.getElementById('tour-type') as HTMLSelectElement).value;
+      if(tourType.toLowerCase() == 'announcement') {
         document.getElementById("step-tourtype-header").innerText = 'Header Text'
         document.getElementById("step-tourtype-header").style.width = '250px'
         document.getElementById("step-announcement-image-url").style.display = 'inline'
         tr.appendChild(tdStepHeader)
         tr.appendChild(tdStepMediaUrl)
+      }
+      else if(tourType.toLowerCase() == 'smarttip') {
+        document.getElementById("step-tourtype-header").style.display = 'none'
+        document.getElementById("step-announcement-image-url").style.display = 'none'
       }
       else {
         document.getElementById("step-tourtype-header").innerText = 'Type'
@@ -491,8 +511,15 @@ class PageTourAuthor {
       ;(document.getElementById('save-tour-modal-btn') as HTMLButtonElement).disabled = false
       ;(document.getElementById('preview-tour-step-btn') as HTMLButtonElement).disabled = false
     } else {
-      document.getElementById('save-tour-modal-btn').setAttribute('disabled', 'disabled')
-      document.getElementById('preview-tour-step-btn').setAttribute('disabled', 'disabled')
+      ;document.getElementById('save-tour-modal-btn').setAttribute('disabled', 'disabled')
+      ;document.getElementById('preview-tour-step-btn').setAttribute('disabled', 'disabled')
+    }
+
+    if (this.tourCoverPageLocation || this.stepList.length > 0) {
+      (document.getElementById('tour-type') as HTMLSelectElement).disabled = true
+    }
+    else {
+      (document.getElementById('tour-type') as HTMLSelectElement).disabled = false
     }
     let tourForm = document.getElementById('add-tour-form')
     DomUtils.manageTabbing(tourForm)
@@ -656,12 +683,37 @@ class PageTourAuthor {
       case "pagetour":
         this.editTourStep();
         break;
+      case "smarttip":
+        this.editSmartTipStep();
+        break;
     }
   }
 
   private editTourStep() {
     this.createChooseElementModal()
     document.getElementById('choose-element-title').innerText = 'Edit Step - Choose an element'
+    document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
+    document.getElementById('cancel-choose-element-btn').setAttribute('aria-label', 'cancel and Close Edit Step dialog')
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
+      const editingStep = this.stepList[this.editStepIndex]
+      if (editingStep && editingStep.selector && editingStep.selector !== '') {
+        this.ignoreStepIfSetup(editingStep)
+        let elementfromselector = document.querySelector(editingStep.selector)
+        if (elementfromselector) {
+          this.lastSelectedElement = elementfromselector
+          this.lastSelectedElementOriginal = elementfromselector
+          this.toggleChooseElement(this.chooseState.Chosen, editingStep)
+        }
+      }
+    }
+  }
+
+  private editSmartTipStep() {
+    this.createChooseElementModal()
+    document.getElementById('choose-element-title').innerText = 'Edit Tip - Choose an element'
     document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
     document.getElementById('cancel-choose-element-btn').setAttribute('aria-label', 'cancel and Close Edit Step dialog')
     event.preventDefault()
@@ -690,9 +742,9 @@ class PageTourAuthor {
     event.stopPropagation()
     if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
       const editingStep = this.stepList[this.editStepIndex]
-      document.getElementById("announcementboxtitle-preview").innerText = document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
+      document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
       document.getElementById("announcementboxdescription").innerHTML= document.getElementById('anno-message-editor').innerHTML = editingStep.message;
-
+      this.announcementHeaderChange()
       if (editingStep.mediaUrl)
         document.getElementById('input-announcement-image-video').innerText = editingStep.mediaUrl;
         this.livePreviewMediaHeader();
@@ -787,9 +839,10 @@ class PageTourAuthor {
 
     let cancelChooseElement = document.getElementById('cancel-choose-element-btn')
     cancelChooseElement.onclick = this.closeChooseElementModal
-
+    let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
     let nextElement = document.getElementById('select-element-next-btn')
-    nextElement.addEventListener('click', this.createRecordBox)
+
+    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === "smarttip") ? this.createSmartTipBox : this.createRecordBox)
     DomUtils.manageTabbing(authoringDeck)
     this.showHideIgnoreKeyElement(false, null)
   }
@@ -853,7 +906,7 @@ class PageTourAuthor {
     DomUtils.removeTabbing(authoringDeckModal)
     authoringDeckModal.parentNode.removeChild(authoringDeckModal)
     this.disablePageInspector(true)
-    this.removeStepDetailModal()
+    this.removeStepDetailModal('step-detail-modal')
     this.unHideAddTourModal()
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
   }
@@ -871,7 +924,7 @@ class PageTourAuthor {
   private unHideChooseElementModal = () => {
     const authoringDeck = document.getElementById('authoringDock')
     authoringDeck.style.display = 'block'
-    authoringDeck.style.zIndex = '20000'
+    authoringDeck.style.zIndex = '200000'
     if (this.lastSelectedElement != null) {
       this.toggleChooseElement(this.chooseState.Chosen, null)
     }
@@ -1077,7 +1130,7 @@ class PageTourAuthor {
     
     document.getElementById('record-announcement-page-btn').onclick = this.recordAnnouncement
 
-    document.getElementById('input-announcement-header-text').onkeyup = this.livePreviewHeader
+    document.getElementById('input-announcement-header-text').onkeyup = this.announcementHeaderChange
     document.getElementById('input-announcement-image-video').onkeyup = this.livePreviewMediaHeader
     document.getElementById('input-announcement-image-video').onblur = this.setDefaultImage
 
@@ -1099,9 +1152,14 @@ class PageTourAuthor {
     .then((editor: any) => {
       this.ckEditor = editor;
       this.checkCharacterLength($(editor.getData()).text().length);
-      editor.model.document.on('change:data', (evt : any, data : any) => {
+
+      editor.model.document.on('change:data', () => {
         document.getElementById("announcementboxdescription").innerHTML = editor.getData();
-        this.checkCharacterLength($(editor.getData()).text().length, evt);
+        this.checkCharacterLength($(editor.getData()).text().length);
+      });
+
+      editor.editing.view.document.on('keydown', (event: any, data: any) => {
+        this.checkKeyboardBlocking($(editor.getData()).text().length, event, data);
       });
     })
     .catch((error:any) => {
@@ -1109,15 +1167,18 @@ class PageTourAuthor {
     });
   }
 
-  private checkCharacterLength(currentCharacterLength: number, event: any = null) {
-    // Todo: make this value configurable
-    let maxCharacterLength = 500;
-    if(currentCharacterLength >= maxCharacterLength) {
-      // event.preventDefault();
-    }
+  private checkCharacterLength(currentCharacterLength: number) {
+    let maxCharacterLength = this.configStore.Options.textAreaCharacterLength;
     const remaining = maxCharacterLength - currentCharacterLength;
     (document.getElementById("character-remaining-text")).textContent = `${remaining} characters remaining`
-    
+  }
+
+  private checkKeyboardBlocking(currentCharacterLength: number, event: any, data: any) {
+    let maxCharacterLength = this.configStore.Options.textAreaCharacterLength;
+    if(currentCharacterLength >= maxCharacterLength) {
+      data.preventDefault();
+      event.stop();
+    }
   }
 
   private setDefaultImage() {
@@ -1125,15 +1186,15 @@ class PageTourAuthor {
     if(mediaUrl.value == "") {
       document.getElementById('anno-media-error').style.display = 'none'
       let mediaDiv = document.getElementById("imgHeaderContainer") as HTMLImageElement;
-      // Todo: make this url injection dynamic
-      if(this.configStore.Options.announcementDefaultImage)
+    // Todo: make this url injection dynamic
+      if(this.configStore !== null && this.configStore.Options.announcementDefaultImage)
         mediaDiv.src = this.configStore.Options.announcementDefaultImage;
       else
         mediaDiv.alt = "Default Image not configured"
     }
   }
 
-  private livePreviewHeader() {
+  private announcementHeaderChange(){
     let headerValue = (document.getElementById('input-announcement-header-text') as HTMLInputElement).value;
     if(headerValue == "") {
       document.getElementById('anno-header-error').style.display = "contents";
@@ -1141,6 +1202,8 @@ class PageTourAuthor {
       document.getElementById('anno-header-error').style.display = "none";
       document.getElementById("announcementboxtitle-preview").innerText = headerValue;
     }
+    document.getElementById("announcement-header-character-limit").innerText =
+      100 - headerValue.length + ' characters remaining.'
   }
 
   private livePreviewMediaHeader() {
@@ -1247,7 +1310,7 @@ class PageTourAuthor {
     // changes made for editing cover page
     let addCoverPageButton = document.getElementById('cover-page-btn')
     addCoverPageButton.innerHTML = '<i class="pagetour__icon icon-pencil icon-inline"></i>Edit Cover Page'
-    addCoverPageButton.title = 'Edit Cover Page'
+    addCoverPageButton.title = 'Edit Cover Page';
 
     this.closeCoverPageModal()
   }
@@ -1430,6 +1493,52 @@ class PageTourAuthor {
     DomUtils.manageTabbing(stepDetailForm)
   }
 
+  private createSmartTipBox = (event: Event) => {
+    event.stopPropagation()
+    this.hideChooseElementModal()
+    let stepDetailModal = document.getElementById('step-detail-modal')
+    if (!stepDetailModal) {
+      let recordBox = this.smartTipDetailModalFn()
+      recordBox = DomUtils.appendToBody(recordBox)
+      DomUtils.show(recordBox)
+
+      let saveAddNewStepBtn = document.getElementById('save-add-new-btn')
+      saveAddNewStepBtn.onclick = this.saveAndAddNewTip
+
+      let saveReturnBtn = document.getElementById('save-return-btn')
+      saveReturnBtn.onclick = this.saveTipAndReturn
+
+      let backToStepDetailBtn = document.getElementById('back-tip-detail-btn')
+      backToStepDetailBtn.onclick = this.backToTipDetails
+
+      let stepDetailCloseBtn = document.getElementById('step-detail-close-btn')
+      stepDetailCloseBtn.onclick = this.stopSmartTipRecording
+
+      document.getElementById('message-for-smart-tip').onkeyup = this.checkSmartTipMessage
+
+      /// Loads Step details in a Record box during Edit.
+      if (this.editStepIndex !== -1) {
+        document.getElementById('tip-detail-modal-title').innerText = 'Edit Smart Tip - Details'
+        this.populateTipDetails()
+        this.checkSmartTipMessage()
+      }
+    } else {
+      stepDetailModal.style.display = 'block'
+    }
+    let stepDetailForm = document.getElementById('step-detail-form')
+    DomUtils.manageTabbing(stepDetailForm)
+  }
+
+  private checkSmartTipMessage() {
+    let messageValue = (document.getElementById('message-for-smart-tip') as HTMLInputElement).value;
+    if(messageValue == "") {
+      document.getElementById('message-for-smart-tip-error').style.display = "contents";
+    } else {
+      document.getElementById('message-for-smart-tip-error').style.display = "none";
+    }
+    document.getElementById("smart-tip-message-character-limit").innerText =
+      100 - messageValue.length + ' characters remaining.'
+  }
   /*#BeginRegion: Step Details validations*/
 
   /// Validates input in Event Type Select Box
@@ -1477,11 +1586,11 @@ class PageTourAuthor {
   }
 
   /// Validates the input in Message to User Text Box
-  private checkMessageForStep = () => {
+  private checkMessageForStep = (tourtype: string) => {
     let messageForStepErrorElement: HTMLTextAreaElement = document.getElementById(
-      'message-for-step',
+      `message-for-${tourtype}`,
     ) as HTMLTextAreaElement
-    document.getElementById('message-for-step-error').style.display =
+    document.getElementById(`message-for-${tourtype}-error`).style.display =
       messageForStepErrorElement.value === '' ? 'block' : 'none'
   }
 
@@ -1509,11 +1618,26 @@ class PageTourAuthor {
   private checkRecordBoxInputs = () => {
     this.checkEventType()
     this.checkPositionSelect()
-    this.checkMessageForStep()
+    this.checkMessageForStep('step')
     this.checkValueForStep()
     this.checkDelayValue()
 
     let controlsList = ['event-type-select', 'position-select', 'message-for-step', 'value-for-step', 'delay-for-step']
+
+    if (!this.validateandSetFocus(controlsList)) {
+      event.preventDefault()
+      event.stopPropagation()
+      return false
+    }
+
+    return true
+  }
+
+  /// Executes inputs of all controls in Step Details Record Dialog
+  private checkSmartTipInputs = () => {
+    this.checkMessageForStep('smart-tip')
+
+    let controlsList = ['message-for-smart-tip']
 
     if (!this.validateandSetFocus(controlsList)) {
       event.preventDefault()
@@ -1557,9 +1681,21 @@ class PageTourAuthor {
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
   }
 
+  /// Closes Step Details Record Dialog and opens Add Tour dialog
+  private stopSmartTipRecording = () => {
+    let stepDetailModal = document.getElementById('tip-detail-modal')
+    stepDetailModal.parentNode.removeChild(stepDetailModal)
+    const authoringDeck = document.getElementById('authoringDock')
+    authoringDeck.parentNode.removeChild(authoringDeck)
+    this.editStepIndex = -1
+    this.disablePageInspector(true)
+    this.unHideAddTourModal()
+    this.populateSteps() /// Populates steps in Add Tour Dialogue.
+  }
+
   /// Removes Step Details Record box.
-  private removeStepDetailModal = () => {
-    let stepDetailModal = document.getElementById('step-detail-modal')
+  private removeStepDetailModal = (modalId: string) => {
+    let stepDetailModal = document.getElementById(modalId)
     if (stepDetailModal != null) {
       stepDetailModal.parentNode.removeChild(stepDetailModal)
       this.editStepIndex = -1
@@ -1568,7 +1704,15 @@ class PageTourAuthor {
 
   /// Takes back to Choose element Dailog from Step details Record Dialog
   private backToStepDetails = () => {
-    document.getElementById('step-detail-modal').style.display = 'none'
+    this.backToDetails('step-detail-modal');
+  }
+
+  private backToTipDetails = () => {
+    this.backToDetails('tip-detail-modal');
+  }
+
+  private backToDetails = (modalId: string) => {
+    document.getElementById(modalId).style.display = 'none'
     let authoringDeck = document.getElementById('authoringDock')
     authoringDeck.style.display = 'block'
     DomUtils.manageTabbing(authoringDeck)
@@ -1581,8 +1725,21 @@ class PageTourAuthor {
       return
     }
     this.getStepDetails()
-    this.backToStepDetails()
-    this.removeStepDetailModal()
+    this.backToDetails('step-detail-modal')
+    this.removeStepDetailModal('step-detail-modal')
+    this.toggleChooseElement(this.chooseState.Choose, null)
+    this.disablePageInspector(true)
+    let chooseElementDock = document.getElementById('authoringDock')
+    DomUtils.manageTabbing(chooseElementDock)
+  }
+
+  private saveAndAddNewTip = () => {
+    if (!this.checkSmartTipInputs()) {
+      return
+    }
+    this.getTipDetails()
+    this.backToDetails('tip-detail-modal')
+    this.removeStepDetailModal('tip-detail-modal')
     this.toggleChooseElement(this.chooseState.Choose, null)
     this.disablePageInspector(true)
     let chooseElementDock = document.getElementById('authoringDock')
@@ -1596,7 +1753,18 @@ class PageTourAuthor {
       return
     }
     this.getStepDetails()
-    this.removeStepDetailModal()
+    this.removeStepDetailModal('step-detail-modal')
+    this.closeChooseElementModal()
+    this.unHideAddTourModal()
+    this.populateSteps() /// Populates steps in Add Tour Dialogue.
+  }
+
+  private saveTipAndReturn = () => {
+    if (!this.checkSmartTipInputs()) {
+      return
+    }
+    this.getTipDetails()
+    this.removeStepDetailModal('tip-detail-modal')
     this.closeChooseElementModal()
     this.unHideAddTourModal()
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
@@ -1672,6 +1840,56 @@ class PageTourAuthor {
     }
   }
 
+    /// Extracts the content from Step Details Record box and pushes to new step to StepDetials array
+    private getTipDetails = () => {
+      let positionSelectElement: HTMLSelectElement = document.getElementById("position-select") as HTMLSelectElement
+      let messageForStepElement: HTMLTextAreaElement = document.getElementById('message-for-smart-tip') as HTMLTextAreaElement
+      
+      let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
+      let message = messageForStepElement.value
+      let newStep: any = {}
+      newStep.message = message
+      newStep.position = position
+      let id = this.lastSelectedElement.getAttribute('id')
+      newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
+      newStep.selector = ''
+      let options = {
+        selectorTypes: ['Class', 'Tag', 'NthChild'],
+      }
+      let elementSelector = unique(this.lastSelectedElementOriginal, options)
+      newStep.selector = elementSelector.toString()
+      let pageContext = this.getPageContext()
+      newStep.pagecontext = pageContext.url
+      newStep.pagestatename = pageContext.state
+  
+      let ignoreKeyCheckboxElement: HTMLInputElement = document.getElementById(
+        'ignore-element-key-chkbox',
+      ) as HTMLInputElement
+      if (ignoreKeyCheckboxElement) {
+        newStep.ignoreelementkey = ignoreKeyCheckboxElement.checked
+      } else {
+        newStep.ignoreelementkey = false
+      }
+  
+      let ignoreNextIfNextStepElementFound: HTMLInputElement = document.getElementById(
+        'ignoreStep-IfNextStepElementFound-chkbox',
+      ) as HTMLInputElement
+      if (ignoreNextIfNextStepElementFound && ignoreNextIfNextStepElementFound.checked) {
+        newStep.ignoreStepIf = true
+        newStep.ignoreStepIfConditions = 'NextStepElementFound'
+      } else {
+        newStep.ignoreStepIf = false
+      }
+  
+      /// Updates the step in stepDetails during edit of a step or pushes a new step to the stepDetails array.
+      if (this.editStepIndex !== -1) {
+        this.stepList[this.editStepIndex] = newStep
+        this.editStepIndex = -1
+      } else {
+        this.stepList.push(newStep)
+      }
+    }
+
   /// Resets the Create Record Box and sets to default values.
   private resetStepDetailsModal = () => {
     let stepDetailModal = document.getElementById('step-detail-modal')
@@ -1700,6 +1918,12 @@ class PageTourAuthor {
       delayBeforeStepValue.value = delayBeforeStepSlider.value
     }
     this.toggleValueDisplay()
+  }
+
+  private populateTipDetails = () => {
+    let step = this.stepList[this.editStepIndex];
+    (document.getElementById('message-for-smart-tip') as HTMLTextAreaElement).value = step.message;
+    (document.getElementById("position-select") as HTMLSelectElement).value = step.position;
   }
 
   private getPageContext = () => {

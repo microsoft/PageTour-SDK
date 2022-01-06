@@ -1,6 +1,8 @@
 import { ConfigStore } from '../common/configstore'
 import * as tourBoxHtml from './tour-box.html'
 import * as AnnouncementBoxHtml from './announcement-page.html'
+import * as SmartTipBoxHtml from './smarttip.html'
+import * as SmartTipPopperHtml from './smarttip-popper.html'
 import { DomUtils } from '../common/domutils'
 import * as viewCoverPageModalTemplate from './view-cover-page-modal.html'
 import { RunTourAction } from '../models/runtouraction'
@@ -29,7 +31,8 @@ class PageTourPlay {
 
   // Template Functions
   private tourBoxHtmlFn: any = tourBoxHtml
-
+  private smartTipFn: any = SmartTipBoxHtml
+  private smartTipPopperFn: any = SmartTipPopperHtml
   private announcementBoxFn: any = AnnouncementBoxHtml
   private viewCoverPageTemplateFn: any = viewCoverPageModalTemplate
   public isTourPlaying: boolean
@@ -39,6 +42,15 @@ class PageTourPlay {
   constructor(private configStore: ConfigStore, private dataStore: DataStore) {
     this.isTourPlaying = false
     this.tourTheme = configStore.Options.theme
+    this.hideSmartTipOnClick();
+  }
+
+  private hideSmartTipOnClick() {
+    window.addEventListener("mouseup", function() {
+      Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+        element.style.display = "none"
+      });
+    });
   }
 
   public playTour = async (tourId: any, action: RunTourAction, startInterval: any, autoPlayTest: boolean = false) => {
@@ -100,30 +112,166 @@ class PageTourPlay {
     autoPlayTest: boolean = false,
   ) => {
     objTour.steps.forEach((element,i) => {
-      let selectedElement = document.querySelector(element.selector);
-      // let img = document.createElement('img');
-      // img.src = 'https://fxpsitstoragenew.z13.web.core.windows.net/effective-thinking-concept-solution-bulb-260nw-1165554163.jpg';
-      // img.title = element.message;
-      // img.height = 40;
-      // img.width = 40;
-      // //img.setAttribute("data-tooltip", element.message);
-      // selectedElement.appendChild(img);
-      // selectedElement.insertBefore(img, selectedElement.nextSibling);
+      let selectedElement = document.querySelector(element.selector) as HTMLElement;
+      let smartTipElement = document.getElementById(`smarttip_${objTour.id}_${i}`);
+      let zIndex = this.configStore.Options.zIndex;
+      if(selectedElement && !selectedElement.getAttribute('disabled') && !smartTipElement)
+      {
+        let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
+        smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
+        (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
+        (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`${objTour.id}_${i}`); if (callback != null) callback(objTour.tourtype)});
+        (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
 
-      let div = document.createElement('div');
-      div.className = "hrw-hint";
-      div.addEventListener("mouseover", function() {
-        let availableSmartTips = document.querySelectorAll('[id^="smarttip_"]');
-        availableSmartTips.forEach((tips) => {
-          tips.className = "triangle-border top";
+        let div = document.createElement('div');
+        div.className = "smart-tip-hint";
+        div.id = `smarttip_${objTour.id}_${i}`;
+        div.style.zIndex = zIndex;
+        div.insertAdjacentHTML('beforeend', this.smartTipFn());
+        selectedElement.appendChild(div);
+
+        let smartTipPopperInstance = new Popper(selectedElement, div, {
+          placement: element.position as Placement,
         });
-        console.log(availableSmartTips);
-        let smartTip = document.getElementById("smarttip_" + objTour.id + "_" + i)
-        smartTip.className = "triangle-border top active"
-      });
-      div.innerHTML = "<a href='#' role='button' class='smarttip hrw-focusable' aria-label='Smart tip'><div class='smarttip-bubble'></div><div class='smarttip-bubble-out'></div></a><div id=smarttip_" + objTour.id + "_" + i +"  class='triangle-border top'><div>"+ element.message +"</div>";
-      selectedElement.appendChild(div);
+        smartTipPopperInstance.update();
+
+        let arrowDiv = document.createElement('div');
+        arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
+        smartTipPopup.appendChild(arrowDiv);
+
+        div.addEventListener("mouseover", function() {
+          const targetDom = document.querySelector(element.selector);
+          Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+            element.style.display = "none"
+          });
+          let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
+          toolTipPopper.style.display = "flex";
+          toolTipPopper.style.zIndex = zIndex;
+          let popperPlacement = element.position as Placement
+          switch (element.position) {
+            case 'top':
+              arrowDiv.className = 'arrow-pointer arrow-down'
+              smartTipPopup.style.flexDirection = 'column'
+              arrowDiv.style.alignSelf = 'center'
+              arrowDiv.style.margin = '0px 0px'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = '#0078D4'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+            case 'bottom':
+              arrowDiv.className = 'arrow-pointer arrow-up'
+              smartTipPopup.style.flexDirection = 'column-reverse'
+              arrowDiv.style.alignSelf = 'center'
+              arrowDiv.style.margin = '0px 0px'
+              arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              break
+
+            case 'top-start':
+              arrowDiv.className = 'arrow-pointer arrow-down'
+              smartTipPopup.style.flexDirection = 'column'
+              arrowDiv.style.alignSelf = 'flex-start'
+              arrowDiv.style.margin = '0px 0px'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = '#0078D4'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+            case 'top-end':
+              smartTipPopup.style.flexDirection = 'column'
+              arrowDiv.className = 'arrow-pointer arrow-down'
+              arrowDiv.style.alignSelf = 'flex-end'
+              arrowDiv.style.margin = '0px 0px'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = '#0078D4'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+              
+            case 'bottom-start':
+              smartTipPopup.style.flexDirection = 'column-reverse'
+              arrowDiv.className = 'arrow-pointer arrow-up'
+              arrowDiv.style.alignSelf = 'flex-start'
+              arrowDiv.style.margin = '0px 0px'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = '#0078D4'
+              break
+
+            case 'bottom-end':
+              smartTipPopup.style.flexDirection = 'column-reverse'
+              arrowDiv.className = 'arrow-pointer arrow-up'
+              arrowDiv.style.alignSelf = 'flex-end'
+              arrowDiv.style.margin = '0px 0px'
+              // todo : apply as per the theme color
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderBottomColor = '#0078D4'
+              break
+
+
+            case 'left':
+              smartTipPopup.style.flexDirection = 'row'
+              arrowDiv.className = 'arrow-pointer arrow-right'
+              arrowDiv.style.alignSelf = 'center'
+              arrowDiv.style.margin = '0px 0px'
+              arrowDiv.style.borderLeftColor = '#0078D4'
+              arrowDiv.style.borderRightColor = 'transparent'
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+            case 'right':
+              smartTipPopup.style.flexDirection = 'row-reverse'
+              arrowDiv.className = 'arrow-pointer arrow-left'
+              arrowDiv.style.alignSelf = 'center'
+              arrowDiv.style.margin = '0px 0px'
+              arrowDiv.style.borderRightColor = '#0078D4'
+              arrowDiv.style.borderLeftColor = 'transparent'
+              arrowDiv.style.borderTopColor = 'transparent'
+              arrowDiv.style.borderBottomColor = 'transparent'
+              break
+
+          }
+
+          let popperInstance = new Popper(targetDom, toolTipPopper, {
+            placement: popperPlacement
+          });
+          popperInstance.enableEventListeners();
+          popperInstance.scheduleUpdate();
+        });
+      }
     });
+  }
+
+  private async dismissSmartTip(id: string) {
+    // remove that specific tips and popper from the domutils.
+    let availableSmartTips = document.querySelectorAll(`[id^="smarttip_${id}"]`);
+    availableSmartTips.forEach(node => {
+      node.remove();
+    });
+
+    // record the action for the specific user and store in local storage.
+    try {
+      let response = await this.configStore.Options.userActionProvider.recordUserAction(
+        null,
+        null,
+        null,
+        null,
+      )
+    } catch (err) {}
   }
 
   public runAnnouncement = (
@@ -133,16 +281,16 @@ class PageTourPlay {
     callback: any = null,
     autoPlayTest: boolean = false,
   ) => {
-    // if (this.isTourPlaying) {
-    //   return
-    // }
-    // this.isTourPlaying = true
+    if (this.isTourPlaying) {
+      return
+    }
+    this.isTourPlaying = true
     this.tour = objTour
     this.LaunchAnnouncement(this.tour,action, startInterval, callback, autoPlayTest)(
       objTour,
       action,
-      callback,
       startInterval,
+      callback,
       autoPlayTest,
     );
   }
@@ -180,14 +328,6 @@ class PageTourPlay {
         if (opts.navigator.callbackOnTourStart != null) {
           opts.navigator.callbackOnTourStart(self.tour)
         }
-        let tourEndsWithCoverPage = tour.coverPage && tour.coverPage.location.toLowerCase() === 'end'
-        self.executeNextStep(tour, action, 0, 0, tourEndsWithCoverPage, callback, startInterval)
-        setInterval(() => {
-          self.goToNextStep(StepAction.Next, tour, action, callback, startInterval)
-          if (self.currentStep === self.totalSteps - 1) {
-            clearInterval()
-          }
-        }, startInterval)
       } else {
         setTimeout(() => {
           const opts = self.configStore.Options
@@ -354,7 +494,7 @@ class PageTourPlay {
       let element = document.querySelector(self.getElementSelector(self.currentStep))
       self.cleanupAction(element)
       self.removeTether()
-      if (callback != null) callback()
+      if (callback != null) callback(tour.tourtype)
       if (opts.navigator.callbackAfterTourEnd != null) {
         opts.navigator.callbackAfterTourEnd(self.tour)
       }
@@ -403,7 +543,6 @@ class PageTourPlay {
   ) => {
     const self = this
     const opts = self.configStore.Options
-    // self.ApplyTheme(self.currentStep)
     if (stepAction === StepAction.Next) {
       const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
       nextButton.classList.add('loadingNextStep')
@@ -413,12 +552,9 @@ class PageTourPlay {
         self.isTourPlaying = false
       }
 
-      // let element = document.querySelector(self.getElementSelector(self.currentStep))
-      // let stepType = self.tour.steps[self.currentStep].type
-      // self.executeAction(tour, stepType, element, self.currentStep)
       if (self.currentStep === self.totalSteps - 1) {
         self.removeTether()
-        // if (callback != null) callback()
+        if (callback != null) callback(tour.tourtype)
 
         if (self.currentStep === this.totalSteps - 1) {
           if (opts.navigator.callbackAfterTourEnd != null) {
@@ -447,7 +583,7 @@ class PageTourPlay {
       let element = document.querySelector(self.getElementSelector(self.currentStep))
       self.cleanupAction(element)
       self.removeTether()
-      if (callback != null) callback()
+      if (callback != null) callback(tour.tourtype)
       if (opts.navigator.callbackAfterTourEnd != null) {
         opts.navigator.callbackAfterTourEnd(self.tour)
       }
@@ -531,7 +667,7 @@ class PageTourPlay {
   private setupAnnouncementBox = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.announcementBoxFn())
-    this.tourBox.style.zIndex = '20000'
+    this.tourBox.style.zIndex = '200000'
   }
 
   private executeAction = (tour: Tutorial, action: any, element: HTMLElement, step: number) => {
@@ -790,7 +926,6 @@ class PageTourPlay {
             videoSourceContainer.src = this.tour.steps[stepCount].mediaUrl;
             videoHeaderContainer.style.display ='block'
             videoHeaderContainer.load();
-            videoHeaderContainer.play();
             imgHeaderContainer.style.display = 'none'
           }
         }
@@ -1203,10 +1338,10 @@ class PageTourPlay {
         var rect = element.getBoundingClientRect();
         let pagetourHelperLayer = document.getElementById("pagetour-elementLayer");
         
-        pagetourHelperLayer.style.left = (rect.left - 10).toString() + 'px';
-        pagetourHelperLayer.style.top = rect.top.toString() + 'px';
-        pagetourHelperLayer.style.height = height.toString() + 'px';
-        pagetourHelperLayer.style.width = (width + 20).toString() + 'px';
+        pagetourHelperLayer.style.left = (rect.left - 14).toString() + 'px';
+        pagetourHelperLayer.style.top = (rect.top - 4).toString() + 'px';
+        pagetourHelperLayer.style.height = (height + 8).toString() + 'px';
+        pagetourHelperLayer.style.width = (width + 24).toString() + 'px';
         document.getElementById("pagetour-greyLayer").style.display = 'inline'
         document.getElementById("pagetour-elementLayer").style.display = 'inline'
       }

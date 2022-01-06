@@ -34,9 +34,13 @@
                     title="Announcement Header"
                     required
                     placeholder="Enter Header of Announcement"
+                    maxlength="100"
                   ></textarea>
                   <span class="textarea-error" aria-live="assertive" id="anno-header-error">
                     Header is required
+                  </span>
+                  <span  aria-live="assertive" class="textarea-character-limit pull-right" id="announcement-header-character-limit">
+                    100 characters remaining.
                   </span>
                 </div>
 
@@ -69,8 +73,9 @@
                     <span class="bodytext-textarea-error" role="alert" aria-live="assertive" id="anno-message-error">
                       Body is required.
                     </span>
-                    <p class="character-remaining" id="character-remaining-text">
-                    </p>
+                    <span  aria-live="assertive" class="textarea-character-limit pull-right" id="character-remaining-text">
+                      500 characters remaining.
+                    </span>
                   </div>
                 </div>
 
@@ -100,6 +105,12 @@
                 <label class="font-caption-alt" for="cover-location-select">
                   <strong> Preview </strong>
                 </label>
+
+                <div class="line-container">
+                  <span class="line preview-arrow-left"></span>
+                  <p> 576 px </p>
+                  <span class="line preview-arrow-right"></span>
+                </div>
 
                 <div class="announcement-container-preview" id="anno-tourBox">
                   <div class="announcement-card" id="announcementboxdata" >

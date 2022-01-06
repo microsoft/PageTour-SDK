@@ -31,6 +31,7 @@
                 >
                   <option value="Pagetour" selected="selected">Page Tour</option>
                   <option value="Announcement">Announcement</option>
+                  <option value="SmartTip">Smart Tip</option>
                 </select>
             </div>
             <div class="col-lg-2 col-sm-6">
@@ -101,12 +102,16 @@
                 type="text"
                 title="Tags with Tour"
                 aria-required="true"
-                placeholder="Enter tags (Eg: Tag1,Tag2)"
-                maxlength="74"
+                placeholder="Enter tags to filter the tours (Comma Seperated)"
+                maxlength="200"
               ></textarea>
-              <span aria-live="assertive" class="textarea-character-limit pull-right" id="tour-tags-character-limit">
-                74 characters remaining.
-              </span>
+              <div><span class="font-para" id="tour-tags-info">
+            </span></div>
+              <div><span aria-live="assertive" class="textarea-character-limit pull-right" id="tour-tags-character-limit">
+                200 characters remaining.
+              </span></div>
+             
+              
             </div>
           </div>
           <div class="row margin-bottom-24">
