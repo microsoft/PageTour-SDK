@@ -1906,6 +1906,12 @@ $input-text-focus-outline: 1px dotted black;
   opacity: 0;
 }
 
+.tutorial-bubble {
+  outline: solid 5px #0078d1;
+  transition: outline 1s linear;
+  margin: 0.5em;
+}
+
 .smarttip-bubble-out {
   box-sizing: content-box;
   width: 10px;
@@ -1946,23 +1952,18 @@ $input-text-focus-outline: 1px dotted black;
 
 @keyframes introjspulse {
   0% {
-    transform: scale(0);
     opacity: 0;
   }
   25% {
-    transform: scale(0);
     opacity: 0.1;
   }
   50% {
-    transform: scale(0.1);
     opacity: 0.3;
   }
   75% {
-    transform: scale(0.5);
     opacity: 0.5;
   }
   100% {
-    transform: scale(1);
     opacity: 0;
   }
 }

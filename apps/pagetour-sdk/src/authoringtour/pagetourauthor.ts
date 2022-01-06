@@ -23,7 +23,6 @@ interface IWindow extends Window {
   SpeechRecognition: any;
 }
 
-
 class PageTourAuthor {
   // private modal: any = null;
   private selectedElement: HTMLElement = null
@@ -1313,7 +1312,8 @@ class PageTourAuthor {
   private GenerateTranscript(type: string) {
     // new speech recognition object
     const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
-    var recognition = new webkitSpeechRecognition();
+    //var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    let recognition = new webkitSpeechRecognition();
     let transcriptDiv = document.getElementById('transcript-message-for-'+ type) as HTMLTextAreaElement;
     let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
                 
