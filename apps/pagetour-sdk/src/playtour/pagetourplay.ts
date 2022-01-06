@@ -121,16 +121,18 @@ class PageTourPlay {
   private makeSmartTipVisible(element : any, i: number, objTour: Tutorial, callback: any) {
     let selectedElement = document.querySelector(element.selector) as HTMLElement;
       let zIndex = this.configStore.Options.zIndex;
-        if(selectedElement && !selectedElement.getAttribute('disabled'))
+      let smartTipId = `smarttip_${objTour.id}_${i}`;
+      let smartTipElement = document.getElementById(smartTipId);
+      if(selectedElement && !selectedElement.getAttribute('disabled') && !smartTipElement)
         {
           let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
-          smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
+          smartTipPopup.id = `${smartTipId}-popup`;
           (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
-          (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`smarttip_${objTour.id}_${i}`, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
+          (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
           (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
 
           let smartTip = DomUtils.appendToBody(this.smartTipFn());
-          smartTip.id = `smarttip_${objTour.id}_${i}`;
+          smartTip.id = smartTipId;
           smartTip.style.zIndex = zIndex;
           selectedElement.insertAdjacentElement('afterend', smartTip);
           let smartTipInstance = new Popper(selectedElement, smartTip, {
