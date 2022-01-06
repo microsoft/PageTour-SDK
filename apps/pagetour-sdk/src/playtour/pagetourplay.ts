@@ -126,7 +126,7 @@ class PageTourPlay {
           let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
           smartTipPopup.id = `smarttip_${objTour.id}_${i}-popup`;
           (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
-          (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`${objTour.id}_${i}`); if (callback != null) callback(objTour.tourtype)});
+          (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(`smarttip_${objTour.id}_${i}`, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
           (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
 
           let smartTip = DomUtils.appendToBody(this.smartTipFn());
@@ -207,20 +207,21 @@ class PageTourPlay {
         }
   }
 
-  private async dismissSmartTip(id: string) {
+  private async dismissSmartTip(id: string, tour: Tutorial, userAction: string, step: string, operation: string) {
     // remove that specific tips and popper from the domutils.
-    let availableSmartTips = document.querySelectorAll(`[id^="smarttip_${id}"]`);
-    availableSmartTips.forEach(node => {
-      node.remove();
-    });
+    let availableSmartTips = document.getElementById(id);
+    if(availableSmartTips)
+    {
+      availableSmartTips.remove();
+    }
 
     // record the action for the specific user and store in local storage.
     try {
       let response = await this.configStore.Options.userActionProvider.recordUserAction(
-        null,
-        null,
-        null,
-        null,
+        tour,
+        userAction,
+        step,
+        operation,
       )
     } catch (err) {}
   }
