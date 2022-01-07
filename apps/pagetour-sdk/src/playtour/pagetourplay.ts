@@ -29,6 +29,7 @@ class PageTourPlay {
   private dock: any = null
   private defaultFontFamily = 'Segoe UI'
   private autoPlayTest: boolean
+  private isMuted: boolean = false;
 
   // Template Functions
   private tourBoxHtmlFn: any = tourBoxHtml
@@ -317,6 +318,7 @@ class PageTourPlay {
             audioMuteButton.addEventListener('click', () => {
               document.getElementById('announcement-audio-stop').style.display = 'inline'
               document.getElementById('announcement-audio').style.display = 'none'
+              self.isMuted = true;
               if (opts.navigator.callbackOnVolumeMute != null) {
                 opts.navigator.callbackOnVolumeMute()
               }
@@ -328,6 +330,7 @@ class PageTourPlay {
             audioUnMuteButton.addEventListener('click', () => {
               document.getElementById('announcement-audio-stop').style.display = 'none'
               document.getElementById('announcement-audio').style.display = 'inline'
+              self.isMuted = false;
               if (opts.navigator.callbackOnVolumeUnmute != null) {
                 opts.navigator.callbackOnVolumeUnmute(self.tour.steps[self.currentStep].transcript)
               }
@@ -415,22 +418,24 @@ class PageTourPlay {
             })
           }
 
-          const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio')
+          const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio');
           if (audioMuteButton) {
             audioMuteButton.addEventListener('click', () => {
               document.getElementById('pagetour-audio-stop').style.display = 'inline'
               document.getElementById('pagetour-audio').style.display = 'none'
+              self.isMuted = true;
               if (opts.navigator.callbackOnVolumeMute != null) {
                 opts.navigator.callbackOnVolumeMute()
               }
             })
           }
 
-          const audioUnMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop')
+          const audioUnMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop');
           if (audioUnMuteButton) {
             audioUnMuteButton.addEventListener('click', () => {
               document.getElementById('pagetour-audio-stop').style.display = 'none'
               document.getElementById('pagetour-audio').style.display = 'inline'
+              self.isMuted = false;
               if (opts.navigator.callbackOnVolumeUnmute != null) {
                 opts.navigator.callbackOnVolumeUnmute(self.tour.steps[self.currentStep].transcript)
               }
@@ -635,12 +640,14 @@ class PageTourPlay {
   private initialize = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.currentStep = 0
+    this.isMuted = false;
     this.setupTourBox(tour)
   }
 
   private initializeAnnouncement = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.currentStep = 0
+    this.isMuted = false;
     this.setupAnnouncementBox(tour)
   }
 
@@ -752,16 +759,28 @@ class PageTourPlay {
     let element = document.querySelector(elementSelector)
     if (this.isValidElement(element)) {
       const previoustButton: HTMLButtonElement = document.querySelector('#pagetour-previous-step')
-      const nextButton: HTMLButtonElement = document.querySelector('#pagetour-next-step')
-      const audioButton: HTMLButtonElement = document.querySelector('#pagetour-audio')
-      const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop')
+      const nextButton: HTMLButtonElement = document.querySelector('#pagetour-next-step');
+      const audioButton: HTMLButtonElement = document.querySelector('#pagetour-audio');
+      const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop');
 
       previoustButton.hidden = false
       previoustButton.disabled = false
       nextButton.hidden = false
       nextButton.disabled = false
-      audioButton.style.display = tour.steps[stepCount].transcript === '' ? 'none': 'inline'
-      audioMuteButton.style.display = 'none'
+      
+      if (tour.steps[stepCount].transcript !== '') {
+        if(this.isMuted) {
+          audioButton.style.display = 'none'
+          audioMuteButton.style.display = 'inline'
+        } else {
+          audioButton.style.display = 'inline'
+          audioMuteButton.style.display = 'none'
+        }
+      } else {
+        audioButton.style.display = 'none'
+        audioMuteButton.style.display = 'none'
+      }
+      
       if (stepCount === 0) {
         // First step with element.
         if (action === RunTourAction.Play && (!opts.isCoverPageTourStart || !tour.coverPage ||tour.coverPage==null || tour.coverPage.location.toLowerCase() != 'start')) {
@@ -807,7 +826,7 @@ class PageTourPlay {
         let tourBoxElement: HTMLElement = document.getElementById('pagetour-tourBox')
         DomUtils.manageTabbing(tourBoxElement)
         if (opts.navigator.callbackAfterTourStep != null) {
-          opts.navigator.callbackAfterTourStep(this.tour.steps[stepCount])
+          opts.navigator.callbackAfterTourStep(this.tour.steps[stepCount], this.isMuted)
         }
       }
 
@@ -885,8 +904,20 @@ class PageTourPlay {
       previoustButton.disabled = false
       nextButton.hidden = false
       nextButton.disabled = false
-      audioButton.style.display = tour.steps[stepCount].transcript === '' ? 'none': 'inline'
-      audioMuteButton.style.display = 'none'
+
+      if (tour.steps[stepCount].transcript !== '') {
+        if(this.isMuted) {
+          audioButton.style.display = 'none'
+          audioMuteButton.style.display = 'inline'
+        } else {
+          audioButton.style.display = 'inline'
+          audioMuteButton.style.display = 'none'
+        }
+      } else {
+        audioButton.style.display = 'none'
+        audioMuteButton.style.display = 'none'
+      }
+      
       if (stepCount === 0) {
         // First step with element.
         if (action === RunTourAction.Play) {
@@ -952,7 +983,7 @@ class PageTourPlay {
         let tourBoxElement: HTMLElement = document.getElementById('anno-tourBox')
         DomUtils.manageTabbing(tourBoxElement)
         if (opts.navigator.callbackAfterTourStep != null) {
-          opts.navigator.callbackAfterTourStep(this.tour.steps[stepCount])
+          opts.navigator.callbackAfterTourStep(this.tour.steps[stepCount], this.isMuted)
         }
 
       if (stepCount === this.totalSteps - 1) {
