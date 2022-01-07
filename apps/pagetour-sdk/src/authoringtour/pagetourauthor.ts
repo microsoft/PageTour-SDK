@@ -1334,7 +1334,7 @@ class PageTourAuthor {
   private closeAnnouncementPageModal = () => {
     let announcementPageModal = document.getElementById('announcement-page-modal')
     announcementPageModal.parentNode.removeChild(announcementPageModal)
-    this.StopTranscriptGeneration(TourTypeEnum.Announcement.toLowerCase());
+    this.stopAnnouncementRecording();
     this.unHideAddTourModal()
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
   }
@@ -1366,7 +1366,7 @@ class PageTourAuthor {
 
     this.getAnnouncementPageDetails()
     this.populateSteps()
-    this.StopTranscriptGeneration(TourTypeEnum.Announcement.toLowerCase());
+    this.stopAnnouncementRecording();
     this.closeAnnouncementPageModal()
   }
 
@@ -1401,8 +1401,10 @@ class PageTourAuthor {
     let stopTranscriptBtnIcon = document.getElementById('stop-record-' + type + '-page-btn') as HTMLButtonElement;
     this.recognition.stop();
     this.hasUserStoppedRecording = true;
-    transcriptBtnIcon.style.display = 'inline';
-    stopTranscriptBtnIcon.style.display = 'none';
+    if(transcriptBtnIcon && stopTranscriptBtnIcon) {
+      transcriptBtnIcon.style.display = 'inline';
+      stopTranscriptBtnIcon.style.display = 'none';
+    }
   }
 
   private GenerateTranscript(type: string) {
@@ -1753,8 +1755,8 @@ class PageTourAuthor {
 
   /// Takes back to Choose element Dailog from Step details Record Dialog
   private backToStepDetails = () => {
-    this.StopTranscriptGeneration('step');
     this.backToDetails('step-detail-modal');
+    this.stopTourRecording();
   }
 
   private backToTipDetails = () => {
@@ -1774,9 +1776,9 @@ class PageTourAuthor {
     if (!this.checkRecordBoxInputs()) {
       return
     }
-    this.StopTranscriptGeneration('step');
     this.getStepDetails()
     this.backToDetails('step-detail-modal')
+    this.stopTourRecording();
     this.removeStepDetailModal('step-detail-modal')
     this.toggleChooseElement(this.chooseState.Choose, null)
     this.disablePageInspector(true)
