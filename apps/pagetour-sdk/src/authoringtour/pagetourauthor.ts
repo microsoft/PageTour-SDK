@@ -1334,6 +1334,7 @@ class PageTourAuthor {
   private closeAnnouncementPageModal = () => {
     let announcementPageModal = document.getElementById('announcement-page-modal')
     announcementPageModal.parentNode.removeChild(announcementPageModal)
+    this.StopTranscriptGeneration(TourTypeEnum.Announcement.toLowerCase());
     this.unHideAddTourModal()
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
   }
@@ -1365,6 +1366,7 @@ class PageTourAuthor {
 
     this.getAnnouncementPageDetails()
     this.populateSteps()
+    this.StopTranscriptGeneration(TourTypeEnum.Announcement.toLowerCase());
     this.closeAnnouncementPageModal()
   }
 
@@ -1751,6 +1753,7 @@ class PageTourAuthor {
 
   /// Takes back to Choose element Dailog from Step details Record Dialog
   private backToStepDetails = () => {
+    this.StopTranscriptGeneration('step');
     this.backToDetails('step-detail-modal');
   }
 
@@ -1771,6 +1774,7 @@ class PageTourAuthor {
     if (!this.checkRecordBoxInputs()) {
       return
     }
+    this.StopTranscriptGeneration('step');
     this.getStepDetails()
     this.backToDetails('step-detail-modal')
     this.removeStepDetailModal('step-detail-modal')
@@ -1799,6 +1803,7 @@ class PageTourAuthor {
     if (!this.checkRecordBoxInputs()) {
       return
     }
+    this.StopTranscriptGeneration('step');
     this.getStepDetails()
     this.removeStepDetailModal('step-detail-modal')
     this.closeChooseElementModal()
