@@ -37,6 +37,6 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "pagetour-sdk": "^1.0.0"
+    "pagetour-sdk": "^2.0.2"
   }
 }
