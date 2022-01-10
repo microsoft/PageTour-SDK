@@ -768,7 +768,7 @@ class PageTourPlay {
       nextButton.hidden = false
       nextButton.disabled = false
       
-      if (tour.steps[stepCount].transcript !== '') {
+      if (tour.steps[stepCount].transcript && tour.steps[stepCount].transcript !== '') {
         if(this.isMuted) {
           audioButton.style.display = 'none'
           audioMuteButton.style.display = 'inline'
@@ -905,7 +905,7 @@ class PageTourPlay {
       nextButton.hidden = false
       nextButton.disabled = false
 
-      if (tour.steps[stepCount].transcript !== '') {
+      if (tour.steps[stepCount].transcript && tour.steps[stepCount].transcript !== '') {
         if(this.isMuted) {
           audioButton.style.display = 'none'
           audioMuteButton.style.display = 'inline'
