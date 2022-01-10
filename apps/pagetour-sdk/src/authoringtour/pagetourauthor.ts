@@ -1962,13 +1962,16 @@ class PageTourAuthor {
 
   /// This loads the details of a step in the Record box.
   private populateStepDetails = () => {
-    let step = this.stepList[this.editStepIndex]
-    ;(document.getElementById('event-type-select') as HTMLSelectElement).value = step.type
-    ;(document.getElementById('position-select') as HTMLSelectElement).value = step.position
-    ;(document.getElementById('message-for-step') as HTMLTextAreaElement).value = step.message
-    ;(document.getElementById('error-message-for-step') as HTMLTextAreaElement).value = step.errorMessage
-    ;(document.getElementById('value-for-step') as HTMLTextAreaElement).value = step.value
-    ;(document.getElementById('transcript-message-for-step') as HTMLTextAreaElement).value = step.transcript
+    let step = this.stepList[this.editStepIndex];
+    (document.getElementById('event-type-select') as HTMLSelectElement).value = step.type;
+    (document.getElementById('position-select') as HTMLSelectElement).value = step.position;
+    (document.getElementById('message-for-step') as HTMLTextAreaElement).value = step.message;
+    (document.getElementById('error-message-for-step') as HTMLTextAreaElement).value = step.errorMessage;
+    (document.getElementById('value-for-step') as HTMLTextAreaElement).value = step.value;
+    if(step.transcript) {
+      (document.getElementById('transcript-message-for-step') as HTMLTextAreaElement).value = step.transcript;
+    }
+
     if (step.delayBefore) {
       let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
       let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
