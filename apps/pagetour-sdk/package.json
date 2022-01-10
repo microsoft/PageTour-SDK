@@ -1,6 +1,6 @@
 {
   "name": "pagetour-sdk",
-  "version": "1.0.2",
+  "version": "2.0.2",
   "license": "MIT",
   "description": "Lightweight Typescript SDK for designing tours in Web Apps",
   "main": "dist/umd/pagetour.umd.js",
@@ -32,7 +32,6 @@
     "watch:webpack": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack --config webpack.config.ts --env.development --watch",
     "watch:esm": "tsc --target es2015 --outDir dist/esm --watch",
     "watch": "concurrently \"npm:watch:webpack\" \"npm:watch:esm\"",
-    "publishpackage": "npm publish",
     "clean": "rimraf node_modules",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
@@ -40,6 +39,8 @@
     "dist"
   ],
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^31.0.0",
+    "@ckeditor/ckeditor5-word-count": "^31.0.0",
     "debounce": "1.2.0",
     "popper.js": "1.14.7",
     "unique-selector": "0.4.1"
@@ -71,7 +72,7 @@
     "typescript": "3.2.4",
     "underscore.string": "3.3.5",
     "url-loader": "1.1.2",
-    "webpack": "4.29.3",
+    "webpack": "4.46.0",
     "webpack-cli": "3.2.3"
   }
 }

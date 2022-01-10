@@ -30,6 +30,8 @@ interface Step {
   ignoreStepIf: Boolean
 
   ignoreStepIfConditions: string
+
+  transcript: string
 }
 
 export { Step }

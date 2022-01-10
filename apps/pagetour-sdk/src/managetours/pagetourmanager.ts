@@ -10,7 +10,7 @@ import { PageContext } from '../models/pagecontext'
 import { RunTourAction } from '../models/runtouraction'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
-
+import { TourTypeEnum } from '../models/tourtypeenum'
 declare const navigator: any
 class PageTourManager {
   private toursList: any = [] // This holds an array of tours
@@ -129,6 +129,7 @@ class PageTourManager {
     this.isAuthorizedToAddTour = await this.authorizationService.isAuthorizedToAddTour()
     let isExportEnabled = await this.isExportAvaialable()
     this.isAuthorizedToDeleteTour = await this.authorizationService.isAuthorizedToDeleteTour()
+    let isBeaconEnabled = this.configStore.Options.enableBeacon;
 
     if (!this.isAuthorizedToAddTour) {
       document.getElementById('manage-tours-modal-add-tour-btn').style.display = 'none'
@@ -141,9 +142,21 @@ class PageTourManager {
       document.getElementById('delete_button_header').style.display = 'none'
     }
 
+    if(!isBeaconEnabled) 
+    {
+      document.getElementById('option-smart-tip').style.display = 'none'
+    }
+
     document.getElementById('all-list-x-btn').onclick = this.closeManageToursModal
     document.getElementById('manage-tours-modal-close-btn').onclick = this.closeManageToursModal
-    document.getElementById('manage-tours-modal-add-tour-btn').onclick = this.addTour
+    document.getElementById('manage-tours-modal-add-tour-btn').onmouseenter = this.showOptions
+    document.getElementById('manage-tours-modal-add-tour-btn').onfocus = this.showOptions
+    document.getElementById('manage-tours-modal-add-tour-div').onmouseleave = this.hideOptions
+    document.getElementById('manage-tours-modal-add-tour-btn').onblur = this.hideOptions
+    document.getElementById('option-page-tour').onclick = this.addPageTour
+    document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
+    document.getElementById('option-smart-tip').onclick = this.addSmartTip
+    document.getElementById('option-guided-tour').onclick = this.addGuidedTour
     document.getElementById('manage-tours-sort').onclick = this.sortTours
     document.getElementById('searchbytitle').onkeyup = this.searchTours
     document.getElementById('showexpiredtours-chkbox').onchange = this.searchTours
@@ -158,6 +171,7 @@ class PageTourManager {
 
     let manageTourFormModal = document.getElementById('tour-form')
     DomUtils.manageTabbing(manageTourFormModal)
+    this.hideOptions()
     try {
       const tours: Tutorial[] = await this.dataStore.GetToursByPageContext(null, true)
       this.toursList = this.sortItems(tours, 'desc')
@@ -306,10 +320,37 @@ class PageTourManager {
     if (manageTourModal != null || manageTourModal != undefined) manageTourModal.parentNode.removeChild(manageTourModal)
   }
 
+  // Opens the option
+  private showOptions = () => {
+    document.getElementById("add-new-dropdown").style.display = 'inline'
+  }
+
+  private hideOptions = () => {
+    document.getElementById("add-new-dropdown").style.display = 'none'
+  }
+
+  
   /// Opens Add Tour Dialog
-  private addTour = () => {
-    this.hideManagePageTourModal()
-    this.pagetourAuthor.AddTour()
+  private addPageTour = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour(TourTypeEnum.PageTour);
+  }
+
+  // Opens Add system announcement dialog
+  private addSystemAnnouncement = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour(TourTypeEnum.Announcement);
+  }
+
+  private addSmartTip = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour(TourTypeEnum.Beacon);
+  }
+
+  /// Opens Guided Tour Dialog
+  private addGuidedTour = () => {
+    this.hideManagePageTourModal();
+    this.pagetourAuthor.AddTour(TourTypeEnum.InteractiveGuide);
   }
 
   /*#BeginRegion:Tours Search*/
@@ -570,6 +611,7 @@ class PageTourManager {
       let tr = document.createElement('tr')
 
       let tdExpander = document.createElement('td')
+      let tdTourType = document.createElement('td')
       let tdTitle = document.createElement('td')
       let tdDescription = document.createElement('td')
       let tdStartPageName = document.createElement('td')
@@ -582,6 +624,10 @@ class PageTourManager {
 
       let expander = this.getButton('expander', tour)
       let title = this.getTextElement('title', tour)
+      let tourtype = null;
+      if(!tour.tourtype || tour.tourtype == '')
+        tour.tourtype = TourTypeEnum.PageTour;
+      tourtype = this.getTextElement('tourtype', tour)
       let author=null;
       if(tour.lastmodifiedby!=null&&tour.lastmodifiedby!='')
         author = this.getTextElement('lastmodifiedby', tour)
@@ -595,6 +641,7 @@ class PageTourManager {
       let tourPlay = this.getButton('play', tour)
 
       tdExpander.setAttribute('class', 'expander-column')
+      tdTourType.setAttribute('class', 'title-column')
       tdTitle.setAttribute('class', 'title-column')
       tdStartPageName.setAttribute('class', 'title-column')
       tdDate.setAttribute('class', 'date-column')
@@ -606,6 +653,7 @@ class PageTourManager {
 
       tdExpander.appendChild(expander)
       tdTitle.appendChild(title)
+      tdTourType.appendChild(tourtype)
       if(author!=null)
         tdTitle.appendChild(author)
       tdDescription.appendChild(description)
@@ -629,6 +677,7 @@ class PageTourManager {
       tdPlay.appendChild(tourPlay)
 
       tr.appendChild(tdExpander)
+      tr.appendChild(tdTourType)
       tr.appendChild(tdTitle)
       tr.appendChild(tdDescription)
       tr.appendChild(tdStartPageName)
@@ -668,6 +717,7 @@ class PageTourManager {
       tags: string
       startpageurl: string
       lastmodifiedby: string
+      tourtype: string
     },
   ) => {
     let msgElement = document.createElement('div')
@@ -688,6 +738,12 @@ class PageTourManager {
         msgElement.appendChild(document.createTextNode('Author: ' + tour.lastmodifiedby))
         msgElement.setAttribute('id', 'tour-lastmodifiedby_' + tour.id)
         msgElement.classList.add('author-desc')
+        break
+      case 'tourtype':
+        let tourTypeIcon = document.createElement('i');
+        msgElement.appendChild(tourTypeIcon)
+        msgElement.appendChild(document.createTextNode(tour.tourtype))
+        msgElement.setAttribute('id', 'tour-type_' + tour.id)
         break
     }
     msgElement.classList.add('message-desc')
@@ -833,7 +889,8 @@ class PageTourManager {
 
   private editTour = (tourId: any) => {
     this.hideManagePageTourModal()
-    this.pagetourAuthor.EditTour(this.getTourbyId(tourId))
+    let tour = this.getTourbyId(tourId);
+    this.pagetourAuthor.EditTour(tour);
   }
 
   private exportTour = async (id: any) => {
@@ -953,11 +1010,11 @@ class PageTourManager {
   /// Edits the Tour
 
   private openDeletePopup = async (tourId: any) => {
-    await this.openPopup(tourId, 'Delete', 'Do you want to delete this tour', 'Delete', 'Cancel')
+    await this.openPopup(tourId, 'Delete', 'Do you want to delete this tour?', 'Delete', 'Cancel')
   }
 
   private openExportPopup = async (tourId: any) => {
-    await this.openPopup(tourId, 'Export', 'Do you want to export this tour', 'Export', 'Cancel')
+    await this.openPopup(tourId, 'Export', 'Do you want to export this tour?', 'Export', 'Cancel')
   }
 
   /// Deletes Tour
@@ -1008,7 +1065,12 @@ class PageTourManager {
 
   private playTourByObject = async (tour: any, startInterval: number) => {
     this.hideManagePageTourModal()
-    this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
+    if(tour.tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase())
+        this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0)
+    else if(tour.tourtype.toLowerCase() == TourTypeEnum.Beacon.toLowerCase())
+        this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0)
+    else
+      this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
   }
   /// Hides Manage Tour Dialog
   private hideManagePageTourModal = () => {
@@ -1018,12 +1080,11 @@ class PageTourManager {
   }
 
   private isExportAvaialable = async (): Promise<Boolean> => {
-    if (this.isExportEnabled == undefined || this.isExportEnabled == null) {
+    if (this.isExportEnabled == undefined || this.isExportEnabled == null || this.isExportEnabled == false) {
       this.isAuthorizedToExportTour = await this.authorizationService.isAuthorizedToExportTour()
       this.isExportEnabled =
         this.isAuthorizedToExportTour &&
-        this.configStore.Options.exportFeatureFlag &&
-        (await this.dataStore.isExportTourImplemented())
+        this.configStore.Options.exportFeatureFlag
     }
     return this.isExportEnabled
   }

@@ -5,9 +5,9 @@ import { Tags } from './tags'
 interface NavigatorOptions {
   navigateToContext?: (context: PageContext) => void
   getStartPageUrl?: (startUrl: string) => string
-  getCurrentPageContext?: (pageContext: PageContext) => PageContext
+  getCurrentPageContext?: () => PageContext
   callbackBeforeTourStep?: (tour: Tutorial) => void
-  callbackAfterTourStep?: (tour: Tutorial) => void
+  callbackAfterTourStep?: (step: any, isMuted: boolean) => void
   callbackBeforeTourStart?: (tour: Tutorial) => void
   callbackOnTourStart?: (tour: Tutorial) => void
   callbackAfterTourEnd?: (tour: Tutorial) => void
@@ -19,6 +19,8 @@ interface NavigatorOptions {
   callbackOnTourExported?: (tour: Tutorial) => void
   callbackOnTourDeleted?: (tour: Tutorial) => void
   callbackForTags?: () => Promise<Tags>
+  callbackOnVolumeMute?: () => void
+  callbackOnVolumeUnmute?: (transcript: string) => void
 }
 
 export { NavigatorOptions }

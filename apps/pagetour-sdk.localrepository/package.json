@@ -1,6 +1,6 @@
 {
   "name": "pagetour-sdk.localrepository",
-  "version": "1.0.0",
+  "version": "2.0.2",
   "description": "Local storage repository plugin for pagetour sdk",
   "author": {
     "name": "PageTour-Team",
@@ -26,16 +26,17 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "watch": "tsc --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "publishpackage": "npm publish"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "license": "MIT",
   "dependencies": {
-    "pagetour-sdk": "^1.0.0",
+    "pagetour-sdk": "^2.0.2",
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "pagetour-sdk": "^1.0.0"
+    "pagetour-sdk": "^2.0.2"
   }
 }

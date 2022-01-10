@@ -9,12 +9,13 @@ class ConfigStore {
     exportFeatureFlag: true,
     autoPlayEnabled: true,
     isCoverPageTourStart: false,
+    enableTranscript: false,
     theme: {
       primaryColor: '#0063b1',
       secondaryColor: '#fdfdfd',
       textColor: '#252423',
       navigationButtonColor: '#0063b1',
-      isRounded: false,
+      isRounded: false
     },
     navigator: {
       navigateToContext: (context: PageContext) => {
@@ -27,7 +28,8 @@ class ConfigStore {
           window.location.href = newUrl
         }
       },
-      getCurrentPageContext: (context: PageContext): PageContext => {
+      getCurrentPageContext: (): PageContext => {
+        let context: any = {}
         const pageUrl = window.location.href
           .replace(window.location.host, '')
           .replace(window.location.protocol + '//', '')
@@ -61,7 +63,11 @@ class ConfigStore {
     tags: {
       includedTags: [],
       excludedTags: [],
+      tagHelpText: "Enter the tag values"
     },
+    zIndex: "100000",
+    textAreaCharacterLength: 500,
+    enableBeacon: false
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)

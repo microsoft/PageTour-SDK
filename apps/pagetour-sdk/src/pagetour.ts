@@ -11,6 +11,7 @@ import { ContextChangeHandler } from './eventhandlers/contextchangehandler'
 import { PageContext } from './models/pagecontext'
 import { IPagetourRepository } from './repository/ipagetourrepository'
 import { DataStore } from './common/datastore'
+import { TourTypeEnum } from './models/tourtypeenum'
 class PageTour {
   public static ContextChangeEvent = 'PageTour:ContextChangeEvent'
 
@@ -31,23 +32,39 @@ class PageTour {
    * 
    * Initialize the PageTour Library
    */
-  public static init = (repository: IPagetourRepository, options: PageTourOptions) => {
-    if (options.navigator) {
-      if (options.navigator.callbackForTags) {
-        options.navigator.callbackForTags().then(function(data) {
-          options.tags.includedTags = options.tags.includedTags
-            ? options.tags.includedTags.concat(data.includedTags)
-            : data.includedTags
-          options.tags.excludedTags = options.tags.excludedTags
-            ? options.tags.excludedTags.concat(data.excludedTags)
-            : data.excludedTags
-        })
+  public static init = (repository: IPagetourRepository, options: PageTourOptions): Promise<Boolean> => {
+    
+    return new Promise<Boolean>((resolve, reject)=>{
+      if (options.navigator) {
+        if (options.navigator.callbackForTags) {
+          options.navigator.callbackForTags().then(function (data) {
+            options.tags.includedTags = options.tags.includedTags
+              ? options.tags.includedTags.concat(data.includedTags)
+              : data.includedTags
+            options.tags.excludedTags = options.tags.excludedTags
+              ? options.tags.excludedTags.concat(data.excludedTags)
+              : data.excludedTags
+            PageTour.initializePageTourServices(repository, options).then(()=>{
+              resolve(true);
+            });
+          })
+        }
+      }else{
+        PageTour.initializePageTourServices(repository, options).then(()=>{
+          resolve(true);
+        });
       }
-    }
+      
+    })
 
+    
+  }
+
+  private static initializePageTourServices = async (repository: IPagetourRepository, options: PageTourOptions): Promise<void> => {
     PageTour.initializeServices(repository, options)
     let pageContext = PageTour.GetInstance().getPageContext()
-    PageTour.GetInstance().autoPlayByContext(pageContext, 0, false)
+    await PageTour.GetInstance().autoPlayByContext(pageContext, 0, false)
+    
   }
 
   /**
@@ -82,7 +99,7 @@ class PageTour {
    * Creates PageTour Author Dialog and attaches it to the DOM
    */
   public openPageTourAuthorDialog = () => {
-    this.pageTourAuthor.AddTour()
+    this.pageTourAuthor.AddTour(TourTypeEnum.PageTour)
   }
 
   /**
@@ -152,7 +169,7 @@ class PageTour {
     return this.authService.isAuthorized(permission)
   }
 
-  private static initializeServices = (repository: IPagetourRepository, config: PageTourOptions, ) => {
+  private static initializeServices = (repository: IPagetourRepository, config: PageTourOptions,) => {
     PageTour.me = new PageTour()
     const configStore = new ConfigStore(config)
     const dataStore = new DataStore(repository, configStore)

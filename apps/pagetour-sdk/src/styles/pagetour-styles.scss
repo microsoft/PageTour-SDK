@@ -11,10 +11,6 @@
   }
 }
 
-div#cover-page-modal {
-  z-index: 999;
-}
-
 .font-body {
   font-family: 'Segoe UI';
   font-weight: 400;
@@ -38,7 +34,7 @@ div#cover-page-modal {
 
 .font-subtitle-alt {
   font-family: 'Segoe UI';
-  font-weight: normal;
+  font-weight: 600;
   font-size: 18px !important;
   line-height: 22px !important;
 }
@@ -113,7 +109,7 @@ $input-text-focus-outline: 1px dotted black;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 20500;
+  z-index: 205000;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -687,8 +683,31 @@ $input-text-focus-outline: 1px dotted black;
       content: '\E104';
     }
 
+    &.icon-microphone:before {
+      content: '\E720';
+      color: #0078d1;
+      font-size: larger;
+    }
+    &.icon-microphoneListening:before {
+      content: '\E7C8';
+      color: red;
+      font-size: larger;
+    }
+
     &.icon-recyclebin:before {
       content: '\E107';
+    }
+
+    &.icon-tourtype-Pagetour:before {
+      content: '\E754';
+      color: #0078d1;
+      margin-right: 5px;
+    }
+
+    &.icon-tourtype-Announcement:before {
+      content: '\EC781';
+      color: #0078d1;
+      margin-right: 5px;
     }
 
     &.icon-calender:before {
@@ -724,6 +743,14 @@ $input-text-focus-outline: 1px dotted black;
 
     &.close-button-icon:before {
       content: '\E10A';
+    }
+
+    &.icon-audio:before {
+      content: '\E767';
+    }
+
+    &.icon-audio-mute:before {
+      content: '\E992';
     }
   }
 
@@ -815,11 +842,11 @@ $input-text-focus-outline: 1px dotted black;
 
     @media (min-width: 1200px) {
       .col-lg-3 {
-        padding: 0 24px 0 0;
+        padding: 0;
       }
 
       .col-lg-2 {
-        padding: 0 24px 0 0;
+        padding: 0;
       }
     }
 
@@ -844,6 +871,50 @@ $input-text-focus-outline: 1px dotted black;
         width: 100%;
         max-width: none;
       }
+    }
+
+    .add-new {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding-right: 15px;
+    }
+
+    .pagetour-dropdown-menu {
+      top: 28px !important;
+      position: absolute;
+      z-index: 1000;
+      float: left;
+      min-width: 10rem;
+      padding: 0.5rem 0;
+      margin: 0.125rem 0 0;
+      font-size: 1rem;
+      color: #212529;
+      text-align: left;
+      list-style: none;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 0.25rem;
+    }
+
+    .pagetour-dropdown-item {
+      display: block;
+      width: 100%;
+      padding: 0.25rem 1.5rem;
+      clear: both;
+      font-weight: 400;
+      color: #212529;
+      text-align: inherit;
+      white-space: nowrap;
+      background-color: transparent;
+      border: 0;
+    }
+
+    .btn-outline-primary{
+      border: none;
     }
 
     .pagination-panel {
@@ -905,7 +976,6 @@ $input-text-focus-outline: 1px dotted black;
     &__select {
       height: 36px;
       padding: 0 12px;
-      -webkit-appearance: none;
       border: 1px solid black;
 
       &:focus {
@@ -933,18 +1003,6 @@ $input-text-focus-outline: 1px dotted black;
       &::-ms-value {
         background: none;
         color: balck;
-      }
-
-      &--icon {
-        font-weight: normal;
-
-        &:after {
-          content: '\e70d';
-          font-family: 'SegoeUI MDL2 Assets';
-          position: absolute;
-          bottom: 8px;
-          right: 32px;
-        }
       }
     }
   }
@@ -1025,6 +1083,7 @@ $input-text-focus-outline: 1px dotted black;
   resize: none;
   padding: 10px 12px;
   width: 100%;
+  font-size: 15px;
 
   &-character-limit {
     font-size: 11px !important;
@@ -1062,6 +1121,10 @@ $input-text-focus-outline: 1px dotted black;
 
 .margin-top-12 {
   margin-top: 12px;
+}
+
+.margin-top-16 {
+  margin-top: 24px;
 }
 
 .margin-bottom-24 {
@@ -1114,13 +1177,13 @@ $input-text-focus-outline: 1px dotted black;
   margin: 0 0 28px;
 }
 
+.mt-20 {
+  margin-top: 10px;
+}
+
 .btn {
   border-radius: 0 !important;
   padding: 5px;
-}
-
-.cover-page-editor {
-  height: 350px;
 }
 .cover-page-footer-btn {
   padding-right: 6px;
@@ -1199,6 +1262,21 @@ $input-text-focus-outline: 1px dotted black;
   }
 }
 
+.btn-transcript {
+  margin-top: 5%;
+  margin-right: 0px;
+  background-color: transparent;
+  font-weight: 600;
+  width: 5%;
+}
+
+.btn-audio {
+  background-color: transparent;
+  border: transparent;
+  font-size: smaller;
+  color: #0078d1;
+}
+
 /* The Close Button */
 .close {
   color: #aaaaaa;
@@ -1221,18 +1299,7 @@ $input-text-focus-outline: 1px dotted black;
   font-size: 14pt;
   height: 36px;
   padding: 0 12px;
-  -webkit-appearance: none;
   border: 1px solid #000;
-}
-
-.select-box-holder {
-  &::after {
-    content: '\e70d';
-    font-family: 'SegoeUI MDL2 Assets';
-    position: absolute;
-    bottom: 8px;
-    right: 12px;
-  }
 }
 
 .textarea-messagetouser {
@@ -1291,7 +1358,7 @@ $input-text-focus-outline: 1px dotted black;
 
 .step-detail-modal {
   display: block; /* Hidden by default */
-  z-index: 20500 !important; /* Sit on top */
+  z-index: 205000 !important; /* Sit on top */
   margin: 80px auto; /* Location of the box */
   left: 0;
   top: 0;
@@ -1331,13 +1398,13 @@ $input-text-focus-outline: 1px dotted black;
 .select-element-modal {
   display: block; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 20000 !important; /* Sit on top */
+  z-index: 200000 !important; /* Sit on top */
   left: 35%;
   top: 30%;
   font-family: 'Segoe UI';
-  width: 25%;
-  height: 50%;
-  min-width: 200px;
+  width: 450px;
+  height: 100vh;
+  min-width: 250px;
   min-height: 150px;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
@@ -1649,6 +1716,13 @@ $input-text-focus-outline: 1px dotted black;
       text-overflow: ellipsis;
     }
 
+    .pt-tourbox-footer {
+      display: flex; 
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+    }
+
     .pt-navigation-buttons {
       display: flex;
       flex-direction: row;
@@ -1821,3 +1895,741 @@ $input-text-focus-outline: 1px dotted black;
   padding-bottom: 10px;
   font-size: 14px;
 }
+
+.smart-tip {
+	background-color: rgba(11, 112, 245, 0.6);
+	border-radius: 50%;
+	animation: pulse-red 2s infinite;
+	height: 17px;
+	width: 17px;
+  position: absolute;
+  box-sizing: content-box;
+  top: -10px;
+  left: -10px;
+
+}
+
+@keyframes pulse-red {
+	0% {
+		transform: scale(0.9);
+		box-shadow: 0 0 0 0 rgba(11, 112, 245, 0.7);
+	}
+	
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+	}
+	
+	100% {
+		transform: scale(0.9);
+		box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+	}
+}
+
+
+.tutorial-bubble {
+  outline: solid 5px #0078d1;
+  transition: outline 1s linear;
+  margin: 0.5em;
+}
+
+.smarttip-bubble-out {
+  position:relative;
+	padding: 0;
+	background-color: #0078d3;
+	bottom: 0px;
+	margin: 0 auto;
+	width: 15px;
+	height: 15px;		
+	border-radius:0% 100% 100% 100%;
+	-webkit-transform: rotate(45deg);
+  -moz-transition: rotate(45deg);
+  -ms-transition: rotate(45deg);
+  -o-transition: rotate(45deg);
+  transition: rotate(45deg);
+}
+
+@keyframes smarttippulse {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.smarttip-container {
+  display: none;
+  flex-direction: column;
+
+  animation: fadeIn 0.7s;
+  opacity: 1;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .arrow {
+    width: 0;
+    height: 0;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 16px solid #0078D4;
+  }
+  
+  .smarttip-box-container {
+    max-width: 330px;
+    max-height: 140px;
+    min-width: 225px;
+    width: 100%;
+    height: 100%;
+    background: #0078D4;
+    color: #fff;
+    border-radius: 2px;
+    position: relative;
+    padding: 18px;
+     
+    .smarttip-close {
+      top: 0;
+      right: 2px;
+      position: absolute;
+      z-index: 2;
+      align-self: end;
+      color: white;
+      cursor: pointer;
+      padding: 3px;
+    }
+
+  .smarttip-content {
+    font-size: 14px;
+    margin: 0;
+    max-height: 62px;
+    height: auto;
+    overflow: hidden;
+  }
+  
+  .smarttip-footer {
+    float: right;
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    
+    .smarttip-dismiss {
+      width: 60px;
+      height: 26px;
+      background: #ffffff;
+      border: 1px solid #0078D4;
+      color: #0078D4;
+      border-radius: 2px;
+      box-sizing: border-box;
+      font-family: 'Segoe UI';
+      font-size: 12px;
+      line-height: 20px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+  }
+}
+  
+}
+/* Announcement popup section start*/
+.announcement-page-dialog {
+    display: block;
+    z-index: 10100 !important;
+    left: 0;
+    top: 0;
+    font-size: 15px !important;
+    line-height: 20px !important;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 0 !important;
+    font-weight: 400;
+  }
+
+.announcement-page-modal {
+  display: block; /* Hidden by default */
+  z-index: 10300 !important; /* Sit on top */
+  margin: 80px auto; /* Location of the box */
+  left: 0;
+  top: 0;
+  font-size: 14px;
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0); /* Black w/ opacity */
+  border-radius: 0 !important;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 65%;
+  min-width: 250px;
+  overflow: auto;
+
+  @media only screen and (max-width: 1366px) {
+    width: 100%;
+  }
+}
+
+.announcement-page-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  overflow-x: auto;
+  border: 1px solid #888;
+}
+
+.announcement-modal-header {
+  margin-bottom: 10px;
+}
+
+.announcement-editor {
+  margin-bottom: 20px;
+  height: 220px;
+}
+
+.ck-editor__editable_inline {
+  height: 175px;
+}
+
+.input-block {
+  height: 95px;
+}
+
+.footer-row {
+  margin-top: 20px;
+}
+
+.character-remaining {
+  float: right
+}
+
+.textarea-transcript{
+  width: 94%;
+  height: 100px;
+  resize: none;
+  overflow-y: scroll;
+  padding: 13px 12px;
+  font-family: 'Segoe UI';
+  font-weight: 400;
+  font-size: 15px !important;
+  line-height: 20px !important;
+}
+
+.announcement-page-display-content {
+  background-color: #fefefe;
+  margin-top: 150px !important;
+  padding: 20px 20px 0px 20px;
+  min-height: 250px;
+  max-height: 604px;
+  height: fit-content;
+  border: 3px solid;
+  position: relative;
+  @media (max-width: 640px) {
+    max-width: 270px;
+  }
+  .ptcloseicon {
+    position: absolute;
+    right: 10px;
+    font-size: 16px;
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+  .ptcloseicon:focus {
+    outline: #000000 dotted 1px;
+  }
+}
+
+.announcement-page-title {
+  display: flex;
+  flex-direction: row;
+  place-content: space-between;
+  margin-bottom: 10px;
+
+  p {
+    // font-family: Segoe UI;
+    font-size: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.announcement-page-body-content {
+  min-height: 160px;
+  height: fit-content;
+  max-height: 495px;
+  width: 550px;
+  overflow-y: auto;
+  padding-bottom: 10px;
+  font-size: 14px;
+}
+
+.start-announcement-page-btn,
+.end-announcement-page-btn {
+  display: none;
+}
+/* Announcement popup section end*/
+
+
+/* Annoucement Box Popup start*/
+.announcement-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+
+  .announcement-card{
+    background: rgb(255, 255, 255);
+    flex-basis: 30%;
+    border-radius: 2px !important;
+    transition:0.3s;
+    box-shadow: 0 4px 20px 0 rgba(34,68,123,0.2);
+    word-break: break-all;
+    max-width: 576px;
+  }
+  
+  .announcement-header {
+    margin: 0;
+    padding: 0;
+    width: 576px;
+    max-width: 576px;
+    height: 216px;
+    max-height: 216px;
+    
+    .close-button-div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-direction: row;
+    }
+
+    .close-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0px 3px;
+      align-self: flex-start;
+      outline: inherit;
+      position: fixed;
+      float: right;
+      align-items: flex-end;
+      z-index: 100;
+    }
+
+    .loadingImage {
+      background: transparent url('https://fxpsitstoragenew.z13.web.core.windows.net/loader.gif') center no - repeat;
+    }
+
+    .noLoadingImage {
+      background: none;
+    }
+
+    .close-button:focus {
+      outline: #000000 dotted 1px;
+    }
+
+    .announcement-heading {
+      font-size:18px;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0 2rem;
+      padding: 1rem 0;
+      height: 100%;
+      display: flex !important;
+      align-items: flex-end;
+      // Todo: make this color contrast to background
+      color: white;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 2px 2px 0px 0px;
+      object-fit: contain;
+      backdrop-filter: blur(4px);
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      border-radius: 2px 2px 0px 0px;
+      object-fit: contain;
+      backdrop-filter: blur(4px);
+    }
+
+  }
+
+  .announcement-content {
+    padding: 1.3rem 2rem;
+    height: 202px;
+    max-height: 100%;
+    overflow: auto;
+    border-top: 1px solid lightgrey;
+
+    .card-title{
+      font-size: 18px;
+      color: #000000;
+      margin-top: 1rem;
+    }
+
+    .anno-text{
+      line-height: 1.5;
+      color: #000000;
+      margin:0;
+      font-family: "Segoe UI";
+      font-size: 14px;
+      font-weight: 400;
+
+      ul {
+        padding-left: 5%;
+
+        li {
+          list-style: disc;
+        }
+
+      }
+
+      ol {
+        padding-left: 5%;
+
+        li {
+          list-style-type: decimal;
+        }
+
+      }
+    }
+  
+  }
+  .announcement-footer {
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .announcement-page-counter {
+      font-size: 14px;
+      line-height: 20px;
+      font-family: 'Segoe UI';
+      display:flex;
+      align-items: center;
+
+      .sound-buttons {
+        padding-left: 4px;
+        padding-top: 3px;
+      }
+    }
+
+    .announcement-navigation-buttons {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      width: 170px;
+      justify-content: flex-end;
+    
+      .announcement-previous-button {
+        width: 93px;
+        height: 32px;
+        background: #ffffff;
+        border: 1px solid #646464;
+        border-radius: 2px;
+        box-sizing: border-box;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+      }
+
+      .announcement-next-button {
+        width: 69px;
+        height: 32px;
+        background: #0078D4;
+        border-radius: 2px;
+        border: 1px solid #0078D4;
+        box-sizing: border-box;
+        color: #ffffff;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+
+.line-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.line {
+  flex-grow: 1;
+  height: 1px;
+  background: black;
+  position: relative;
+}
+
+.line.preview-arrow-right:after {
+  position: absolute;
+  content: '';
+  bottom: -10px;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid gray;
+}
+
+.line.preview-arrow-left:after {
+  position: absolute;
+  content: '';
+  top: -10px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid gray;
+}
+
+
+.announcement-container-preview {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 50vh;
+  background-color: rgba(255, 255, 255, 0.6);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: inherit;
+
+  @media only screen and (max-width: 1366px) {
+    height: 95vh;
+  }
+
+  .announcement-card{
+    background: rgb(255, 255, 255);
+    flex-basis: 30%;
+    border-radius: 2px !important;
+    transition:0.3s;
+    box-shadow: 0 0px 30px 18px rgba(34,68,123,0.2);
+    word-break: break-all;
+    max-width: 576px;
+
+    .announcement-header {
+      margin: 0;
+      padding: 0;
+      width: 576px;
+      max-width: 576px;
+      height: 216px;
+      max-height: 216px;
+      
+      .close-button-div {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-direction: row;
+      }
+  
+      .close-button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0px 3px;
+        align-self: flex-start;
+        outline: inherit;
+        position: fixed;
+        float: right;
+        align-items: flex-end;
+        z-index: 100;
+      }
+  
+      .loadingImage {
+        background: transparent url('https://fxpsitstoragenew.z13.web.core.windows.net/loader.gif') center no - repeat;
+      }
+  
+      .noLoadingImage {
+        background: none;
+      }
+  
+      .close-button:focus {
+        outline: #000000 dotted 1px;
+      }
+  
+      .announcement-heading {
+        font-size:18px;
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 2rem;
+        padding: 1rem 0;
+        height: 100%;
+        display: flex !important;
+        align-items: flex-end;
+        // Todo: make this color contrast to background
+        color: white;
+      }
+  
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 2px 2px 0px 0px;
+        object-fit: contain;
+        backdrop-filter: blur(4px);
+      }
+  
+      video {
+        width: 100%;
+        height: 100%;
+        border-radius: 2px 2px 0px 0px;
+        object-fit: contain;
+        backdrop-filter: blur(4px);
+      }
+  
+    }
+  }
+  
+  
+
+  
+  .announcement-content {
+    padding: 1.3rem 2rem;
+    height: 202px;
+    max-height: 100%;
+    overflow: auto;
+    border-top: 1px solid lightgrey;
+
+    .card-title{
+      font-size: 18px;
+      color: #000000;
+      margin-top: 1rem;
+    }
+
+    .card-excerpt{
+      font-size: 15px;
+      line-height: 1.5rem;
+      color: #000000;
+      margin:0;
+    }
+
+    .anno-text{
+      line-height: 1.5;
+      color: #000000;
+      margin:0;
+      font-family: "Segoe UI";
+      font-size: 14px;
+      font-weight: 400;
+
+      ul {
+        padding-left: 5%;
+
+        li {
+          list-style: disc;
+        }
+
+      }
+
+      ol {
+        padding-left: 5%;
+
+        li {
+          list-style-type: decimal;
+        }
+
+      }
+    }
+  
+  }
+
+  .announcement-footer {
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .announcement-page-counter {
+      font-size: 14px;
+      line-height: 20px;
+      font-family: 'Segoe UI';
+      display:flex;
+      align-items: center;
+
+      .sound-buttons {
+        padding-left: 4px;
+        padding-top: 3px;
+      }
+    }
+
+    .announcement-navigation-buttons {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      width: 170px;
+      justify-content: flex-end;
+    
+      .announcement-previous-button {
+        width: 93px;
+        height: 32px;
+        background: #ffffff;
+        border: 1px solid #646464;
+        border-radius: 2px;
+        box-sizing: border-box;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+      }
+
+      .announcement-next-button {
+        width: 69px;
+        height: 32px;
+        background: #0078D4;
+        border-radius: 2px;
+        border: 1px solid #0078D4;
+        box-sizing: border-box;
+        color: #ffffff;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        margin-left: 10px;
+      }
+    }
+  }
+ 
+}
+
+/* Annoucement Box Popup end*/

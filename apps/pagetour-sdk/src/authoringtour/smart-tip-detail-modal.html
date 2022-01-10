@@ -1,0 +1,121 @@
+<div id="tip-detail-modal" class="pagetour tour-dialog" role="dialog" aria-describedby="tip-detail-modal-title">
+  <div class="step-dialog">
+    <div class="step-detail-modal">
+      <form id="step-detail-form">
+        <div class="step-detail-content">
+          <div class="row-24">
+            <div class="pull-right">
+              <button
+                id="step-detail-close-btn"
+                type="button"
+                class="icon-holder-36-close-with-margin"
+                title="Close"
+                aria-label="Close Add Step Details dialog"
+              >
+                <i class="pagetour__icon icon-close"></i>
+              </button>
+            </div>
+            <h1 class="font-subtitle" id="tip-detail-modal-title">Add Tip - Details</h1>
+          </div>
+          <div class="row row-8">
+            <div>
+              <label class="font-caption-alt margin-bottom-12"> <strong>Message location (*) :</strong></label>
+              <div class="select-box-holder">
+                <select
+                  class="select-box font-body"
+                  id="position-select"
+                  aria-required="true"
+                  title="Position of message"
+                  aria-label="Position of message"
+                >
+                  <option value="">Select</option>
+                  <option value="top" selected="selected">Above</option>
+                  <option value="bottom">Below</option>
+                  <option value="left">Left</option>
+                  <option value="right" selected="selected">Right</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row row-8 mt-20">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 pad-right-6">
+              <label class="font-caption-alt margin-bottom-12">
+                <strong> Delay before this step </strong>
+                </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 pad-right-6 slidecontainer">
+              <input type="range" min="0" max="30" value="0" class="slider" 
+                id="delayBeforeStepSlider" aria-label="Slider to set delay (in seconds) before steps"
+              />
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 delayInputBox">
+              <input id="delay-for-step" type="number" class="font-caption-alt" aria-label="Delay before steps (in seconds)" style="width: 10;"></span>
+              <span class="font-caption-alt"> Seconds</span>
+              <div class="textarea-errormessage-setter">
+                <span class="textarea-error" role="alert" aria-live="assertive" id="delay-for-step-error">
+                  Delay must be between 0 to 30
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row row-28">
+            <label class="font-caption-alt margin-bottom-12"><strong>Message to user (*):</strong></label>
+            <div class="textarea-messagetouser-group">
+              <textarea
+                class="textarea-messagetouser"
+                id="message-for-smart-tip"
+                title="Message to user"
+                aria-required="true"
+                aria-label="Please enter message to user"
+                type="text"
+                placeholder="Enter the message user will see during this step"
+                maxlength="100"
+                required
+              ></textarea>
+              <span  aria-live="assertive" class="textarea-character-limit pull-right" id="smart-tip-message-character-limit">
+                100 characters remaining.
+              </span>
+              <div>
+                <span class="textarea-error" role="alert" aria-live="assertive" id="message-for-smart-tip-error">
+                  Message to user is required.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row row-24">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 pad-right-6">
+              <button
+                class="pagetour-btn--secondary footer-btn"
+                id="back-tip-detail-btn"
+                type="button"
+                title="Back to author tour modal"
+              >
+                Back
+              </button>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 pad-left-6">
+              <div class="pull-right">
+                <button
+                  class="pagetour-btn--secondary footer-btn-big"
+                  id="save-return-btn"
+                  title="save and return to author tour modal"
+                  type="button"
+                >
+                  Save & return to tour
+                </button>
+                <button
+                  class="pagetour-btn--primary footer-btn-big"
+                  id="save-add-new-btn"
+                  title="save and add new step"
+                  type="button"
+                >
+                  Save & add new step
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

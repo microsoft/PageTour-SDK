@@ -2,7 +2,9 @@ import { PageTourPlay } from '../playtour/pagetourplay'
 import * as stepModalTemplate from './step-detail-modal.html'
 import * as chooseElementTemplate from './chose-element-modal.html'
 import * as addTourModalTemplate from './add-tour-modal.html'
+import * as smartTipDetailModal from './smart-tip-detail-modal.html'
 import * as createCoverPageModalTemplate from './create-cover-page-modal.html'
+import * as createAnnouncementModalTemplate from './add-announcement-page-modal.html'
 import { DomUtils } from '../common/domutils'
 import { ConfigStore } from '../common/configstore'
 import { debounce } from 'debounce'
@@ -12,8 +14,16 @@ import { RunTourAction } from '../models/runtouraction'
 import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { TourTypeEnum } from '../models/tourtypeenum'
+
 
 declare const $: any
+
+interface IWindow extends Window {
+  webkitSpeechRecognition: any;
+  SpeechRecognition: any;
+}
 
 class PageTourAuthor {
   // private modal: any = null;
@@ -28,44 +38,57 @@ class PageTourAuthor {
   private lastSelectedElementStore: any = {}
   private chooseState = Object.freeze({ Choose: 1, Chosen: 2 })
   private domLookupBox: HTMLInputElement = null
+  private ckEditor: any = null;
   // Template Functions
   private stepModalTemplateFn: any = stepModalTemplate
+  private smartTipDetailModalFn: any = smartTipDetailModal
   private chooseElementTemplateFn: any = chooseElementTemplate
   private addTourModalTemplateFn: any = addTourModalTemplate
   private createCoverPageTemplateFn: any = createCoverPageModalTemplate
+
+  private createAnnouncementTemplateFn: any = createAnnouncementModalTemplate
+
+  private recognition: any;
+  private hasUserStoppedRecording: boolean = false;
 
   // Debounce Functions
   private bodyMouseMoveFunction: any
 
   constructor(private pageTourPlay: PageTourPlay, private configStore: ConfigStore, private dataStore: DataStore) {
     this.bodyMouseMoveFunction = debounce(this.onBodyMouseMove, 50)
+    // new speech recognition object
+    const { webkitSpeechRecognition }: IWindow = <IWindow><unknown>window;
+    //var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    this.recognition = new webkitSpeechRecognition();
   }
 
-  public InitAuthoringDock = () => {
-    this.addTourDialog()
+  public InitAuthoringDock = (tourType : string) => {
+    this.addTourDialog(tourType)
   }
 
   // Adds Tour.
-  public AddTour = () => {
+  public AddTour = (tourType : string) => {
     // Clear Tour and StepsList while creating new tour
     this.tour = null
     this.stepList = []
-    this.InitAuthoringDock()
+    this.InitAuthoringDock(tourType)
   }
 
   /// Edit Tour
   public EditTour = (objTour: any) => {
-    this.InitAuthoringDock()
-    document.getElementById('tutorial-modal-title').innerText = 'Edit Tour'
+    this.InitAuthoringDock(objTour.tourtype)
+    document.getElementById('tutorial-modal-title').innerText = 'Edit'
     let addTourDialogCloseBtn = document.getElementById('add-tour-modal-close')
     addTourDialogCloseBtn.setAttribute('aria-label', 'Close Edit Tour dialog')
     document.getElementById('add-tour-modal-cancel-btn').setAttribute('aria-label', 'cancel and close Edit Tour dialog')
-
+    document.getElementById('tour-type').setAttribute('disabled', 'true')
     this.tour = objTour
+    this.tourTypeChanged()
     this.loadTour()
     this.validateTourInputs()
     this.resetIsTourPlaying()
   }
+
 
   /// Deletes Tour
   public DeleteTour = async (tourId: any) => {
@@ -81,7 +104,7 @@ class PageTourAuthor {
   /*#BeginRegion:Add tour dialog methods*/
 
   /// Adds Tour Dialog
-  private addTourDialog = () => {
+  private addTourDialog = (tourType : string) => {
     if (this.configStore.Options.navigator.callbackOnAuthoringStart) {
       this.configStore.Options.navigator.callbackOnAuthoringStart()
     }
@@ -99,7 +122,9 @@ class PageTourAuthor {
     let defaultExpiresOn = new Date().setMonth(new Date().getMonth() + 6)
     ;(document.getElementById('tour-expireson') as HTMLInputElement).value = new Date(defaultExpiresOn)
       .toISOString()
-      .split('T')[0]
+      .split('T')[0];
+    (document.getElementById("tour-type") as HTMLSelectElement).value = tourType;
+    (document.getElementById("tour-tags-info") as HTMLSpanElement).innerText = this.configStore.Options.tags.tagHelpText;
 
     document.getElementById('tour-title').onkeyup = this.checkTourTitle
     document.getElementById('tour-description').onkeyup = this.checkTourDescription
@@ -108,12 +133,18 @@ class PageTourAuthor {
     document.getElementById('tour-tags').onkeyup = this.checkTourTags
     document.getElementById('cover-page-btn').onclick = this.createCoverPageModal
     document.getElementById('add-step-btn').onclick = this.createChooseElementModal
+    document.getElementById('add-announcement-btn').onclick = this.addAnnouncementPage
     document.getElementById('preview-tour-step-btn').onclick = this.previewTour
     document.getElementById('add-tour-modal-close').onclick = this.closeAddTourModal
     document.getElementById('add-tour-modal-cancel-btn').onclick = this.closeAddTourModal
     document.getElementById('save-tour-modal-btn').onclick = this.saveTour
-
+    document.getElementById('tour-type').onchange = this.tourTypeChanged
+    this.tourTypeChanged()
     this.resetIsTourPlaying()
+    if(!this.configStore.Options.enableBeacon) {
+      let tourtypeElement = document.getElementById('tour-type') as HTMLSelectElement;
+      tourtypeElement.remove(tourtypeElement.length-1)
+    }
   }
 
   /*# BeginRegion: Tour Dialogue Validations */
@@ -155,7 +186,7 @@ class PageTourAuthor {
   private checkTourTags = () => {
     const tourTagsTextArea: HTMLTextAreaElement = document.getElementById('tour-tags') as HTMLTextAreaElement
     let value = tourTagsTextArea.value
-    document.getElementById('tour-tags-character-limit').innerText = 74 - value.length + ' characters remaining.'
+    document.getElementById('tour-tags-character-limit').innerText = 200 - value.length + ' characters remaining.'
   }
 
   /*# EndRegion: Tour Dialogue Validations */
@@ -212,6 +243,8 @@ class PageTourAuthor {
     let tourExpiresOnBox: HTMLInputElement = document.getElementById('tour-expireson') as HTMLInputElement
     let isTourAutoPlayEnabledFlag: HTMLInputElement = document.getElementById('isAutoPlayEnabled') as HTMLInputElement
     let tags: HTMLTextAreaElement = document.getElementById('tour-tags') as HTMLTextAreaElement
+    let tourTypeElement = document.getElementById('tour-type') as HTMLSelectElement
+    let tourType = tourTypeElement.value;
     let tourTitle = tourTitleBox.value
     let tourDescription = tourDescriptionBox.value
     let tourActiveOn = new Date(tourActiveOnBox.value).toUTCString()
@@ -256,6 +289,7 @@ class PageTourAuthor {
       lastmodifiedon: currentDate.toUTCString(),
       lastmodifiedby: this.getCurrentUser(),
       tags: tagsArray,
+      tourtype: tourType
     }
 
     if (this.configStore.Options.appInfo) {
@@ -264,7 +298,7 @@ class PageTourAuthor {
       }
     }
 
-    if (this.tour == null) {
+    if (this.tour == null || this.tour.id == null) {
       pagetourJson.createdon = currentDate.toUTCString()
       pagetourJson.createdby = this.getCurrentUser()
       try {
@@ -296,6 +330,34 @@ class PageTourAuthor {
     }
 
     this.closeAddTourModal()
+  }
+
+  private tourTypeChanged = () => {
+    let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
+    let autoPlayCheckbox = document.getElementById("isAutoPlayEnabled") as HTMLInputElement;
+    var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
+    if(tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase()){
+      document.getElementById("add-announcement-btn").style.display = 'inline'
+      document.getElementById("add-step-btn").style.display = 'none'
+      document.getElementById("cover-page-btn").style.display = 'none'
+      autoPlayCheckbox.checked = true;
+      autoPlayCheckbox.disabled = true;
+    }
+    else if(tourtype.toLowerCase() == TourTypeEnum.Beacon.toLocaleLowerCase()){
+      document.getElementById("add-announcement-btn").style.display = 'none'
+      document.getElementById("add-step-btn").style.display = 'inline'
+      document.getElementById("cover-page-btn").style.display = 'none'
+      autoPlayCheckbox.checked = true;
+      autoPlayCheckbox.disabled = true;
+    }
+    else {
+      document.getElementById("add-announcement-btn").style.display = 'none'
+      document.getElementById("add-step-btn").style.display = 'inline'
+      document.getElementById("cover-page-btn").style.display = 'inline'
+      autoPlayCheckbox.checked = false;
+      autoPlayCheckbox.disabled = false;
+    }
+
   }
 
   /// Validates Add/Edit Tour dialog inputs.
@@ -332,6 +394,7 @@ class PageTourAuthor {
     ;(document.getElementById('tour-activeon') as HTMLInputElement).value = this.tour.activeon.split('T')[0]
     ;(document.getElementById('tour-expireson') as HTMLInputElement).value = this.tour.expireson.split('T')[0]
     ;(document.getElementById('isAutoPlayEnabled') as HTMLInputElement).checked = this.tour.isautoplayenabled
+    ;(document.getElementById('tour-type') as HTMLSelectElement).value = this.tour.tourtype
     this.stepList = this.tour.steps
 
     if (this.tour.coverPage) {
@@ -358,12 +421,20 @@ class PageTourAuthor {
         steps: [],
       }
       tour.steps = this.stepList
-      tour.coverPage = {}
       tour.title = (document.getElementById('tour-title') as HTMLTextAreaElement).value
       tour.description = (document.getElementById('tour-description') as HTMLTextAreaElement).value
-      tour.coverPage.location = this.tourCoverPageLocation
-      tour.coverPage.content = this.tourCoverPageContent
-      this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
+      tour.tourtype = (document.getElementById('tour-type') as HTMLSelectElement).value
+      if(tour.tourtype.toLowerCase() == TourTypeEnum.PageTour.toLowerCase()) {
+        tour.coverPage = {}
+        tour.coverPage.location = this.tourCoverPageLocation
+        tour.coverPage.content = this.tourCoverPageContent
+      }
+      if(tour.tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase())
+        this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0, this.addTourDialog)
+      else if(tour.tourtype.toLowerCase() == TourTypeEnum.Beacon.toLocaleLowerCase())
+        this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0, this.addTourDialog)
+      else
+        this.pageTourPlay.runTour(tour, RunTourAction.Preview, 0, this.addTourDialog)
     }
   }
 
@@ -383,13 +454,17 @@ class PageTourAuthor {
       let tdexpander = document.createElement('td')
       let tdStepCount = document.createElement('td')
       let tdStepType = document.createElement('td')
+      let tdStepHeader = document.createElement('td')
       let tdStepMessage = document.createElement('td')
+      let tdStepMediaUrl = document.createElement('td')
       let tdStepMoveup = document.createElement('td')
       let tdStepEdit = document.createElement('td')
       let tdStepDelete = document.createElement('td')
       let expander = this.getButton('expander', i)
       let stepCount = document.createTextNode((i + 1).toString())
       let stepType = document.createTextNode(this.stepList[i].type)
+      let stepHeaderText = document.createTextNode(this.stepList[i].headerText)
+      let stepMediaUrl = document.createTextNode(this.stepList[i].mediaUrl)
       let stepMessage = this.getStepMessageElement(i)
       let stepMoveup = this.getButton('moveup', i)
       let stepMovedown = this.getButton('movedown', i)
@@ -403,6 +478,7 @@ class PageTourAuthor {
       tdStepMoveup.setAttribute('class', 'reorder-column')
       tdStepEdit.setAttribute('class', 'button-column')
       tdStepDelete.setAttribute('class', 'button-column')
+      tdStepHeader.setAttribute('class', 'message-desc')
 
       tdexpander.appendChild(expander)
       tdStepCount.appendChild(stepCount)
@@ -412,14 +488,33 @@ class PageTourAuthor {
       tdStepMoveup.appendChild(stepMovedown)
       tdStepEdit.appendChild(stepEdit)
       tdStepDelete.appendChild(stepDelete)
+      tdStepHeader.appendChild(stepHeaderText)
+      tdStepMediaUrl.appendChild(stepMediaUrl)
 
       tr.appendChild(tdexpander)
       tr.appendChild(tdStepCount)
-      tr.appendChild(tdStepType)
+      let tourType = (this.tour && this.tour.tourtype) ? this.tour.tourtype : (document.getElementById('tour-type') as HTMLSelectElement).value;
+      if(tourType.toLowerCase() == TourTypeEnum.Announcement.toLowerCase()) {
+        document.getElementById("step-tourtype-header").innerText = 'Header Text'
+        document.getElementById("step-tourtype-header").style.width = '250px'
+        document.getElementById("step-announcement-image-url").style.display = 'inline'
+        tr.appendChild(tdStepHeader)
+        tr.appendChild(tdStepMediaUrl)
+      }
+      else if(tourType.toLowerCase() == TourTypeEnum.Beacon.toLowerCase()) {
+        document.getElementById("step-tourtype-header").style.display = 'none'
+        document.getElementById("step-announcement-image-url").style.display = 'none'
+      }
+      else {
+        document.getElementById("step-tourtype-header").innerText = 'Type'
+        document.getElementById("step-announcement-image-url").style.display = 'none'
+        tr.appendChild(tdStepType)
+      }
       tr.appendChild(tdStepMessage)
       tr.appendChild(tdStepMoveup)
       tr.appendChild(tdStepEdit)
       tr.appendChild(tdStepDelete)
+
 
       tourStepsTableBody.appendChild(tr)
     }
@@ -428,8 +523,15 @@ class PageTourAuthor {
       ;(document.getElementById('save-tour-modal-btn') as HTMLButtonElement).disabled = false
       ;(document.getElementById('preview-tour-step-btn') as HTMLButtonElement).disabled = false
     } else {
-      document.getElementById('save-tour-modal-btn').setAttribute('disabled', 'disabled')
-      document.getElementById('preview-tour-step-btn').setAttribute('disabled', 'disabled')
+      ;document.getElementById('save-tour-modal-btn').setAttribute('disabled', 'disabled')
+      ;document.getElementById('preview-tour-step-btn').setAttribute('disabled', 'disabled')
+    }
+
+    if (this.tourCoverPageLocation || this.stepList.length > 0) {
+      (document.getElementById('tour-type') as HTMLSelectElement).disabled = true
+    }
+    else {
+      (document.getElementById('tour-type') as HTMLSelectElement).disabled = false
     }
     let tourForm = document.getElementById('add-tour-form')
     DomUtils.manageTabbing(tourForm)
@@ -583,7 +685,24 @@ class PageTourAuthor {
   }
   /// This is a method to edit a step in a tour
   private editStep = (index: any) => {
-    this.editStepIndex = index
+    this.editStepIndex = index;
+    let tourtypeselect = document.getElementById("tour-type") as HTMLSelectElement;
+    var tourtype = tourtypeselect.options[tourtypeselect.selectedIndex].value;
+    switch(tourtype.toLowerCase()) {
+      case TourTypeEnum.Announcement.toLowerCase():
+        this.editAnnouncementStep();
+        break;
+      case TourTypeEnum.PageTour.toLowerCase():
+      case TourTypeEnum.InteractiveGuide.toLowerCase():
+        this.editTourStep();
+        break;
+      case TourTypeEnum.Beacon.toLowerCase():
+        this.editSmartTipStep();
+        break;
+    }
+  }
+
+  private editTourStep() {
     this.createChooseElementModal()
     document.getElementById('choose-element-title').innerText = 'Edit Step - Choose an element'
     document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
@@ -602,6 +721,48 @@ class PageTourAuthor {
           this.toggleChooseElement(this.chooseState.Chosen, editingStep)
         }
       }
+    }
+  }
+
+  private editSmartTipStep() {
+    this.createChooseElementModal()
+    document.getElementById('choose-element-title').innerText = 'Edit Tip - Choose an element'
+    document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
+    document.getElementById('cancel-choose-element-btn').setAttribute('aria-label', 'cancel and Close Edit Step dialog')
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
+      const editingStep = this.stepList[this.editStepIndex]
+      if (editingStep && editingStep.selector && editingStep.selector !== '') {
+        this.ignoreStepIfSetup(editingStep)
+        let elementfromselector = document.querySelector(editingStep.selector)
+        if (elementfromselector) {
+          this.lastSelectedElement = elementfromselector
+          this.lastSelectedElementOriginal = elementfromselector
+          this.toggleChooseElement(this.chooseState.Chosen, editingStep)
+        }
+      }
+    }
+  }
+
+  private editAnnouncementStep() {
+    this.addAnnouncementPage()
+    document.getElementById('announcement-page-modal-title').innerText = 'Edit Announcement Step'
+    document.getElementById('announcement-page-close-btn').setAttribute('aria-label', 'Close Edit Announcement step dialog')
+    document.getElementById('cancel-announcement-page-btn').setAttribute('aria-label', 'Cancel and Close Edit Announcement Step dialog')
+    event.preventDefault()
+    event.stopPropagation()
+    if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
+      const editingStep = this.stepList[this.editStepIndex]
+      document.getElementById('input-announcement-header-text').innerText = editingStep.headerText;
+      document.getElementById("announcementboxdescription").innerHTML= document.getElementById('anno-message-editor').innerHTML = editingStep.message;
+      this.announcementHeaderChange()
+      if (editingStep.mediaUrl)
+        document.getElementById('input-announcement-image-video').innerText = editingStep.mediaUrl;
+        this.livePreviewMediaHeader();
+      if (editingStep.transcript)
+        document.getElementById('transcript-message-for-announcement').innerText = editingStep.transcript;
     }
   }
 
@@ -691,9 +852,10 @@ class PageTourAuthor {
 
     let cancelChooseElement = document.getElementById('cancel-choose-element-btn')
     cancelChooseElement.onclick = this.closeChooseElementModal
-
+    let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
     let nextElement = document.getElementById('select-element-next-btn')
-    nextElement.addEventListener('click', this.createRecordBox)
+
+    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === TourTypeEnum.Beacon.toLowerCase()) ? this.createSmartTipBox : this.createRecordBox)
     DomUtils.manageTabbing(authoringDeck)
     this.showHideIgnoreKeyElement(false, null)
   }
@@ -757,7 +919,7 @@ class PageTourAuthor {
     DomUtils.removeTabbing(authoringDeckModal)
     authoringDeckModal.parentNode.removeChild(authoringDeckModal)
     this.disablePageInspector(true)
-    this.removeStepDetailModal()
+    this.removeStepDetailModal('step-detail-modal')
     this.unHideAddTourModal()
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
   }
@@ -775,7 +937,7 @@ class PageTourAuthor {
   private unHideChooseElementModal = () => {
     const authoringDeck = document.getElementById('authoringDock')
     authoringDeck.style.display = 'block'
-    authoringDeck.style.zIndex = '20000'
+    authoringDeck.style.zIndex = '200000'
     if (this.lastSelectedElement != null) {
       this.toggleChooseElement(this.chooseState.Chosen, null)
     }
@@ -956,6 +1118,142 @@ class PageTourAuthor {
     saveCoverPageElement.onclick = this.saveCoverPage
   }
 
+  private addAnnouncementPage = () => {
+    this.hideAddTourModal()
+    let announcementPageModal = document.getElementById('announcementPageDock')
+    if (!announcementPageModal) {
+      const chooseElementDock = this.createAnnouncementTemplateFn()
+      let dock = DomUtils.appendToBody(chooseElementDock)
+      this.updateModalTitle()
+      DomUtils.show(dock)
+    } else {
+      announcementPageModal.style.display = 'block'
+    }
+    announcementPageModal = document.getElementById('announcement-page-modal')
+    announcementPageModal.style.display = 'block';
+    (document.getElementById("videoHeaderContainer") as HTMLVideoElement).style.display ='none'
+    this.setDefaultImage();
+    this.initiateCkEditor();
+
+    let announcementPageForm = document.getElementById('announcement-page-form')
+    DomUtils.manageTabbing(announcementPageForm)
+
+    const closeBtn = document.getElementById('announcement-page-close-btn')
+    closeBtn.onclick = this.closeAnnouncementPageModal
+    
+    document.getElementById('record-announcement-page-btn').onclick = this.recordAnnouncement
+    document.getElementById('stop-record-announcement-page-btn').onclick = this.stopAnnouncementRecording
+
+    document.getElementById('input-announcement-header-text').onkeyup = this.announcementHeaderChange
+    document.getElementById('input-announcement-image-video').onkeyup = this.livePreviewMediaHeader
+    document.getElementById('input-announcement-image-video').onblur = this.setDefaultImage
+
+    document.getElementById('cancel-announcement-page-btn').onclick = this.closeAnnouncementPageModal 
+    document.getElementById('save-announcement-page-btn').onclick = this.saveAnnouncementPage
+
+    if(!this.configStore.Options.enableTranscript)
+      document.getElementById('transcript-announcement-area').style.display = 'none'
+  }
+
+  private async initiateCkEditor() {
+    ClassicEditor
+    .create(document.getElementById('anno-message-editor'), {
+      toolbar: ['bold','italic','link','bulletedList', 'numberedList'],
+      link: {
+        addTargetToExternalLinks: true
+      }
+    })
+    .then((editor: any) => {
+      this.ckEditor = editor;
+      this.checkCharacterLength($(editor.getData()).text().length);
+
+      editor.model.document.on('change:data', () => {
+        document.getElementById("announcementboxdescription").innerHTML = editor.getData();
+        this.checkCharacterLength($(editor.getData()).text().length);
+      });
+
+      editor.editing.view.document.on('keydown', (event: any, data: any) => {
+        this.checkKeyboardBlocking($(editor.getData()).text().length, event, data);
+      });
+    })
+    .catch((error:any) => {
+      console.log(error);
+    });
+  }
+
+  private checkCharacterLength(currentCharacterLength: number) {
+    let maxCharacterLength = this.configStore.Options.textAreaCharacterLength;
+    const remaining = maxCharacterLength - currentCharacterLength;
+    (document.getElementById("character-remaining-text")).textContent = `${remaining} characters remaining`
+  }
+
+  private checkKeyboardBlocking(currentCharacterLength: number, event: any, data: any) {
+    let maxCharacterLength = this.configStore.Options.textAreaCharacterLength;
+    if(currentCharacterLength >= maxCharacterLength) {
+      data.preventDefault();
+      event.stop();
+    }
+  }
+
+  private setDefaultImage() {
+    let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    if(mediaUrl.value == "") {
+      document.getElementById('anno-media-error').style.display = 'none'
+      let mediaDiv = document.getElementById("imgHeaderContainer") as HTMLImageElement;
+    // Todo: make this url injection dynamic
+      if(this.configStore !== null && this.configStore.Options.announcementDefaultImage)
+        mediaDiv.src = this.configStore.Options.announcementDefaultImage;
+      else
+        mediaDiv.alt = "Default Image not configured"
+    }
+  }
+
+  private announcementHeaderChange(){
+    let headerValue = (document.getElementById('input-announcement-header-text') as HTMLInputElement).value;
+    if(headerValue == "") {
+      document.getElementById('anno-header-error').style.display = "contents";
+    } else {
+      document.getElementById('anno-header-error').style.display = "none";
+      document.getElementById("announcementboxtitle-preview").innerText = headerValue;
+    }
+    document.getElementById("announcement-header-character-limit").innerText =
+      100 - headerValue.length + ' characters remaining.'
+  }
+
+  private livePreviewMediaHeader() {
+    let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    // put it into a separate method
+    let imgPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
+    let videoPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:mp4|mov|wmv|avi|)+$/;
+    let isValidUrl, isValidImageUrl, isValidVideoUrl;
+    isValidUrl = isValidImageUrl = !!imgPattern.test(mediaUrl.value);
+    if(!isValidUrl) {
+      isValidUrl = isValidVideoUrl = !!videoPattern.test(mediaUrl.value);
+    }
+
+    //check if it is image or video url
+    if (!isValidUrl && mediaUrl.value !== '') {
+      document.getElementById('anno-media-error').style.display = 'contents'
+      return;
+    } else {
+      document.getElementById('anno-media-error').style.display = 'none'
+      let imgHeaderContainer = document.getElementById("imgHeaderContainer") as HTMLImageElement;
+      let videoHeaderContainer = document.getElementById("videoHeaderContainer") as HTMLVideoElement;
+      if(isValidImageUrl) {
+        videoHeaderContainer.style.display ='none'
+        imgHeaderContainer.style.display = 'block'
+        imgHeaderContainer.src = mediaUrl.value;
+        imgHeaderContainer.className = 'loadingImage'
+      } 
+      else if(isValidVideoUrl) {
+        imgHeaderContainer.style.display = 'none'
+        videoHeaderContainer.style.display = 'block'
+        videoHeaderContainer.src = mediaUrl.value;
+        videoHeaderContainer.load();
+      }
+    }
+  }
+
   /// Validates input in CoverPage Position Select Box
   private checkCoverPagePosition = () => {
     const coverPagePositionElement = document.getElementById('cover-location-select') as HTMLSelectElement
@@ -1026,12 +1324,146 @@ class PageTourAuthor {
     // changes made for editing cover page
     let addCoverPageButton = document.getElementById('cover-page-btn')
     addCoverPageButton.innerHTML = '<i class="pagetour__icon icon-pencil icon-inline"></i>Edit Cover Page'
-    addCoverPageButton.title = 'Edit Cover Page'
+    addCoverPageButton.title = 'Edit Cover Page';
 
     this.closeCoverPageModal()
   }
 
   /*#EndRegion: Closes Cover page dialog methods*/
+
+  private closeAnnouncementPageModal = () => {
+    let announcementPageModal = document.getElementById('announcement-page-modal')
+    announcementPageModal.parentNode.removeChild(announcementPageModal)
+    this.stopAnnouncementRecording();
+    this.unHideAddTourModal()
+    this.populateSteps() /// Populates steps in Add Tour Dialogue.
+  }
+
+  private saveAnnouncementPage = () => {
+    let announcementHeader = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
+    if (announcementHeader.value === '') {
+      document.getElementById('anno-header-error').style.display = 'contents'
+      return;
+    } else {
+      document.getElementById('anno-header-error').style.display = 'none'
+    }
+
+    let mediaUrl = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    let isValidUrl = this.validateUrl(mediaUrl.value);
+    if (mediaUrl.value !== '' && !isValidUrl) {
+      document.getElementById('anno-media-error').style.display = 'contents'
+      return;
+    } else {
+      document.getElementById('anno-media-error').style.display = 'none'
+    }
+    let messageContent = this.ckEditor.getData();
+    if(messageContent === ''){
+      document.getElementById('anno-message-error').style.display = 'contents'
+      return;
+    } else {
+      document.getElementById('anno-message-error').style.display = 'none'
+    }
+
+    this.getAnnouncementPageDetails()
+    this.populateSteps()
+    this.stopAnnouncementRecording();
+    this.closeAnnouncementPageModal()
+  }
+
+  private validateUrl = (text: string) => {
+    let imgPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)+$/;
+    let result = !!imgPattern.test(text);
+    if(!result) {
+      let videoPattern = /^(http(s?):)([/|.|\w|\s|-])*\.(?:mp4|mov|wmv|avi|)+$/;
+      result = !!videoPattern.test(text);
+    }
+    return result;
+  }
+
+  private recordAnnouncement = () => {
+    this.GenerateTranscript(TourTypeEnum.Announcement.toLowerCase());
+  }
+
+  private stopAnnouncementRecording = () => {
+    this.StopTranscriptGeneration(TourTypeEnum.Announcement.toLowerCase())
+  }
+
+  private stopTourRecording = () => {
+    this.StopTranscriptGeneration('step')
+  }
+
+  private recordTutorial = () => {
+    this.GenerateTranscript('step');
+  }
+
+  private StopTranscriptGeneration(type: string) {
+    let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
+    let stopTranscriptBtnIcon = document.getElementById('stop-record-' + type + '-page-btn') as HTMLButtonElement;
+    this.recognition.stop();
+    this.hasUserStoppedRecording = true;
+    if(transcriptBtnIcon && stopTranscriptBtnIcon) {
+      transcriptBtnIcon.style.display = 'inline';
+      stopTranscriptBtnIcon.style.display = 'none';
+    }
+  }
+
+  private GenerateTranscript(type: string) {
+    let self = this;
+    let transcriptDiv = document.getElementById('transcript-message-for-'+ type) as HTMLTextAreaElement;
+    let transcriptBtnIcon = document.getElementById('record-' + type + '-page-btn') as HTMLButtonElement;
+    let stopTranscriptBtnIcon = document.getElementById('stop-record-' + type + '-page-btn') as HTMLButtonElement;
+          
+    // This runs when the speech recognition service starts
+    self.recognition.onstart = function() {
+      transcriptBtnIcon.style.display = 'none'
+      stopTranscriptBtnIcon.style.display = 'inline';     
+      self.hasUserStoppedRecording = false;
+    };
+
+    self.recognition.onend = function() {
+        // when user is done speaking
+        if(!self.hasUserStoppedRecording)
+          self.recognition.start();
+        else
+        self.recognition.stop();
+    }
+                  
+    // This runs when the speech recognition service returns result
+    self.recognition.onresult = function(event: any) {
+      if(transcriptDiv.value)
+        transcriptDiv.value += event.results[0][0].transcript;
+      else
+        transcriptDiv.value = event.results[0][0].transcript;
+    };
+                  
+    // start recognition
+    self.recognition.start();
+  }
+  private getAnnouncementPageDetails = () => {
+    let headerElement = document.getElementById('input-announcement-header-text') as HTMLTextAreaElement
+    let mediaUrlElement = document.getElementById('input-announcement-image-video') as HTMLTextAreaElement
+    let transcriptElement = document.getElementById('transcript-message-for-announcement') as HTMLTextAreaElement
+    let pageContext = this.getPageContext()
+    if(this.tour == null)
+      this.tour = {}
+    this.tour.tourtype = TourTypeEnum.Announcement.toLowerCase()
+    
+    let newStep: any = {}
+    newStep.headerText = headerElement.value;
+    newStep.mediaUrl = mediaUrlElement.value;
+    newStep.message = this.ckEditor.getData();
+    newStep.pagecontext = pageContext.url
+    newStep.pagestatename = pageContext.state
+    if(transcriptElement)
+    newStep.transcript = transcriptElement.value;
+
+    if (this.editStepIndex !== -1) {
+      this.stepList[this.editStepIndex] = newStep
+      this.editStepIndex = -1
+    } else {
+      this.stepList.push(newStep)
+    }
+  }
 
   /*# BeginRegion:Step Details Record Box methods*/
 
@@ -1069,6 +1501,12 @@ class PageTourAuthor {
       let stepDetailCloseBtn = document.getElementById('step-detail-close-btn')
       stepDetailCloseBtn.onclick = this.stopPagetourRecording
 
+      let stepAudioContent = document.getElementById('record-step-page-btn')
+      stepAudioContent.onclick = this.recordTutorial
+
+      let stopRecording = document.getElementById('stop-record-step-page-btn')
+      stopRecording.onclick = this.stopTourRecording
+
       let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
       let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
       delayBeforeStepValue.value = delayBeforeStepSlider.value
@@ -1088,10 +1526,69 @@ class PageTourAuthor {
     } else {
       stepDetailModal.style.display = 'block'
     }
+    if(!this.configStore.Options.enableTranscript)
+      document.getElementById('transcript-pagetour-area').style.display = "none"
     let stepDetailForm = document.getElementById('step-detail-form')
     DomUtils.manageTabbing(stepDetailForm)
   }
 
+  private createSmartTipBox = (event: Event) => {
+    event.stopPropagation()
+    this.hideChooseElementModal()
+    let stepDetailModal = document.getElementById('step-detail-modal')
+    if (!stepDetailModal) {
+      let recordBox = this.smartTipDetailModalFn()
+      recordBox = DomUtils.appendToBody(recordBox)
+      DomUtils.show(recordBox)
+
+      let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
+      let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
+      delayBeforeStepValue.value = delayBeforeStepSlider.value
+
+      delayBeforeStepValue.oninput = () => {
+        delayBeforeStepSlider.value = delayBeforeStepValue.value
+      }
+      delayBeforeStepSlider.oninput = () => {
+        delayBeforeStepValue.value = delayBeforeStepSlider.value
+      }
+
+      let saveAddNewStepBtn = document.getElementById('save-add-new-btn')
+      saveAddNewStepBtn.onclick = this.saveAndAddNewTip
+
+      let saveReturnBtn = document.getElementById('save-return-btn')
+      saveReturnBtn.onclick = this.saveTipAndReturn
+
+      let backToStepDetailBtn = document.getElementById('back-tip-detail-btn')
+      backToStepDetailBtn.onclick = this.backToTipDetails
+
+      let stepDetailCloseBtn = document.getElementById('step-detail-close-btn')
+      stepDetailCloseBtn.onclick = this.stopSmartTipRecording
+
+      document.getElementById('message-for-smart-tip').onkeyup = this.checkSmartTipMessage
+
+      /// Loads Step details in a Record box during Edit.
+      if (this.editStepIndex !== -1) {
+        document.getElementById('tip-detail-modal-title').innerText = 'Edit Smart Tip - Details'
+        this.populateTipDetails()
+        this.checkSmartTipMessage()
+      }
+    } else {
+      stepDetailModal.style.display = 'block'
+    }
+    let stepDetailForm = document.getElementById('step-detail-form')
+    DomUtils.manageTabbing(stepDetailForm)
+  }
+
+  private checkSmartTipMessage() {
+    let messageValue = (document.getElementById('message-for-smart-tip') as HTMLInputElement).value;
+    if(messageValue == "") {
+      document.getElementById('message-for-smart-tip-error').style.display = "contents";
+    } else {
+      document.getElementById('message-for-smart-tip-error').style.display = "none";
+    }
+    document.getElementById("smart-tip-message-character-limit").innerText =
+      100 - messageValue.length + ' characters remaining.'
+  }
   /*#BeginRegion: Step Details validations*/
 
   /// Validates input in Event Type Select Box
@@ -1139,11 +1636,11 @@ class PageTourAuthor {
   }
 
   /// Validates the input in Message to User Text Box
-  private checkMessageForStep = () => {
+  private checkMessageForStep = (tourtype: string) => {
     let messageForStepErrorElement: HTMLTextAreaElement = document.getElementById(
-      'message-for-step',
+      `message-for-${tourtype}`,
     ) as HTMLTextAreaElement
-    document.getElementById('message-for-step-error').style.display =
+    document.getElementById(`message-for-${tourtype}-error`).style.display =
       messageForStepErrorElement.value === '' ? 'block' : 'none'
   }
 
@@ -1171,11 +1668,27 @@ class PageTourAuthor {
   private checkRecordBoxInputs = () => {
     this.checkEventType()
     this.checkPositionSelect()
-    this.checkMessageForStep()
+    this.checkMessageForStep('step')
     this.checkValueForStep()
     this.checkDelayValue()
 
     let controlsList = ['event-type-select', 'position-select', 'message-for-step', 'value-for-step', 'delay-for-step']
+
+    if (!this.validateandSetFocus(controlsList)) {
+      event.preventDefault()
+      event.stopPropagation()
+      return false
+    }
+
+    return true
+  }
+
+  /// Executes inputs of all controls in Step Details Record Dialog
+  private checkSmartTipInputs = () => {
+    this.checkMessageForStep('smart-tip')
+    this.checkDelayValue();
+
+    let controlsList = ['message-for-smart-tip', 'delay-for-step']
 
     if (!this.validateandSetFocus(controlsList)) {
       event.preventDefault()
@@ -1219,9 +1732,21 @@ class PageTourAuthor {
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
   }
 
+  /// Closes Step Details Record Dialog and opens Add Tour dialog
+  private stopSmartTipRecording = () => {
+    let stepDetailModal = document.getElementById('tip-detail-modal')
+    stepDetailModal.parentNode.removeChild(stepDetailModal)
+    const authoringDeck = document.getElementById('authoringDock')
+    authoringDeck.parentNode.removeChild(authoringDeck)
+    this.editStepIndex = -1
+    this.disablePageInspector(true)
+    this.unHideAddTourModal()
+    this.populateSteps() /// Populates steps in Add Tour Dialogue.
+  }
+
   /// Removes Step Details Record box.
-  private removeStepDetailModal = () => {
-    let stepDetailModal = document.getElementById('step-detail-modal')
+  private removeStepDetailModal = (modalId: string) => {
+    let stepDetailModal = document.getElementById(modalId)
     if (stepDetailModal != null) {
       stepDetailModal.parentNode.removeChild(stepDetailModal)
       this.editStepIndex = -1
@@ -1230,7 +1755,16 @@ class PageTourAuthor {
 
   /// Takes back to Choose element Dailog from Step details Record Dialog
   private backToStepDetails = () => {
-    document.getElementById('step-detail-modal').style.display = 'none'
+    this.backToDetails('step-detail-modal');
+    this.stopTourRecording();
+  }
+
+  private backToTipDetails = () => {
+    this.backToDetails('tip-detail-modal');
+  }
+
+  private backToDetails = (modalId: string) => {
+    document.getElementById(modalId).style.display = 'none'
     let authoringDeck = document.getElementById('authoringDock')
     authoringDeck.style.display = 'block'
     DomUtils.manageTabbing(authoringDeck)
@@ -1243,8 +1777,22 @@ class PageTourAuthor {
       return
     }
     this.getStepDetails()
-    this.backToStepDetails()
-    this.removeStepDetailModal()
+    this.backToDetails('step-detail-modal')
+    this.stopTourRecording();
+    this.removeStepDetailModal('step-detail-modal')
+    this.toggleChooseElement(this.chooseState.Choose, null)
+    this.disablePageInspector(true)
+    let chooseElementDock = document.getElementById('authoringDock')
+    DomUtils.manageTabbing(chooseElementDock)
+  }
+
+  private saveAndAddNewTip = () => {
+    if (!this.checkSmartTipInputs()) {
+      return
+    }
+    this.getTipDetails()
+    this.backToDetails('tip-detail-modal')
+    this.removeStepDetailModal('tip-detail-modal')
     this.toggleChooseElement(this.chooseState.Choose, null)
     this.disablePageInspector(true)
     let chooseElementDock = document.getElementById('authoringDock')
@@ -1257,8 +1805,20 @@ class PageTourAuthor {
     if (!this.checkRecordBoxInputs()) {
       return
     }
+    this.StopTranscriptGeneration('step');
     this.getStepDetails()
-    this.removeStepDetailModal()
+    this.removeStepDetailModal('step-detail-modal')
+    this.closeChooseElementModal()
+    this.unHideAddTourModal()
+    this.populateSteps() /// Populates steps in Add Tour Dialogue.
+  }
+
+  private saveTipAndReturn = () => {
+    if (!this.checkSmartTipInputs()) {
+      return
+    }
+    this.getTipDetails()
+    this.removeStepDetailModal('tip-detail-modal')
     this.closeChooseElementModal()
     this.unHideAddTourModal()
     this.populateSteps() /// Populates steps in Add Tour Dialogue.
@@ -1274,6 +1834,9 @@ class PageTourAuthor {
     ) as HTMLTextAreaElement
     let valueForStepElement: HTMLTextAreaElement = document.getElementById('value-for-step') as HTMLTextAreaElement
     let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
+    let transcriptForStepElement: HTMLTextAreaElement = document.getElementById(
+      'transcript-message-for-step',
+    ) as HTMLTextAreaElement
 
     let eventType = eventTypeElement.options[eventTypeElement.selectedIndex].value
     let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
@@ -1319,6 +1882,8 @@ class PageTourAuthor {
     } else {
       newStep.ignoreStepIf = false
     }
+    if(transcriptForStepElement)
+    newStep.transcript = transcriptForStepElement.value;
 
     /// Updates the step in stepDetails during edit of a step or pushes a new step to the stepDetails array.
     if (this.editStepIndex !== -1) {
@@ -1328,6 +1893,60 @@ class PageTourAuthor {
       this.stepList.push(newStep)
     }
   }
+
+    /// Extracts the content from Step Details Record box and pushes to new step to StepDetials array
+    private getTipDetails = () => {
+      let positionSelectElement: HTMLSelectElement = document.getElementById("position-select") as HTMLSelectElement
+      let messageForStepElement: HTMLTextAreaElement = document.getElementById('message-for-smart-tip') as HTMLTextAreaElement
+      
+      let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
+      let message = messageForStepElement.value
+      let newStep: any = {}
+      newStep.message = message
+      newStep.position = position
+
+      let delayBefore: number = parseInt((document.getElementById('delay-for-step') as HTMLInputElement).value, 10);
+      newStep.delayBefore = delayBefore;
+
+      let id = this.lastSelectedElement.getAttribute('id')
+      newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
+      newStep.selector = ''
+      let options = {
+        selectorTypes: ['Class', 'Tag', 'NthChild'],
+      }
+      let elementSelector = unique(this.lastSelectedElementOriginal, options)
+      newStep.selector = elementSelector.toString()
+      let pageContext = this.getPageContext()
+      newStep.pagecontext = pageContext.url
+      newStep.pagestatename = pageContext.state
+  
+      let ignoreKeyCheckboxElement: HTMLInputElement = document.getElementById(
+        'ignore-element-key-chkbox',
+      ) as HTMLInputElement
+      if (ignoreKeyCheckboxElement) {
+        newStep.ignoreelementkey = ignoreKeyCheckboxElement.checked
+      } else {
+        newStep.ignoreelementkey = false
+      }
+  
+      let ignoreNextIfNextStepElementFound: HTMLInputElement = document.getElementById(
+        'ignoreStep-IfNextStepElementFound-chkbox',
+      ) as HTMLInputElement
+      if (ignoreNextIfNextStepElementFound && ignoreNextIfNextStepElementFound.checked) {
+        newStep.ignoreStepIf = true
+        newStep.ignoreStepIfConditions = 'NextStepElementFound'
+      } else {
+        newStep.ignoreStepIf = false
+      }
+  
+      /// Updates the step in stepDetails during edit of a step or pushes a new step to the stepDetails array.
+      if (this.editStepIndex !== -1) {
+        this.stepList[this.editStepIndex] = newStep
+        this.editStepIndex = -1
+      } else {
+        this.stepList.push(newStep)
+      }
+    }
 
   /// Resets the Create Record Box and sets to default values.
   private resetStepDetailsModal = () => {
@@ -1343,12 +1962,16 @@ class PageTourAuthor {
 
   /// This loads the details of a step in the Record box.
   private populateStepDetails = () => {
-    let step = this.stepList[this.editStepIndex]
-    ;(document.getElementById('event-type-select') as HTMLSelectElement).value = step.type
-    ;(document.getElementById('position-select') as HTMLSelectElement).value = step.position
-    ;(document.getElementById('message-for-step') as HTMLTextAreaElement).value = step.message
-    ;(document.getElementById('error-message-for-step') as HTMLTextAreaElement).value = step.errorMessage
-    ;(document.getElementById('value-for-step') as HTMLTextAreaElement).value = step.value
+    let step = this.stepList[this.editStepIndex];
+    (document.getElementById('event-type-select') as HTMLSelectElement).value = step.type;
+    (document.getElementById('position-select') as HTMLSelectElement).value = step.position;
+    (document.getElementById('message-for-step') as HTMLTextAreaElement).value = step.message;
+    (document.getElementById('error-message-for-step') as HTMLTextAreaElement).value = step.errorMessage;
+    (document.getElementById('value-for-step') as HTMLTextAreaElement).value = step.value;
+    if(step.transcript) {
+      (document.getElementById('transcript-message-for-step') as HTMLTextAreaElement).value = step.transcript;
+    }
+
     if (step.delayBefore) {
       let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
       let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
@@ -1356,6 +1979,19 @@ class PageTourAuthor {
       delayBeforeStepValue.value = delayBeforeStepSlider.value
     }
     this.toggleValueDisplay()
+  }
+
+  private populateTipDetails = () => {
+    let step = this.stepList[this.editStepIndex];
+    (document.getElementById('message-for-smart-tip') as HTMLTextAreaElement).value = step.message;
+    (document.getElementById("position-select") as HTMLSelectElement).value = step.position;
+
+    if(step.delayBefore) {
+      let delayBeforeStepSlider: HTMLInputElement = document.getElementById('delayBeforeStepSlider') as HTMLInputElement
+      let delayBeforeStepValue: HTMLInputElement = document.getElementById('delay-for-step') as HTMLInputElement
+      delayBeforeStepSlider.value = String(step.delayBefore)
+      delayBeforeStepValue.value = delayBeforeStepSlider.value
+    }
   }
 
   private getPageContext = () => {
