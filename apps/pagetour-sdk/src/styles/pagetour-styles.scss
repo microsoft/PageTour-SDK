@@ -2633,3 +2633,115 @@ $input-text-focus-outline: 1px dotted black;
 }
 
 /* Annoucement Box Popup end*/
+
+/* Cover page starts here */
+.coverpage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+
+  .coverpage-card {
+    background: rgb(255, 255, 255);
+    flex-basis: 40%;
+    border-radius: 2px !important;
+    transition:0.3s;
+    box-shadow: 0 4px 20px 0 rgba(34,68,123,0.2);
+    word-break: break-all;
+    max-width: 576px;
+  }
+
+  .coverpage-content {
+    padding: 1.3rem 2rem;
+    height: auto;
+    max-height: 100%;
+    overflow: auto;
+    border-top: 1px solid lightgrey;
+
+    .close-button-div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-direction: row;
+      .close-button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0px 3px;
+        align-self: flex-start;
+        outline: inherit;
+        position: fixed;
+        float: right;
+        align-items: flex-end;
+        z-index: 100;
+      }
+    }
+
+    .coverpage-title{
+      font-size: 18px;
+      color: #000000;
+      margin-top: 1rem;
+    }
+
+    .coverpage-description {
+      line-height: 1.5;
+      color: #000000;
+      margin:0;
+      font-family: "Segoe UI";
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+
+  .coverpage-footer {
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    .coverpage-buttons {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      width: 170px;
+      justify-content: flex-end;
+
+      .coverpage-cancel-button{
+        width: 93px;
+        height: 32px;
+        background: #ffffff;
+        border: 1px solid #646464;
+        border-radius: 2px;
+        box-sizing: border-box;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+      }
+
+      .coverpage-next-button {
+        width: 100px;
+        height: 32px;
+        background: #0078D4;
+        border-radius: 2px;
+        border: 1px solid #0078D4;
+        box-sizing: border-box;
+        color: #ffffff;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+/* Cover page ends here */
