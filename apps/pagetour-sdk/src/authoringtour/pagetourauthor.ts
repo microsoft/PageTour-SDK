@@ -285,7 +285,7 @@ class PageTourAuthor {
       activeon: tourActiveOn,
       isactive: true,
       isdeleted: false,
-      version: 1,
+      version: (this.tour && this.tour.version) ? this.tour.version : 1,
       lastmodifiedon: currentDate.toUTCString(),
       lastmodifiedby: this.getCurrentUser(),
       tags: tagsArray,
