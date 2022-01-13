@@ -200,6 +200,12 @@ $input-text-focus-outline: 1px dotted black;
     }
   }
 
+  .cover-page-dialog {
+    @extend .tour-modal;
+    width: 100%;
+    margin-left: 0%;
+  }
+
   .step-dialog {
     @extend .tour-modal;
     width: 100%;
@@ -1370,6 +1376,25 @@ $input-text-focus-outline: 1px dotted black;
   left: 0;
 }
 
+.cover-page-modal {
+  display: block; /* Hidden by default */
+  z-index: 10300 !important; /* Sit on top */
+  margin: 80px auto; /* Location of the box */
+  left: 0;
+  top: 0;
+  font-size: x-small;
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0); /* Black w/ opacity */
+  border-radius: 0 !important;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 55%;
+  min-width: 250px;
+  overflow: auto;
+}
+
 .select-element-modal {
   display: block; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -1400,7 +1425,67 @@ $input-text-focus-outline: 1px dotted black;
   display: inline-block;
 }
 
+.cover-page-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  overflow-x: auto;
+  border: 1px solid #888;
+}
 
+.cover-page-display-content {
+  background-color: #fefefe;
+  margin-top: 150px !important;
+  padding: 20px 20px 0px 20px;
+  min-height: 250px;
+  max-height: 604px;
+  height: fit-content;
+  border: 3px solid;
+  position: relative;
+  @media (max-width: 640px) {
+    max-width: 270px;
+  }
+  .ptcloseicon {
+    position: absolute;
+    right: 10px;
+    font-size: 16px;
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+  .ptcloseicon:focus {
+    outline: #000000 dotted 1px;
+  }
+}
+
+.cover-page-title {
+  display: flex;
+  flex-direction: row;
+  place-content: space-between;
+  margin-bottom: 10px;
+
+  p {
+    // font-family: Segoe UI;
+    font-size: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.cover-page-body-content {
+  min-height: 160px;
+  height: fit-content;
+  max-height: 495px;
+  width: 550px;
+  overflow-y: auto;
+  padding-bottom: 10px;
+  font-size: 14px;
+}
+
+.start-cover-page-btn,
+.end-cover-page-btn {
+  display: none;
+}
 
 .step-detail-content {
   background-color: #fefefe;
