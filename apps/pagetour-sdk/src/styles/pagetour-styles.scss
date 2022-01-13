@@ -606,8 +606,10 @@ $input-text-focus-outline: 1px dotted black;
   .scrollable {
     overflow-x: auto;
     overflow-y: auto;
+    max-height: 40vh;
     height: 100%;
     width: 100%;
+
   }
 
   .action-trigger-events {
