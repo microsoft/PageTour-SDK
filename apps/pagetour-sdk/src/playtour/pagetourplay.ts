@@ -26,6 +26,7 @@ class PageTourPlay {
   private delay = 750
   private maxRetryCount = 5
   private modal: any = null
+  private dock: any = null
   private defaultFontFamily = 'Segoe UI'
   private autoPlayTest: boolean
   private isMuted: boolean = false;
@@ -1421,8 +1422,8 @@ class PageTourPlay {
     this.modal = document.getElementById('coverPageDock')
     if (!this.modal) {
       let chooseElementDock = this.viewCoverPageTemplateFn()
-      let dock = DomUtils.appendToBody(chooseElementDock) as HTMLElement;
-      // dock.style.display = "flex";
+      this.dock = DomUtils.appendToBody(chooseElementDock)
+      DomUtils.show(this.dock)
       let coverPageTitleElement = document.getElementById('cover-page-title')
       let titleContentElement = document.createElement('p')
       titleContentElement.innerText = title
@@ -1439,12 +1440,20 @@ class PageTourPlay {
 
     this.modal = document.getElementById('cover-page-modal')
     this.modal.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily
-    this.modal.style.display = 'flex'
+    this.modal.style.display = 'block'
 
     let startTourCoverPageButton = document.getElementById('starttour-cover-page-btn') as HTMLButtonElement
     let closeBtn = document.getElementById('cover-page-close-btn') as HTMLButtonElement
     let cancelBtn = document.getElementById('cancel-cover-page-btn') as HTMLButtonElement
 
+    let coverpagebox = document.getElementById('cover-page-display-content')
+
+    coverpagebox.style.borderColor = this.tourTheme.primaryColor
+    if (this.tourTheme.isRounded) {
+      coverpagebox.style.borderRadius = this.tourTheme.borderRadius ? `${this.tourTheme.borderRadius}px` : '10px'
+    }
+    coverpagebox.style.color = this.tourTheme.textColor
+    
     startTourCoverPageButton.style.background = this.tourTheme.primaryColor
     startTourCoverPageButton.style.color = this.tourTheme.secondaryColor
     startTourCoverPageButton.style.display = 'inline'
