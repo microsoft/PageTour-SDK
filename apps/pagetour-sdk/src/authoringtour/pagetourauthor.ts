@@ -1966,7 +1966,9 @@ class PageTourAuthor {
     (document.getElementById('event-type-select') as HTMLSelectElement).value = step.type;
     (document.getElementById('position-select') as HTMLSelectElement).value = step.position;
     (document.getElementById('message-for-step') as HTMLTextAreaElement).value = step.message;
-    (document.getElementById('error-message-for-step') as HTMLTextAreaElement).value = step.errorMessage;
+    if(step.errorMessage) {
+      (document.getElementById('error-message-for-step') as HTMLTextAreaElement).value = step.errorMessage;
+    }
     (document.getElementById('value-for-step') as HTMLTextAreaElement).value = step.value;
     if(step.transcript) {
       (document.getElementById('transcript-message-for-step') as HTMLTextAreaElement).value = step.transcript;

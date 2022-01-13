@@ -1,6 +1,6 @@
 {
   "name": "pagetour-sdk.sample",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -22,9 +22,9 @@
     "@angular/router": "8.2.14",
     "core-js": "2.5.4",
     "jquery": "^3.5.0",
-    "pagetour-sdk": "^2.0.1",
-    "pagetour-sdk.httprepository": "^2.0.1",
-    "pagetour-sdk.localrepository": "^2.0.1",
+    "pagetour-sdk": "^2.0.4",
+    "pagetour-sdk.httprepository": "^2.0.4",
+    "pagetour-sdk.localrepository": "^2.0.4",
     "popper.js": "^1.14.7",
     "rxjs": "6.6.7",
     "tslib": "1.9.0",
