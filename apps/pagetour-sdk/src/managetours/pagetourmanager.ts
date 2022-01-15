@@ -1066,9 +1066,9 @@ class PageTourManager {
   private playTourByObject = async (tour: any, startInterval: number) => {
     this.hideManagePageTourModal()
     if(tour.tourtype.toLowerCase() == TourTypeEnum.Announcement.toLowerCase())
-        this.pageTourPlay.runAnnouncement(tour, RunTourAction.Preview, 0)
+        this.pageTourPlay.runAnnouncement(tour, RunTourAction.Play, 0)
     else if(tour.tourtype.toLowerCase() == TourTypeEnum.Beacon.toLowerCase())
-        this.pageTourPlay.runSmartTip(tour, RunTourAction.Preview, 0)
+        this.pageTourPlay.runSmartTip(tour, RunTourAction.Play, 0)
     else
       this.pageTourPlay.runTour(tour, RunTourAction.Play, startInterval)
   }
