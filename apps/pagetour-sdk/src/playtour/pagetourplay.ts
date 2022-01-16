@@ -114,9 +114,13 @@ class PageTourPlay {
     callback: any = null,
     autoPlayTest: boolean = false,
   ) => {
+    const opts = this.configStore.Options;
     objTour.steps.forEach((element,i) => {
         setTimeout(() => this.makeSmartTipVisible(element, i, objTour, callback), element.delayBefore * 1000)
     });
+    if(opts.navigator.callbackOnTourStart != null) {
+      opts.navigator.callbackOnTourStart(objTour)
+    }
   }
 
   private makeSmartTipVisible(element : any, i: number, objTour: Tutorial, callback: any) {
@@ -213,6 +217,7 @@ class PageTourPlay {
   private async dismissSmartTip(id: string, tour: Tutorial, userAction: string, step: string, operation: string) {
     // remove that specific tips and popper from the domutils.
     let availableSmartTips = document.getElementById(id);
+    const opts = this.configStore.Options;
     if(availableSmartTips)
     {
       availableSmartTips.remove();
@@ -220,12 +225,15 @@ class PageTourPlay {
 
     // record the action for the specific user and store in local storage.
     try {
-      let response = await this.configStore.Options.userActionProvider.recordUserAction(
+      let response = await opts.userActionProvider.recordUserAction(
         tour,
         userAction,
         step,
         operation,
       )
+      if(opts.navigator.callbackAfterTourEnd != null) {
+        opts.navigator.callbackAfterTourEnd(tour)
+      }
     } catch (err) {}
   }
 
