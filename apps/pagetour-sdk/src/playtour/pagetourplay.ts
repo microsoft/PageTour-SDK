@@ -817,7 +817,7 @@ class PageTourPlay {
         let stepCounter = document.getElementById('usermessageboxcounter')
 
         if (this.tour.title !== undefined && this.tour.title !== '') {
-          stepHeadingElement.innerText = this.tour.title + '.'
+          stepHeadingElement.innerText = this.tour.title
         } else {
           stepHeadingElement.innerText = ''
         }
