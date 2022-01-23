@@ -16,6 +16,7 @@ import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { TourTypeEnum } from '../models/tourtypeenum'
+import { getCssSelector } from 'css-selector-generator'
 
 
 declare const $: any
@@ -1025,6 +1026,9 @@ class PageTourAuthor {
     } else if (el.className === 'inspectorOutline') {
       DomUtils.hide(inspector)
       el = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement
+      while(el.shadowRoot != null){
+        el = el.shadowRoot.elementFromPoint(event.clientX, event.clientY) as HTMLElement
+      }
       if (el.className === 'authoringElement') {
         return
       }
@@ -1858,7 +1862,7 @@ class PageTourAuthor {
     let options = {
       selectorTypes: ['ID','Class', 'Tag', 'NthChild'],
     }
-    let elementSelector = unique(this.lastSelectedElementOriginal, options)
+    let elementSelector = getCssSelector(this.lastSelectedElementOriginal)
     newStep.selector = elementSelector.toString()
     let pageContext = this.getPageContext()
     newStep.pagecontext = pageContext.url

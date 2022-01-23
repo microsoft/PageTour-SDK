@@ -14,6 +14,7 @@ import { Step } from '../models/step'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
 import { TourTypeEnum } from '../models/tourtypeenum'
+import  { querySelectorDeep } from 'query-selector-shadow-dom'
 
 declare const $: any
 class PageTourPlay {
@@ -764,7 +765,8 @@ class PageTourPlay {
       }
     }
 
-    let element = document.querySelector(elementSelector)
+    //let element = document.querySelector(elementSelector)
+    let element = querySelectorDeep(elementSelector)
     if (this.isValidElement(element)) {
       const previoustButton: HTMLButtonElement = document.querySelector('#pagetour-previous-step')
       const nextButton: HTMLButtonElement = document.querySelector('#pagetour-next-step');
@@ -1258,7 +1260,7 @@ class PageTourPlay {
         popperPosition = 'bottom'
     }
 
-    const targetDom = document.querySelector(target)
+    const targetDom = querySelectorDeep(target)
 
     let popperInstance = new Popper(targetDom, tourBoxElement, {
       placement: popperPosition,
@@ -1317,7 +1319,7 @@ class PageTourPlay {
     }
 
     if (elementSelector && elementSelector.length !== 0) {
-      let foundElementByKey = document.querySelector(elementSelector)
+      let foundElementByKey = querySelectorDeep(elementSelector)
       if (foundElementByKey) {
         return elementSelector
       }
