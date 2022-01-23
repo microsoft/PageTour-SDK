@@ -1856,7 +1856,7 @@ class PageTourAuthor {
     newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
     newStep.selector = ''
     let options = {
-      selectorTypes: ['ID','Class', 'Tag', 'NthChild'],
+      selectorTypes: ['Class', 'Tag', 'NthChild'],
     }
     let elementSelector = unique(this.lastSelectedElementOriginal, options)
     newStep.selector = elementSelector.toString()
@@ -1912,7 +1912,7 @@ class PageTourAuthor {
       newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
       newStep.selector = ''
       let options = {
-        selectorTypes: ['ID', 'Class', 'Tag', 'NthChild'],
+        selectorTypes: ['Class', 'Tag', 'NthChild'],
       }
       let elementSelector = unique(this.lastSelectedElementOriginal, options)
       newStep.selector = elementSelector.toString()
