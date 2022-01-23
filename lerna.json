@@ -2,7 +2,7 @@
   "packages": [
     "apps/*"
   ],
-  "version": "2.0.7",
+  "version": "2.0.8",
   "npmClient": "npm",
   "hoist": true
 }
