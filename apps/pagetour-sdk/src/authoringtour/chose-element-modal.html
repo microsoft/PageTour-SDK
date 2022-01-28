@@ -30,6 +30,23 @@
         </button>
         <span id="choose-element-text" class="small"></span>
       </div>
+
+      <div class="row-17">
+        <label class="margin-bottom-12 font-body" for="chosen-element">Chosen Element:</label>
+        <textarea
+          class="textarea"
+          id="chosen-element"
+          type="text"
+          title="Chosen Element"
+          required
+          placeholder="Chosen Element will appear here"
+          disabled
+        ></textarea>
+        <span class="textarea-error" aria-live="assertive" id="chosen-element-error">
+          Chosen Element cannot be empty
+        </span>
+      </div>
+
       <div class="row-17 ignoreElementKey">
         <input id="ignore-element-key-chkbox" title="Check" type="checkbox" aria-label="Select to ignore element id" />
         <label for="ignore-element-key-chkbox" id="ignore-element-key-chkbox-lbl">Ignore element id</label>

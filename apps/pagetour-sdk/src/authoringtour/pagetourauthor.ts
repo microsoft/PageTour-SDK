@@ -853,9 +853,18 @@ class PageTourAuthor {
     let cancelChooseElement = document.getElementById('cancel-choose-element-btn')
     cancelChooseElement.onclick = this.closeChooseElementModal
     let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
-    let nextElement = document.getElementById('select-element-next-btn')
+    let nextElement = document.getElementById('select-element-next-btn') as HTMLButtonElement;
 
-    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === TourTypeEnum.Beacon.toLowerCase()) ? this.createSmartTipBox : this.createRecordBox)
+    const chosenElementTextArea: HTMLTextAreaElement = document.getElementById('chosen-element') as HTMLTextAreaElement;
+    chosenElementTextArea.addEventListener('change', function() {
+      if(chosenElementTextArea.value === "") {
+        nextElement.disabled = true;
+      } else {
+        nextElement.disabled = false;
+      }
+    });
+
+    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === TourTypeEnum.Beacon.toLowerCase() ? this.createSmartTipBox : this.createRecordBox))
     DomUtils.manageTabbing(authoringDeck)
     this.showHideIgnoreKeyElement(false, null)
   }
@@ -865,6 +874,10 @@ class PageTourAuthor {
     let chooseElement: HTMLButtonElement = document.getElementById('choose-element-btn') as HTMLButtonElement
     let chooseElementText = document.getElementById('choose-element-text')
     let nextButton = document.getElementById('select-element-next-btn') as HTMLButtonElement
+    const chosenElementTextArea: HTMLTextAreaElement = document.getElementById('chosen-element') as HTMLTextAreaElement
+    let options = {
+      selectorTypes: ['Class', 'Tag', 'NthChild']
+    }
 
     switch (state) {
       case this.chooseState.Choose:
@@ -879,6 +892,8 @@ class PageTourAuthor {
         chooseElement.disabled = false
         chooseElementText.innerText = 'Element Selected'
         nextButton.disabled = false
+        chosenElementTextArea.disabled = false
+        chosenElementTextArea.value = unique(this.lastSelectedElementOriginal, options);
 
         if (this.lastSelectedElement) {
           let idVal = this.lastSelectedElement.getAttribute('id')
@@ -1006,11 +1021,11 @@ class PageTourAuthor {
           this.selectedElement.style.outline = '#f00 solid 1px'
           DomUtils.hide(inspector)
           if (this.lastSelectedElement != null) {
-            this.toggleChooseElement(this.chooseState.Chosen, null)
+            this.toggleChooseElement(this.chooseState.Chosen, null);
           }
         }
       }
-    })
+    });
 
     const body = document.querySelector('body')
     body.addEventListener('mousemove', this.bodyMouseMoveFunction)
@@ -1837,6 +1852,7 @@ class PageTourAuthor {
     let transcriptForStepElement: HTMLTextAreaElement = document.getElementById(
       'transcript-message-for-step',
     ) as HTMLTextAreaElement
+    let chosenElement: HTMLTextAreaElement = document.getElementById("chosen-element") as HTMLTextAreaElement
 
     let eventType = eventTypeElement.options[eventTypeElement.selectedIndex].value
     let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
@@ -1855,12 +1871,8 @@ class PageTourAuthor {
     let id = this.lastSelectedElement.getAttribute('id')
     newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
     newStep.selector = ''
-    let options = {
-      selectorTypes: ['Class', 'Tag', 'NthChild'],
-    }
-    let elementSelector = unique(this.lastSelectedElementOriginal, options)
-    newStep.selector = elementSelector.toString()
-    let pageContext = this.getPageContext()
+    newStep.selector = chosenElement.value;
+    let pageContext = this.getPageContext();
     newStep.pagecontext = pageContext.url
     newStep.pagestatename = pageContext.state
 
@@ -1898,6 +1910,7 @@ class PageTourAuthor {
     private getTipDetails = () => {
       let positionSelectElement: HTMLSelectElement = document.getElementById("position-select") as HTMLSelectElement
       let messageForStepElement: HTMLTextAreaElement = document.getElementById('message-for-smart-tip') as HTMLTextAreaElement
+      let chosenElement: HTMLTextAreaElement = document.getElementById("chosen-element") as HTMLTextAreaElement
       
       let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
       let message = messageForStepElement.value
@@ -1911,11 +1924,7 @@ class PageTourAuthor {
       let id = this.lastSelectedElement.getAttribute('id')
       newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
       newStep.selector = ''
-      let options = {
-        selectorTypes: ['Class', 'Tag', 'NthChild'],
-      }
-      let elementSelector = unique(this.lastSelectedElementOriginal, options)
-      newStep.selector = elementSelector.toString()
+      newStep.selector = chosenElement.value;
       let pageContext = this.getPageContext()
       newStep.pagecontext = pageContext.url
       newStep.pagestatename = pageContext.state
