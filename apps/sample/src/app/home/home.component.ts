@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
     //Inside element
     let h2 = document.createElement( "h2" )
     h2.textContent = "h2"
-    h2.id = "secondChild"
+    //h2.id = "secondChild"
     h2.className = 'demo header2'
     root.appendChild( h2 )
   }
