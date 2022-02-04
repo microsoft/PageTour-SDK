@@ -876,7 +876,7 @@ class PageTourAuthor {
     let nextButton = document.getElementById('select-element-next-btn') as HTMLButtonElement
     const chosenElementTextArea: HTMLTextAreaElement = document.getElementById('chosen-element') as HTMLTextAreaElement
     let options = {
-      selectorTypes: ['Class', 'Tag', 'NthChild']
+      selectorTypes: ['ID','Class', 'Tag', 'NthChild']
     }
 
     switch (state) {
