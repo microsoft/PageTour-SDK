@@ -1434,6 +1434,9 @@ $input-text-focus-outline: 1px dotted black;
   .actions {
     display: flex;
   }
+  #draggableElement{
+    cursor: move;
+  }
 }
 
 /* Create Choose Element Box*/

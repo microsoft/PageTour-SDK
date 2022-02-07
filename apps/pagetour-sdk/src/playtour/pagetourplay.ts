@@ -207,7 +207,12 @@ class PageTourPlay {
             }
 
             let popperInstance = new Popper(smartTip, toolTipPopper, {
-              placement: popperPlacement
+              placement: popperPlacement,
+              modifiers: {
+                offset: {
+                  offset: '0, 10'
+                }
+              }
             });
             popperInstance.enableEventListeners();
             popperInstance.scheduleUpdate();
@@ -1264,6 +1269,11 @@ class PageTourPlay {
 
     let popperInstance = new Popper(targetDom, tourBoxElement, {
       placement: popperPosition,
+      modifiers: {
+        offset: {
+          offset: '0, 13'
+        }
+      }
     })
 
     popperInstance.enableEventListeners()
