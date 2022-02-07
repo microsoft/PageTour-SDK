@@ -16,6 +16,7 @@ import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { TourTypeEnum } from '../models/tourtypeenum'
+import { getCssSelector } from 'css-selector-generator'
 
 
 declare const $: any
@@ -30,6 +31,8 @@ class PageTourAuthor {
   private selectedElement: HTMLElement = null
   private lastSelectedElement: HTMLElement = null
   private lastSelectedElementOriginal: HTMLElement = null
+
+  private lastSelectedElementShadowDom: string = null
   private stepList: any = []
   private editStepIndex = -1
   private tour: any = null
@@ -1034,12 +1037,21 @@ class PageTourAuthor {
   private onBodyMouseMove = (event: HTMLElementEventMap['mousemove']) => {
     const inspector: HTMLElement = document.querySelector('.inspectorOutline')
     let el: HTMLElement = event.target as any
+    let options = {
+      selectorTypes: ['Class', 'Tag', 'NthChild'],
+    }
     if (el === document.body) {
       DomUtils.hide(inspector)
       return
     } else if (el.className === 'inspectorOutline') {
       DomUtils.hide(inspector)
       el = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement
+      this.lastSelectedElementShadowDom = getCssSelector(el)
+      while(el.shadowRoot != null){
+        let shadowRoot = el.shadowRoot;
+        el = el.shadowRoot.elementFromPoint(event.clientX, event.clientY) as HTMLElement;
+        this.lastSelectedElementShadowDom += " " + getCssSelector(el, {root: shadowRoot});
+      }
       if (el.className === 'authoringElement') {
         return
       }
@@ -1047,6 +1059,7 @@ class PageTourAuthor {
       return
     }
     this.lastSelectedElementOriginal = el
+    console.log(this.lastSelectedElementShadowDom);
     const offset = DomUtils.offset(el)
 
     const width = DomUtils.outerWidth(el) - 1
@@ -1922,7 +1935,7 @@ class PageTourAuthor {
       newStep.delayBefore = delayBefore;
 
       let id = this.lastSelectedElement.getAttribute('id')
-      newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
+      newStep.key = id ? '#' + id : ''
       newStep.selector = ''
       newStep.selector = chosenElement.value;
       let pageContext = this.getPageContext()
