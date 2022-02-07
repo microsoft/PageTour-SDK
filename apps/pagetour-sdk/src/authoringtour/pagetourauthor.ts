@@ -879,7 +879,7 @@ class PageTourAuthor {
     let nextButton = document.getElementById('select-element-next-btn') as HTMLButtonElement
     const chosenElementTextArea: HTMLTextAreaElement = document.getElementById('chosen-element') as HTMLTextAreaElement
     let options = {
-      selectorTypes: ['Class', 'Tag', 'NthChild']
+      selectorTypes: ['ID','Class', 'Tag', 'NthChild']
     }
 
     switch (state) {
@@ -1082,22 +1082,6 @@ class PageTourAuthor {
     let pos3 = 0
     let pos4 = 0
 
-    let closeDragElement = () => {
-      document.onmouseup = null
-      document.onmousemove = null
-    }
-
-    let elementDrag = (event: HTMLElementEventMap['mousemove']) => {
-      let e: HTMLElementEventMap['mousemove'] = event || (window.event as any)
-      pos1 = pos3 - e.clientX
-      pos2 = pos4 - e.clientY
-      pos3 = e.clientX
-      pos4 = e.clientY
-      elmnt.style.top = elmnt.offsetTop - pos2 + 'px'
-      elmnt.style.left = elmnt.offsetLeft - pos1 + 'px'
-      e.preventDefault()
-    }
-
     let dragMouseDown = (event: HTMLElementEventMap['mousedown']) => {
       let e: HTMLElementEventMap['mousedown'] = event || (window.event as any)
       pos3 = e.clientX
@@ -1107,7 +1091,23 @@ class PageTourAuthor {
       event.preventDefault()
     }
 
-    elmnt.onmousedown = dragMouseDown
+    let elementDrag = (event: HTMLElementEventMap['mousemove']) => {
+      let e: HTMLElementEventMap['mousemove'] = event || (window.event as any)
+      pos1 = pos3 - e.clientX
+      pos2 = pos4 - e.clientY
+      pos3 = e.clientX
+      pos4 = e.clientY
+      elmnt.style.top = (elmnt.offsetTop - pos2) + 'px'
+      elmnt.style.left = (elmnt.offsetLeft - pos1) + 'px'
+      e.preventDefault()
+    }
+
+    let closeDragElement = () => {
+      document.onmouseup = null
+      document.onmousemove = null
+    }
+
+    document.getElementById("draggableElement").onmousedown = dragMouseDown;
   }
 
   /*#EndRegion: Choose element dialog methods*/
