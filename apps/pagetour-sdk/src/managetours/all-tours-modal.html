@@ -1,4 +1,9 @@
-<div id="manage-tours-modal" role="dialog" aria-label="Page Tour" class="pagetour">
+<div
+  id="manage-tours-modal"
+  role="dialog"
+  aria-label="Page Tour"
+  class="pagetour"
+>
   <div id="msg-announcement" aria-live="assertive"></div>
   <div class="tour-dialog">
     <div class="tour-modal">
@@ -16,7 +21,9 @@
                 <i class="pagetour__icon icon-close"></i>
               </button>
             </div>
-            <h1 class="font-subtitle-alt" id="alltutorials-modal-title">Page Tour</h1>
+            <h1 class="font-subtitle-alt" id="alltutorials-modal-title">
+              Page Tour
+            </h1>
           </div>
           <div class="row margin-bottom-12">
             <div class="col-lg-4 col-sm-6 search-box">
@@ -34,12 +41,16 @@
                 class="pagetour-btn--search clear"
                 id="search-tour-btn-cancel"
                 type="button"
-                style="display:none;"
+                style="display: none"
                 aria-label="clear search"
               >
                 <span class="pagetour__icon icon-close"></span>
               </button>
-              <button class="pagetour-btn--search search" aria-label="search" type="button">
+              <button
+                class="pagetour-btn--search search"
+                aria-label="search"
+                type="button"
+              >
                 <span class="pagetour__icon icon-search"></span>
               </button>
             </div>
@@ -59,28 +70,64 @@
               </span>
             </div>
             <div class="col-lg-2 col-sm-5 items-to-display-box">
-              <div style="min-height: 30px;"></div>
+              <div style="min-height: 30px"></div>
               <div>
-                <input id="showexpiredtours-chkbox" title="Check" type="checkbox" aria-label="Show Expired Tours" />
+                <input
+                  id="showexpiredtours-chkbox"
+                  title="Check"
+                  type="checkbox"
+                  aria-label="Show Expired Tours"
+                />
                 <label for="showexpiredtours-chkbox" id="showexpiredtours-lbl">
                   Include Expired Tours
                 </label>
               </div>
             </div>
 
-            <div class="dropdown col-lg-2 col-sm-5 items-to-display-box add-new" id="manage-tours-modal-add-tour-div">
-              <button class="btn pull-right btn-outline-primary" type="button" id="manage-tours-modal-add-tour-btn" data-toggle="dropdown" >
+            <div
+              class="dropdown col-lg-2 col-sm-5 items-to-display-box add-new"
+              id="manage-tours-modal-add-tour-div"
+            >
+              <button
+                class="btn pull-right btn-outline-primary"
+                type="button"
+                id="manage-tours-modal-add-tour-btn"
+                data-toggle="dropdown"
+              >
                 <i class="pagetour__icon icon-plus icon-inline"></i>
                 Add New
               </button>
-              <div class="pagetour-dropdown-menu" id="add-new-dropdown" aria-labelledby="manage-tours-modal-add-tour-btn">
-                <a class="pagetour-dropdown-item" id="option-page-tour" style="cursor: pointer;">Page Tour</a>
-                <a class="pagetour-dropdown-item" id="option-guided-tour" style="cursor: pointer;">Interactive Guide</a>
-                <a class="pagetour-dropdown-item" id="option-system-announcement" style="cursor: pointer;">Announcement</a>
-                <a class="pagetour-dropdown-item" id="option-smart-tip" style="cursor: pointer;">Smart Tip</a>
+              <div
+                class="pagetour-dropdown-menu"
+                id="add-new-dropdown"
+                aria-labelledby="manage-tours-modal-add-tour-btn"
+              >
+                <a
+                  class="pagetour-dropdown-item"
+                  id="option-page-tour"
+                  style="cursor: pointer"
+                  >Page Tour</a
+                >
+                <a
+                  class="pagetour-dropdown-item"
+                  id="option-guided-tour"
+                  style="cursor: pointer"
+                  >Interactive Guide</a
+                >
+                <a
+                  class="pagetour-dropdown-item"
+                  id="option-system-announcement"
+                  style="cursor: pointer"
+                  >Announcement</a
+                >
+                <a
+                  class="pagetour-dropdown-item"
+                  id="option-smart-tip"
+                  style="cursor: pointer"
+                  >Smart Tip</a
+                >
               </div>
             </div>
-
           </div>
           <div class="row margin-bottom-12">
             <div class="col-lg-12 col-sm-12 button-col pull-right">
@@ -92,7 +139,7 @@
                   aria-label="Previous Page"
                 >
                   <span class="pagetour__icon icon-chevron-left"></span>
-                  <span class="font-caption-alt ">Prev</span>
+                  <span class="font-caption-alt">Prev</span>
                 </button>
                 <input
                   class="font-caption-alt page-number"
@@ -103,14 +150,18 @@
                   placeholder="1"
                 />
                 <span class="font-caption-alt page-text">of</span>
-                <span id="total-tours-pages-top" class="font-caption-alt page-text">1</span>
+                <span
+                  id="total-tours-pages-top"
+                  class="font-caption-alt page-text"
+                  >1</span
+                >
                 <button
                   id="tours-table-next-page-top"
                   class="pagetour-btn pagetour-btn--action"
                   type="button"
                   aria-label="Next Page"
                 >
-                  <span class="font-caption-alt ">Next</span>
+                  <span class="font-caption-alt">Next</span>
                   <span class="pagetour__icon icon-chevron-right"></span>
                 </button>
               </div>
@@ -124,18 +175,24 @@
               >
                 <thead>
                   <tr>
-                    <th class="expander-column-header">Expand or collapse tour description</th>
+                    <th class="expander-column-header">
+                      Expand or collapse tour description
+                    </th>
                     <th class="title-column-header">Tour Type</th>
                     <th class="title-column-header">Title</th>
                     <th class="desc-column-header">Description</th>
                     <th class="title-column-header">Start Page Name</th>
                     <th class="date-column-header">
-                      <button id="manage-tours-sort" type="button" class="button-sortcolumn">
+                      <button
+                        id="manage-tours-sort"
+                        type="button"
+                        class="button-sortcolumn"
+                        aria-label="sort by date"
+                      >
                         Date Added
                         <i
                           class="pagetour__icon icon-order-down"
                           id="icon-tours-sortorder"
-                          aria-label="sort tutorials by date added ascending"
                         ></i>
                       </button>
                     </th>
@@ -154,7 +211,10 @@
                     <th class="button-column-header">Play</th>
                   </tr>
                 </thead>
-                <tbody id="all-tours-table-body" class="font-caption-alt"></tbody>
+                <tbody
+                  id="all-tours-table-body"
+                  class="font-caption-alt"
+                ></tbody>
               </table>
             </div>
             <div class="pagination-panel width-100">
@@ -166,7 +226,7 @@
                   aria-label="Previous Page"
                 >
                   <span class="pagetour__icon icon-chevron-left"></span>
-                  <span class="font-caption-alt ">Prev</span>
+                  <span class="font-caption-alt">Prev</span>
                 </button>
                 <input
                   class="font-caption-alt page-number"
@@ -177,14 +237,18 @@
                   placeholder="1"
                 />
                 <span class="font-caption-alt page-text">of</span>
-                <span id="total-tours-pages-bottom" class="font-caption-alt page-text">1</span>
+                <span
+                  id="total-tours-pages-bottom"
+                  class="font-caption-alt page-text"
+                  >1</span
+                >
                 <button
                   id="tours-table-next-page-bottom"
                   class="pagetour-btn pagetour-btn--action"
                   type="button"
                   aria-label="Next Page"
                 >
-                  <span class="font-caption-alt ">Next</span>
+                  <span class="font-caption-alt">Next</span>
                   <span class="pagetour__icon icon-chevron-right"></span>
                 </button>
               </div>
