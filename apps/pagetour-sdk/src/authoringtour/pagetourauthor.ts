@@ -9,7 +9,6 @@ import { DomUtils } from '../common/domutils'
 import { ConfigStore } from '../common/configstore'
 import { debounce } from 'debounce'
 import { PageContext } from '../models/pagecontext'
-import unique from 'unique-selector'
 import { RunTourAction } from '../models/runtouraction'
 import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
@@ -17,6 +16,7 @@ import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { TourTypeEnum } from '../models/tourtypeenum'
 import { getCssSelector } from 'css-selector-generator'
+import { querySelectorDeep } from 'query-selector-shadow-dom'
 
 
 declare const $: any
@@ -32,7 +32,7 @@ class PageTourAuthor {
   private lastSelectedElement: HTMLElement = null
   private lastSelectedElementOriginal: HTMLElement = null
 
-  private lastSelectedElementShadowDom: string = null
+  private lastSelectedElementSelector: string = null
   private stepList: any = []
   private editStepIndex = -1
   private tour: any = null
@@ -700,7 +700,7 @@ class PageTourAuthor {
         this.editTourStep();
         break;
       case TourTypeEnum.Beacon.toLowerCase():
-        this.editSmartTipStep();
+        this.editTourStep();
         break;
     }
   }
@@ -717,32 +717,12 @@ class PageTourAuthor {
       const editingStep = this.stepList[this.editStepIndex]
       if (editingStep && editingStep.selector && editingStep.selector !== '') {
         this.ignoreStepIfSetup(editingStep)
-        let elementfromselector = document.querySelector(editingStep.selector)
+        let elementfromselector = querySelectorDeep(editingStep.selector)
         if (elementfromselector) {
           this.lastSelectedElement = elementfromselector
           this.lastSelectedElementOriginal = elementfromselector
-          this.toggleChooseElement(this.chooseState.Chosen, editingStep)
-        }
-      }
-    }
-  }
+          this.lastSelectedElementSelector = editingStep.selector
 
-  private editSmartTipStep() {
-    this.createChooseElementModal()
-    document.getElementById('choose-element-title').innerText = 'Edit Tip - Choose an element'
-    document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
-    document.getElementById('cancel-choose-element-btn').setAttribute('aria-label', 'cancel and Close Edit Step dialog')
-    event.preventDefault()
-    event.stopPropagation()
-
-    if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
-      const editingStep = this.stepList[this.editStepIndex]
-      if (editingStep && editingStep.selector && editingStep.selector !== '') {
-        this.ignoreStepIfSetup(editingStep)
-        let elementfromselector = document.querySelector(editingStep.selector)
-        if (elementfromselector) {
-          this.lastSelectedElement = elementfromselector
-          this.lastSelectedElementOriginal = elementfromselector
           this.toggleChooseElement(this.chooseState.Chosen, editingStep)
         }
       }
@@ -878,9 +858,6 @@ class PageTourAuthor {
     let chooseElementText = document.getElementById('choose-element-text')
     let nextButton = document.getElementById('select-element-next-btn') as HTMLButtonElement
     const chosenElementTextArea: HTMLTextAreaElement = document.getElementById('chosen-element') as HTMLTextAreaElement
-    let options = {
-      selectorTypes: ['ID','Class', 'Tag', 'NthChild']
-    }
 
     switch (state) {
       case this.chooseState.Choose:
@@ -896,7 +873,9 @@ class PageTourAuthor {
         chooseElementText.innerText = 'Element Selected'
         nextButton.disabled = false
         chosenElementTextArea.disabled = false
-        chosenElementTextArea.value = unique(this.lastSelectedElementOriginal, options);
+        if(editingStep && editingStep.selector) {
+          chosenElementTextArea.value = editingStep.selector
+        }
 
         if (this.lastSelectedElement) {
           let idVal = this.lastSelectedElement.getAttribute('id')
@@ -1000,6 +979,7 @@ class PageTourAuthor {
   }
 
   private enablePageInspector = (event: Event) => {
+    let self = this;
     event.stopPropagation()
     this.disablePageInspector(true)
     this.hideChooseElementModal()
@@ -1024,7 +1004,7 @@ class PageTourAuthor {
           this.selectedElement.style.outline = '#f00 solid 1px'
           DomUtils.hide(inspector)
           if (this.lastSelectedElement != null) {
-            this.toggleChooseElement(this.chooseState.Chosen, null);
+            this.toggleChooseElement(this.chooseState.Chosen, { selector : self.lastSelectedElementSelector});
           }
         }
       }
@@ -1046,11 +1026,15 @@ class PageTourAuthor {
     } else if (el.className === 'inspectorOutline') {
       DomUtils.hide(inspector)
       el = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement
-      this.lastSelectedElementShadowDom = getCssSelector(el)
-      while(el.shadowRoot != null){
+      this.lastSelectedElementSelector = getCssSelector(el)
+      let count = 0;
+      while(el && el.shadowRoot != null && count < 10){
+        //console.log(el.shadowRoot)
         let shadowRoot = el.shadowRoot;
         el = el.shadowRoot.elementFromPoint(event.clientX, event.clientY) as HTMLElement;
-        this.lastSelectedElementShadowDom += " " + getCssSelector(el, {root: shadowRoot});
+        //console.log(el);
+        this.lastSelectedElementSelector += " " + getCssSelector(el, {root: shadowRoot});
+        count++;
       }
       if (el.className === 'authoringElement') {
         return
@@ -1059,7 +1043,6 @@ class PageTourAuthor {
       return
     }
     this.lastSelectedElementOriginal = el
-    console.log(this.lastSelectedElementShadowDom);
     const offset = DomUtils.offset(el)
 
     const width = DomUtils.outerWidth(el) - 1
@@ -1888,7 +1871,7 @@ class PageTourAuthor {
       selectorTypes: ['Class', 'Tag', 'NthChild'],
     }
     //let elementSelector = getCssSelector(this.lastSelectedElement)
-    newStep.selector = this.lastSelectedElementShadowDom.toString()
+    newStep.selector = chosenElement.value
     let pageContext = this.getPageContext()
     newStep.pagecontext = pageContext.url
     newStep.pagestatename = pageContext.state
@@ -1940,12 +1923,7 @@ class PageTourAuthor {
 
       let id = this.lastSelectedElement.getAttribute('id')
       newStep.key = id ? '#' + id : ''
-      newStep.selector = ''
-      let options = {
-        selectorTypes: ['Class', 'Tag', 'NthChild'],
-      }
-      let elementSelector = unique(this.lastSelectedElementOriginal, options)
-      newStep.selector = elementSelector.toString()
+      newStep.selector = chosenElement.value
       let pageContext = this.getPageContext()
       newStep.pagecontext = pageContext.url
       newStep.pagestatename = pageContext.state
