@@ -9,13 +9,14 @@ import { DomUtils } from '../common/domutils'
 import { ConfigStore } from '../common/configstore'
 import { debounce } from 'debounce'
 import { PageContext } from '../models/pagecontext'
-import unique from 'unique-selector'
 import { RunTourAction } from '../models/runtouraction'
 import { Step } from '../models/step'
 import { DataStore } from '../common/datastore'
 import { Tutorial } from '../models/tutorial'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { TourTypeEnum } from '../models/tourtypeenum'
+import { getCssSelector } from 'css-selector-generator'
+import { querySelectorDeep } from 'query-selector-shadow-dom'
 
 
 declare const $: any
@@ -30,6 +31,8 @@ class PageTourAuthor {
   private selectedElement: HTMLElement = null
   private lastSelectedElement: HTMLElement = null
   private lastSelectedElementOriginal: HTMLElement = null
+
+  private lastSelectedElementSelector: string = null
   private stepList: any = []
   private editStepIndex = -1
   private tour: any = null
@@ -697,7 +700,7 @@ class PageTourAuthor {
         this.editTourStep();
         break;
       case TourTypeEnum.Beacon.toLowerCase():
-        this.editSmartTipStep();
+        this.editTourStep();
         break;
     }
   }
@@ -714,32 +717,12 @@ class PageTourAuthor {
       const editingStep = this.stepList[this.editStepIndex]
       if (editingStep && editingStep.selector && editingStep.selector !== '') {
         this.ignoreStepIfSetup(editingStep)
-        let elementfromselector = document.querySelector(editingStep.selector)
+        let elementfromselector = querySelectorDeep(editingStep.selector)
         if (elementfromselector) {
           this.lastSelectedElement = elementfromselector
           this.lastSelectedElementOriginal = elementfromselector
-          this.toggleChooseElement(this.chooseState.Chosen, editingStep)
-        }
-      }
-    }
-  }
+          this.lastSelectedElementSelector = editingStep.selector
 
-  private editSmartTipStep() {
-    this.createChooseElementModal()
-    document.getElementById('choose-element-title').innerText = 'Edit Tip - Choose an element'
-    document.getElementById('close-btn').setAttribute('aria-label', 'Close Edit step dialog')
-    document.getElementById('cancel-choose-element-btn').setAttribute('aria-label', 'cancel and Close Edit Step dialog')
-    event.preventDefault()
-    event.stopPropagation()
-
-    if (this.stepList && this.editStepIndex !== -1 && this.stepList.length > this.editStepIndex) {
-      const editingStep = this.stepList[this.editStepIndex]
-      if (editingStep && editingStep.selector && editingStep.selector !== '') {
-        this.ignoreStepIfSetup(editingStep)
-        let elementfromselector = document.querySelector(editingStep.selector)
-        if (elementfromselector) {
-          this.lastSelectedElement = elementfromselector
-          this.lastSelectedElementOriginal = elementfromselector
           this.toggleChooseElement(this.chooseState.Chosen, editingStep)
         }
       }
@@ -853,9 +836,18 @@ class PageTourAuthor {
     let cancelChooseElement = document.getElementById('cancel-choose-element-btn')
     cancelChooseElement.onclick = this.closeChooseElementModal
     let tourType = (document.getElementById('tour-type') as HTMLSelectElement).value;
-    let nextElement = document.getElementById('select-element-next-btn')
+    let nextElement = document.getElementById('select-element-next-btn') as HTMLButtonElement;
 
-    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === TourTypeEnum.Beacon.toLowerCase()) ? this.createSmartTipBox : this.createRecordBox)
+    const chosenElementTextArea: HTMLTextAreaElement = document.getElementById('chosen-element') as HTMLTextAreaElement;
+    chosenElementTextArea.addEventListener('change', function() {
+      if(chosenElementTextArea.value === "") {
+        nextElement.disabled = true;
+      } else {
+        nextElement.disabled = false;
+      }
+    });
+
+    nextElement.addEventListener('click', (tourType && tourType.toLowerCase() === TourTypeEnum.Beacon.toLowerCase() ? this.createSmartTipBox : this.createRecordBox))
     DomUtils.manageTabbing(authoringDeck)
     this.showHideIgnoreKeyElement(false, null)
   }
@@ -865,6 +857,7 @@ class PageTourAuthor {
     let chooseElement: HTMLButtonElement = document.getElementById('choose-element-btn') as HTMLButtonElement
     let chooseElementText = document.getElementById('choose-element-text')
     let nextButton = document.getElementById('select-element-next-btn') as HTMLButtonElement
+    const chosenElementTextArea: HTMLTextAreaElement = document.getElementById('chosen-element') as HTMLTextAreaElement
 
     switch (state) {
       case this.chooseState.Choose:
@@ -879,6 +872,10 @@ class PageTourAuthor {
         chooseElement.disabled = false
         chooseElementText.innerText = 'Element Selected'
         nextButton.disabled = false
+        chosenElementTextArea.disabled = false
+        if(editingStep && editingStep.selector) {
+          chosenElementTextArea.value = editingStep.selector
+        }
 
         if (this.lastSelectedElement) {
           let idVal = this.lastSelectedElement.getAttribute('id')
@@ -982,6 +979,7 @@ class PageTourAuthor {
   }
 
   private enablePageInspector = (event: Event) => {
+    let self = this;
     event.stopPropagation()
     this.disablePageInspector(true)
     this.hideChooseElementModal()
@@ -1006,11 +1004,11 @@ class PageTourAuthor {
           this.selectedElement.style.outline = '#f00 solid 1px'
           DomUtils.hide(inspector)
           if (this.lastSelectedElement != null) {
-            this.toggleChooseElement(this.chooseState.Chosen, null)
+            this.toggleChooseElement(this.chooseState.Chosen, { selector : self.lastSelectedElementSelector});
           }
         }
       }
-    })
+    });
 
     const body = document.querySelector('body')
     body.addEventListener('mousemove', this.bodyMouseMoveFunction)
@@ -1019,12 +1017,25 @@ class PageTourAuthor {
   private onBodyMouseMove = (event: HTMLElementEventMap['mousemove']) => {
     const inspector: HTMLElement = document.querySelector('.inspectorOutline')
     let el: HTMLElement = event.target as any
+    let options = {
+      selectorTypes: ['Class', 'Tag', 'NthChild'],
+    }
     if (el === document.body) {
       DomUtils.hide(inspector)
       return
     } else if (el.className === 'inspectorOutline') {
       DomUtils.hide(inspector)
       el = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement
+      this.lastSelectedElementSelector = getCssSelector(el)
+      let count = 0;
+      while(el && el.shadowRoot != null && count < 10){
+        //console.log(el.shadowRoot)
+        let shadowRoot = el.shadowRoot;
+        el = el.shadowRoot.elementFromPoint(event.clientX, event.clientY) as HTMLElement;
+        //console.log(el);
+        this.lastSelectedElementSelector += " " + getCssSelector(el, {root: shadowRoot});
+        count++;
+      }
       if (el.className === 'authoringElement') {
         return
       }
@@ -1054,22 +1065,6 @@ class PageTourAuthor {
     let pos3 = 0
     let pos4 = 0
 
-    let closeDragElement = () => {
-      document.onmouseup = null
-      document.onmousemove = null
-    }
-
-    let elementDrag = (event: HTMLElementEventMap['mousemove']) => {
-      let e: HTMLElementEventMap['mousemove'] = event || (window.event as any)
-      pos1 = pos3 - e.clientX
-      pos2 = pos4 - e.clientY
-      pos3 = e.clientX
-      pos4 = e.clientY
-      elmnt.style.top = elmnt.offsetTop - pos2 + 'px'
-      elmnt.style.left = elmnt.offsetLeft - pos1 + 'px'
-      e.preventDefault()
-    }
-
     let dragMouseDown = (event: HTMLElementEventMap['mousedown']) => {
       let e: HTMLElementEventMap['mousedown'] = event || (window.event as any)
       pos3 = e.clientX
@@ -1079,7 +1074,23 @@ class PageTourAuthor {
       event.preventDefault()
     }
 
-    elmnt.onmousedown = dragMouseDown
+    let elementDrag = (event: HTMLElementEventMap['mousemove']) => {
+      let e: HTMLElementEventMap['mousemove'] = event || (window.event as any)
+      pos1 = pos3 - e.clientX
+      pos2 = pos4 - e.clientY
+      pos3 = e.clientX
+      pos4 = e.clientY
+      elmnt.style.top = (elmnt.offsetTop - pos2) + 'px'
+      elmnt.style.left = (elmnt.offsetLeft - pos1) + 'px'
+      e.preventDefault()
+    }
+
+    let closeDragElement = () => {
+      document.onmouseup = null
+      document.onmousemove = null
+    }
+
+    document.getElementById("draggableElement").onmousedown = dragMouseDown;
   }
 
   /*#EndRegion: Choose element dialog methods*/
@@ -1837,6 +1848,7 @@ class PageTourAuthor {
     let transcriptForStepElement: HTMLTextAreaElement = document.getElementById(
       'transcript-message-for-step',
     ) as HTMLTextAreaElement
+    let chosenElement: HTMLTextAreaElement = document.getElementById("chosen-element") as HTMLTextAreaElement
 
     let eventType = eventTypeElement.options[eventTypeElement.selectedIndex].value
     let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
@@ -1858,8 +1870,8 @@ class PageTourAuthor {
     let options = {
       selectorTypes: ['Class', 'Tag', 'NthChild'],
     }
-    let elementSelector = unique(this.lastSelectedElementOriginal, options)
-    newStep.selector = elementSelector.toString()
+    //let elementSelector = getCssSelector(this.lastSelectedElement)
+    newStep.selector = chosenElement.value
     let pageContext = this.getPageContext()
     newStep.pagecontext = pageContext.url
     newStep.pagestatename = pageContext.state
@@ -1898,6 +1910,7 @@ class PageTourAuthor {
     private getTipDetails = () => {
       let positionSelectElement: HTMLSelectElement = document.getElementById("position-select") as HTMLSelectElement
       let messageForStepElement: HTMLTextAreaElement = document.getElementById('message-for-smart-tip') as HTMLTextAreaElement
+      let chosenElement: HTMLTextAreaElement = document.getElementById("chosen-element") as HTMLTextAreaElement
       
       let position = positionSelectElement.options[positionSelectElement.selectedIndex].value
       let message = messageForStepElement.value
@@ -1909,13 +1922,8 @@ class PageTourAuthor {
       newStep.delayBefore = delayBefore;
 
       let id = this.lastSelectedElement.getAttribute('id')
-      newStep.key = id ? '#' + this.lastSelectedElement.getAttribute('id') : ''
-      newStep.selector = ''
-      let options = {
-        selectorTypes: ['Class', 'Tag', 'NthChild'],
-      }
-      let elementSelector = unique(this.lastSelectedElementOriginal, options)
-      newStep.selector = elementSelector.toString()
+      newStep.key = id ? '#' + id : ''
+      newStep.selector = chosenElement.value
       let pageContext = this.getPageContext()
       newStep.pagecontext = pageContext.url
       newStep.pagestatename = pageContext.state

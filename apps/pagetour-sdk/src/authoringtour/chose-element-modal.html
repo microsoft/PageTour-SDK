@@ -1,7 +1,7 @@
 <div class="pagetour container col-xs-12" draggable="true">
   <div id="authoringDock" class="select-element-modal" role="dialog" aria-describedby="choose-element-title">
     <div class="select-element-content">
-      <div class="row-16 chooseElement">
+      <div class="row-16 chooseElement" id="draggableElement">
         <div class="pull-right chooseElement">
           <button
             id="close-btn"
@@ -12,7 +12,7 @@
             <i class="icon-static icon-close chooseElement"></i>
           </button>
         </div>
-        <h1 class="font-subtitle" id="choose-element-title">Add Step - Choose an element</span>
+        <h1 class="font-subtitle" id="choose-element-title">Add Step - Select an element</span>
       </div>
       <p id="addsteppara" class="font-para row-16 chooseElement">
         Navigate to the area of the desired element. Press the "Choose" button then hover or tab over the page to
@@ -23,13 +23,30 @@
         <button
           id="choose-element-btn"
           class="btn btn-primary pagetour-btn--primary footer-btn"
-          title="Choose Element"
-          aria-label="Choose element from screen"
+          title="Select Element"
+          aria-label="Select element from screen"
         >
-          Choose
+        Select
         </button>
         <span id="choose-element-text" class="small"></span>
       </div>
+
+      <div class="row-17">
+        <label class="margin-bottom-12 font-body" for="chosen-element">Select Element:</label>
+        <textarea
+          class="textarea"
+          id="chosen-element"
+          type="text"
+          title="Select Element"
+          required
+          placeholder="Select Element will appear here"
+          disabled
+        ></textarea>
+        <span class="textarea-error" aria-live="assertive" id="chosen-element-error">
+          Select Element cannot be empty
+        </span>
+      </div>
+
       <div class="row-17 ignoreElementKey">
         <input id="ignore-element-key-chkbox" title="Check" type="checkbox" aria-label="Select to ignore element id" />
         <label for="ignore-element-key-chkbox" id="ignore-element-key-chkbox-lbl">Ignore element id</label>
