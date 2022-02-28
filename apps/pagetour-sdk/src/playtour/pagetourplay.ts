@@ -14,6 +14,7 @@ import { Step } from '../models/step'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
 import { TourTypeEnum } from '../models/tourtypeenum'
+import  { querySelectorDeep } from 'query-selector-shadow-dom'
 
 declare const $: any
 class PageTourPlay {
@@ -124,7 +125,7 @@ class PageTourPlay {
   }
 
   private makeSmartTipVisible(element : any, i: number, objTour: Tutorial, callback: any) {
-    let selectedElement = document.querySelector(element.selector) as HTMLElement;
+    let selectedElement = querySelectorDeep(element.selector) as HTMLElement;
       let zIndex = this.configStore.Options.zIndex;
       let smartTipId = `smarttip_${objTour.id}_${i}`;
       let smartTipElement = document.getElementById(smartTipId);
@@ -139,6 +140,16 @@ class PageTourPlay {
           let smartTip = DomUtils.appendToBody(this.smartTipFn());
           smartTip.id = smartTipId;
           smartTip.style.zIndex = zIndex;
+          // let smartTipDiv = smartTip.firstElementChild as HTMLElement;
+          // smartTipDiv.style.backgroundColor= 'rgba(11, 112, 245, 0.6)';
+          // smartTipDiv.style.borderRadius= '50%';
+          // smartTipDiv.style.animation= 'pulse-red 2s infinite';
+	        // smartTipDiv.style.height= '17px';
+	        // smartTipDiv.style.width= '17px';
+          // smartTipDiv.style.position= 'absolute';
+          // smartTipDiv.style.boxSizing= 'content-box';
+          // smartTipDiv.style.top= '-10px';
+          // smartTipDiv.style.left= '-10px';
           selectedElement.insertAdjacentElement('afterend', smartTip);
           let smartTipInstance = new Popper(selectedElement, smartTip, {
             placement: element.position as Placement,
@@ -206,7 +217,12 @@ class PageTourPlay {
             }
 
             let popperInstance = new Popper(smartTip, toolTipPopper, {
-              placement: popperPlacement
+              placement: popperPlacement,
+              modifiers: {
+                offset: {
+                  offset: '0, 10'
+                }
+              }
             });
             popperInstance.enableEventListeners();
             popperInstance.scheduleUpdate();
@@ -474,7 +490,7 @@ class PageTourPlay {
       if (self.currentStep === this.totalSteps - 1) {
         self.isTourPlaying = false
       }
-      let element = document.querySelector(self.getElementSelector(self.currentStep))
+      let element = querySelectorDeep(self.getElementSelector(self.currentStep))
       let stepType = self.tour.steps[self.currentStep].type
       self.executeAction(tour, stepType, element, self.currentStep)
       if (self.currentStep === self.totalSteps - 1) {
@@ -764,7 +780,8 @@ class PageTourPlay {
       }
     }
 
-    let element = document.querySelector(elementSelector)
+    //let element = document.querySelector(elementSelector)
+    let element = querySelectorDeep(elementSelector)
     if (this.isValidElement(element)) {
       const previoustButton: HTMLButtonElement = document.querySelector('#pagetour-previous-step')
       const nextButton: HTMLButtonElement = document.querySelector('#pagetour-next-step');
@@ -1258,10 +1275,15 @@ class PageTourPlay {
         popperPosition = 'bottom'
     }
 
-    const targetDom = document.querySelector(target)
+    const targetDom = querySelectorDeep(target)
 
     let popperInstance = new Popper(targetDom, tourBoxElement, {
       placement: popperPosition,
+      modifiers: {
+        offset: {
+          offset: '0, 13'
+        }
+      }
     })
 
     popperInstance.enableEventListeners()
@@ -1317,7 +1339,7 @@ class PageTourPlay {
     }
 
     if (elementSelector && elementSelector.length !== 0) {
-      let foundElementByKey = document.querySelector(elementSelector)
+      let foundElementByKey = querySelectorDeep(elementSelector)
       if (foundElementByKey) {
         return elementSelector
       }
