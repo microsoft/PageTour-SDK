@@ -248,7 +248,7 @@ class PageTourPlay {
         operation,
       )
       if(opts.navigator.callbackAfterTourEnd != null) {
-        opts.navigator.callbackAfterTourEnd(tour)
+        opts.navigator.callbackAfterTourEnd(tour, parseInt(step) + 1);
       }
     } catch (err) {}
   }
@@ -503,7 +503,7 @@ class PageTourPlay {
 
         if (self.currentStep === this.totalSteps - 1) {
           if (opts.navigator.callbackAfterTourEnd != null) {
-            opts.navigator.callbackAfterTourEnd(tour)
+            opts.navigator.callbackAfterTourEnd(tour, self.currentStep + 1)
           }
         }
       } else {
@@ -523,7 +523,7 @@ class PageTourPlay {
       self.removeTether()
       if (callback != null) callback(tour.tourtype)
       if (opts.navigator.callbackAfterTourEnd != null) {
-        opts.navigator.callbackAfterTourEnd(self.tour)
+        opts.navigator.callbackAfterTourEnd(self.tour, self.currentStep + 1)
       }
       self.isTourPlaying = false
     } else if (stepAction === StepAction.Previous) {
@@ -585,13 +585,13 @@ class PageTourPlay {
 
         if (self.currentStep === this.totalSteps - 1) {
           if (opts.navigator.callbackAfterTourEnd != null) {
-            opts.navigator.callbackAfterTourEnd(tour)
+            opts.navigator.callbackAfterTourEnd(tour, self.currentStep + 1)
           }
           // code to dismiss the announcement if it is last step
           let element = document.querySelector(self.getElementSelector(self.currentStep))
           self.cleanupAction(element)
           if (opts.navigator.callbackAfterTourEnd != null) {
-            opts.navigator.callbackAfterTourEnd(self.tour)
+            opts.navigator.callbackAfterTourEnd(self.tour, self.currentStep + 1)
           }
           self.isTourPlaying = false
         }
@@ -612,7 +612,7 @@ class PageTourPlay {
       self.removeTether()
       if (callback != null) callback(tour.tourtype)
       if (opts.navigator.callbackAfterTourEnd != null) {
-        opts.navigator.callbackAfterTourEnd(self.tour)
+        opts.navigator.callbackAfterTourEnd(self.tour, self.currentStep + 1)
       }
       self.isTourPlaying = false
     } else if (stepAction === StepAction.Previous) {
