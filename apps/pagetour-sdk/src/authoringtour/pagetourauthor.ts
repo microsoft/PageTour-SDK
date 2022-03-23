@@ -864,6 +864,7 @@ class PageTourAuthor {
         chooseElement.innerText = 'Choose'
         chooseElement.disabled = false
         chooseElementText.innerText = ''
+        chosenElementTextArea.value = "";
         nextButton.setAttribute('disabled', 'disabled')
         this.showHideIgnoreKeyElement(false, editingStep)
         break
