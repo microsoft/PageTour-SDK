@@ -1,6 +1,7 @@
 import { PageTourOptions } from '../models/pagetouroptions'
 import { PageContext } from '../models/pagecontext'
-
+import { FeedbackTypeEnum } from '../models/feedbacktypeenum'
+//adding default config values
 class ConfigStore {
   private options: PageTourOptions
   private defaultOptions: PageTourOptions = {
@@ -67,7 +68,14 @@ class ConfigStore {
     },
     zIndex: "100000",
     textAreaCharacterLength: 500,
-    enableBeacon: false
+    enableBeacon: false,
+    feedback: {
+      enabled: true,
+      type:'5-star',
+      heading: "Your Feedback is important",
+      description: "Please rate this Guide out of 5 star",
+      isFeedbackGiven: false
+    }
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)

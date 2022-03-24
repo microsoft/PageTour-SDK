@@ -1,5 +1,6 @@
 import { ConfigStore } from '../common/configstore'
 import * as tourBoxHtml from './tour-box.html'
+import * as feedbackPageHtml from './feedback-page.html'
 import * as AnnouncementBoxHtml from './announcement-page.html'
 import * as SmartTipBoxHtml from './smarttip.html'
 import * as SmartTipPopperHtml from './smarttip-popper.html'
@@ -14,7 +15,7 @@ import { Step } from '../models/step'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
 import { TourTypeEnum } from '../models/tourtypeenum'
-import  { querySelectorDeep } from 'query-selector-shadow-dom'
+import { querySelectorDeep } from 'query-selector-shadow-dom'
 
 declare const $: any
 class PageTourPlay {
@@ -27,6 +28,7 @@ class PageTourPlay {
   private delay = 750
   private maxRetryCount = 5
   private modal: any = null
+  private feedbackModal: any = null
   private dock: any = null
   private defaultFontFamily = 'Segoe UI'
   private autoPlayTest: boolean
@@ -34,6 +36,7 @@ class PageTourPlay {
 
   // Template Functions
   private tourBoxHtmlFn: any = tourBoxHtml
+  private feedbackPageFn: any = feedbackPageHtml
   private smartTipFn: any = SmartTipBoxHtml
   private smartTipPopperFn: any = SmartTipPopperHtml
   private announcementBoxFn: any = AnnouncementBoxHtml
@@ -95,6 +98,7 @@ class PageTourPlay {
     if (objTour.steps[0].delayBefore) {
       startInterval = parseInt(String(objTour.steps[0].delayBefore), 10) * 1000
     }
+    //if there is a cover page and the cover page is at the start -> function showCoverPageModal
     if (objTour.coverPage && objTour.coverPage.location.toLowerCase() === 'start') {
       this.showCoverPageModal(objTour, action, callback, startInterval, autoPlayTest)
     } else {
@@ -247,6 +251,7 @@ class PageTourPlay {
         step,
         operation,
       )
+      
       if(opts.navigator.callbackAfterTourEnd != null) {
         opts.navigator.callbackAfterTourEnd(tour)
       }
@@ -365,6 +370,7 @@ class PageTourPlay {
     }
   }
 
+  //starts the tour
   private beginTourSteps = (
     tour: Tutorial,
     action: RunTourAction,
@@ -372,6 +378,7 @@ class PageTourPlay {
     startInterval: any,
     autoPlayTest: boolean = false,
   ) => {
+    //all properties and funcs of playtour
     let self = this
     return function(
       tour: Tutorial,
@@ -380,10 +387,13 @@ class PageTourPlay {
       startInterval: any,
       autoPlayTest: boolean = false,
     ) {
+      //checking the config options 
       const opts = self.configStore.Options
+      //use of navigator??
       if (opts.navigator.callbackBeforeTourStart != null) {
         opts.navigator.callbackBeforeTourStart(self.tour)
       }
+      //if there is a cover page at the start remove the cover page (since we will be starting the tour)
       if (tour.coverPage && tour.coverPage.location === 'start') {
         self.modal = document.getElementById('cover-page-modal')
         self.modal.parentNode.removeChild(self.modal)
@@ -391,26 +401,32 @@ class PageTourPlay {
       }
 
       self.initialize(tour)
-
+      //what is state for??
       let retVal = {} as PageContext
       retVal.state = tour.steps[0].pagestatename
       retVal.url = tour.steps[0].pagecontext
-
+      //to get the flow of the steps for forward and back??
       self.navigateToStart(retVal)
 
+      // If autoPlay is enabled
       if (autoPlayTest === true) {
         const opts = self.configStore.Options
         if (opts.navigator.callbackOnTourStart != null) {
           opts.navigator.callbackOnTourStart(self.tour)
         }
+        //flag to check if tour ends with cover page
         let tourEndsWithCoverPage = tour.coverPage && tour.coverPage.location.toLowerCase() === 'end'
+
+
+
+        //execute the step
         self.executeNextStep(tour, action, 0, 0, tourEndsWithCoverPage, callback, startInterval)
         setInterval(() => {
           self.goToNextStep(StepAction.Next, tour, action, callback, startInterval)
           if (self.currentStep === self.totalSteps - 1) {
             clearInterval()
           }
-        }, startInterval)
+        }, startInterval);
       } else {
         setTimeout(() => {
           const opts = self.configStore.Options
@@ -465,11 +481,11 @@ class PageTourPlay {
               }
             })
           }
-        }, startInterval)
+        }, startInterval);
       }
     }
   }
-
+//when next button is clicked
   private goToNextStep = (
     stepAction: StepAction,
     tour: Tutorial,
@@ -487,6 +503,7 @@ class PageTourPlay {
       nextButton.classList.add('loadingNextStep')
       nextButton.disabled = true
 
+      
       if (self.currentStep === this.totalSteps - 1) {
         self.isTourPlaying = false
       }
@@ -494,10 +511,30 @@ class PageTourPlay {
       let stepType = self.tour.steps[self.currentStep].type
       self.executeAction(tour, stepType, element, self.currentStep)
       if (self.currentStep === self.totalSteps - 1) {
+        //remove the last element(tour box)
         self.removeTether()
         if (tourEndsWithCoverPage) {
           self.showCoverPageModal(tour, action, callback, startInterval)
+          // let startTourCoverPageButton = document.getElementById('starttour-cover-page-btn') as HTMLButtonElement
+          // let closeBtn = document.getElementById('cover-page-close-btn') as HTMLButtonElement
+          // let cancelBtn = document.getElementById('cancel-cover-page-btn') as HTMLButtonElement
+          // startTourCoverPageButton.onclick = this.closeCoverPageModal(callback);
+          // closeBtn.onclick = this.closeCoverPageModal(callback)
+          // cancelBtn.onclick = this.closeCoverPageModal(callback)
+          // if(closeBtn.onclick || startTourCoverPageButton.onclick || cancelBtn.onclick ){
+          //   //this.removeTether();
+          //   if(opts.feedback.enabled){
+          //     self.showFeedbackModal();
+          //   }
+            
+          // }
+          //if feedback is enabled show feedback here
+        
         } else {
+          if(opts.feedback.enabled){
+            //this.removeTether();
+            self.showFeedbackModal();
+          }
           if (callback != null) callback()
         }
 
@@ -660,7 +697,7 @@ class PageTourPlay {
 
     return 0
   }
-
+//fill the properties of this(playtour)
   private initialize = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.currentStep = 0
@@ -686,13 +723,17 @@ class PageTourPlay {
       window.location.href = window.location.protocol + '//' + window.location.host + pageContext
     }
   }
-
+//appends the tour box to the dom once page tour step is init note: just places the box on the dom doesnt append it to the element yet
   private setupTourBox = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.tourBoxHtmlFn())
     //this.tourBox.style.zIndex = '20000'
   }
 
+  private setupFeedbackBox = (tour: any) =>{
+    this.totalSteps = tour.steps.length
+    this.tourBox = DomUtils.appendToBody(this.feedbackPageFn())
+  }
   private setupAnnouncementBox = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.announcementBoxFn())
@@ -724,8 +765,10 @@ class PageTourPlay {
     callback: any,
     startInterval: any,
   ) => {
+    //get the selected element
     let elementSelector = this.getElementSelector(stepCount)
     const opts = this.configStore.Options
+    //if tour has failed > retry count
     if (
       retryCount > this.maxRetryCount ||
       (elementSelector === null || elementSelector === '' || elementSelector === ' ' || elementSelector === 'undefined')
@@ -741,7 +784,7 @@ class PageTourPlay {
       if (opts.navigator.callbackOnTourStepFailure != null) {
         if (
           tour.steps != null &&
-          tour.steps.length >= stepCount &&
+          tour.steps.length >= stepCount && //adding feedback
           tour.steps[stepCount] != null &&
           tour.steps[stepCount].errormessage != null &&
           tour.steps[stepCount].errormessage !== 'undefined' &&
@@ -755,14 +798,18 @@ class PageTourPlay {
       self.removeTether()
       return
     }
-
+//current step and next step is of type tour
     let currentStep = tour.steps[stepCount]
     let nextStepWillBe: Step
     if (stepCount + 1 < tour.steps.length) {
       nextStepWillBe = tour.steps[stepCount + 1]
     }
+    // else if(stepCount + 1 == tour.steps.length){
+    //   nextStepWillBe = this.setupFeedbackBox(tour);
+    // }
 
     let ignoreCurrentStep: Boolean = false
+    //why is it written twice?
     if (currentStep.ignoreStepIf && currentStep.ignoreStepIf === true) {
       if (currentStep.ignoreStepIfConditions && currentStep.ignoreStepIfConditions === 'NextStepElementFound') {
         let nextStepElementSelector = this.getElementSelector(stepCount + 1)
@@ -780,6 +827,7 @@ class PageTourPlay {
       }
     }
 
+    //get the element selected - deep? why is element selector and element different
     //let element = document.querySelector(elementSelector)
     let element = querySelectorDeep(elementSelector)
     if (this.isValidElement(element)) {
@@ -787,12 +835,12 @@ class PageTourPlay {
       const nextButton: HTMLButtonElement = document.querySelector('#pagetour-next-step');
       const audioButton: HTMLButtonElement = document.querySelector('#pagetour-audio');
       const audioMuteButton: HTMLButtonElement = document.querySelector('#pagetour-audio-stop');
-
+      //enable the prev and next buttons
       previoustButton.hidden = false
       previoustButton.disabled = false
       nextButton.hidden = false
       nextButton.disabled = false
-      
+      //if there a audio transcript add those buttons also
       if (tour.steps[stepCount].transcript && tour.steps[stepCount].transcript !== '') {
         if(this.isMuted) {
           audioButton.style.display = 'none'
@@ -805,9 +853,10 @@ class PageTourPlay {
         audioButton.style.display = 'none'
         audioMuteButton.style.display = 'none'
       }
-      
+      //disable prev button for first step
       if (stepCount === 0) {
         // First step with element.
+        //if cover page at start has already been shown(isCoverPageTourStart) or there no coverpage pr cover page at end
         if (action === RunTourAction.Play && (!opts.isCoverPageTourStart || !tour.coverPage ||tour.coverPage==null || tour.coverPage.location.toLowerCase() != 'start')) {
           this.updateUserActions(tour, 'Started', '0', 'Playing')
         }
@@ -819,20 +868,31 @@ class PageTourPlay {
         if (opts.navigator.callbackBeforeTourStep != null) {
           opts.navigator.callbackBeforeTourStep(this.tour)
         }
+        //for last step and no cover page at end
         if (stepCount === this.totalSteps - 1 && !tourEndsWithCoverPage) {
-          nextButton.hidden = true
-          nextButton.disabled = true
+          //if feedback is enabled and user has not given feedback before
+
+          if(opts.feedback.enabled) {
+            nextButton.hidden = false;
+            nextButton.disabled = false;
+            // this.removeTether();
+            // this.showFeedbackModal();
+          } else {
+            nextButton.hidden = true
+            nextButton.disabled = true
+          }
         }
         nextButton.classList.remove('loadingNextStep')
         previoustButton.classList.remove('loadingNextStep')
+        //next 2 steps not necessary?
         nextButton.disabled = false
         previoustButton.disabled = false
-
+        //get msgs and html elements
         let stepDescription = this.tour.steps[stepCount].message
         let stepHeadingElement = document.getElementById('usermessageboxtitle')
         let stepDescriptionElement = document.getElementById('usermessageboxdescription')
         let stepCounter = document.getElementById('usermessageboxcounter')
-
+        //add title to html
         if (this.tour.title !== undefined && this.tour.title !== '') {
           stepHeadingElement.innerText = this.tour.title
         } else {
@@ -842,9 +902,11 @@ class PageTourPlay {
         stepCounter.innerText = stepCount + 1 + ' / ' + this.tour.steps.length
 
         stepDescriptionElement.innerText = stepDescription
-
+        //loads the pagetour box
         this.tether = this.getTetherObject(stepCount, elementSelector)
+        //highlight chosen element(add outline to it)
         this.addTourOutline(element, tour.tourtype)
+        
         this.scrollIntoView(element)
         this.ApplyTheme(stepCount)
         this.srSpeak(`${this.tour.title} dialog`, 'assertive', 'dialog')
@@ -1433,6 +1495,7 @@ class PageTourPlay {
         step,
         operation,
       )
+      console.log(response);
     } catch (err) {}
     return
   }
@@ -1449,17 +1512,25 @@ class PageTourPlay {
     let title = tourObj.title
     let locationValue = this.tour.coverPage.location
 
+    //where to show the cover page in the doc?? configurable? 
     this.modal = document.getElementById('coverPageDock')
     if (!this.modal) {
+      //the entire template of view-cover-page-modal.html
       let chooseElementDock = this.viewCoverPageTemplateFn()
+      //append this template to the dom
       this.dock = DomUtils.appendToBody(chooseElementDock)
       DomUtils.show(this.dock)
+      //get the element which will show the title in html
       let coverPageTitleElement = document.getElementById('cover-page-title')
+      //create a p element to add title provided by user
       let titleContentElement = document.createElement('p')
+      //set the text and props
       titleContentElement.innerText = title
       titleContentElement.setAttribute('role', 'heading')
       titleContentElement.setAttribute('aria-level', '1')
+      //append it to the html
       coverPageTitleElement.appendChild(titleContentElement)
+      //dp the same for body
       let coverPageContentElement = document.getElementById('cover-page-body-content')
       let contentElement = document.createElement('div')
       contentElement.innerText = content
@@ -1467,11 +1538,12 @@ class PageTourPlay {
     } else {
       this.modal.style.display = 'block'
     }
-
+    //modal will have html template?
     this.modal = document.getElementById('cover-page-modal')
+    //add theme
     this.modal.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily
     this.modal.style.display = 'block'
-
+    //get the rest of the elements
     let startTourCoverPageButton = document.getElementById('starttour-cover-page-btn') as HTMLButtonElement
     let closeBtn = document.getElementById('cover-page-close-btn') as HTMLButtonElement
     let cancelBtn = document.getElementById('cancel-cover-page-btn') as HTMLButtonElement
@@ -1488,12 +1560,14 @@ class PageTourPlay {
     startTourCoverPageButton.style.color = this.tourTheme.secondaryColor
     startTourCoverPageButton.style.display = 'inline'
     if (locationValue.toLowerCase() === 'start') {
+      //change button of cover page
       startTourCoverPageButton.innerHTML = 'Begin Tour'
       startTourCoverPageButton.title = 'Begin Tour'
       cancelBtn.style.display = 'inline'
       if(this.configStore.Options.isCoverPageTourStart){
         this.updateUserActions(this.tour, 'Started', '0', 'Playing')
       }
+      //clicking the button will begin tour for start
       startTourCoverPageButton.onclick = (event: MouseEvent) => {
         this.beginTourSteps(this.tour, action, callback, startInterval)(this.tour, action, callback, startInterval)
       }
@@ -1501,7 +1575,17 @@ class PageTourPlay {
       cancelBtn.style.display = 'none'
       startTourCoverPageButton.innerHTML = 'Finish tour'
       startTourCoverPageButton.title = 'Finish Tour'
-      startTourCoverPageButton.onclick = this.closeCoverPageModal(callback)
+      let opts = this.configStore.Options;
+      // startTourCoverPageButton.onclick = (event) => {
+      //   if(opts.feedback.enabled){
+      //     this.showFeedbackModal();
+      //   }
+      //   return this.closeCoverPageModal(callback);
+       
+
+      // }
+      startTourCoverPageButton.onclick = this.closeCoverPageModal(callback);
+      //if cover page at the end - call feedback page(another button for Submit feedback in place of Finish tour)
     }
 
     closeBtn.onclick = this.closeCoverPageModal(callback)
@@ -1532,6 +1616,12 @@ class PageTourPlay {
       this.isTourPlaying = false
       this.modal = document.getElementById('cover-page-modal')
       this.modal.parentNode.removeChild(this.modal)
+      //show feedback modal if enabled
+      let opts = this.configStore.Options;
+      let coverPageLocation = this.tour.coverPage.location;
+      if(opts.feedback.enabled && coverPageLocation.toLocaleLowerCase() == "end"){
+        this.showFeedbackModal();
+      }
       // this.disablePageInspector(true);
       if (callback != null) callback()
     }
@@ -1600,6 +1690,88 @@ class PageTourPlay {
       document.body.removeChild(document.getElementById(id))
     }, 1000)
     return
+  }
+
+  private showFeedbackModal = () => {
+
+    let feedbackHtml = this.feedbackPageFn();
+    this.feedbackModal = DomUtils.appendToBody(feedbackHtml);
+    DomUtils.show(this.feedbackModal);
+    //config options
+    let opts = this.configStore.Options;
+    //getting html elements
+    let feedbackHeadingElement= document.getElementById("feedbackheading");
+    let feedbackDescriptionElement = document.getElementById("feedbackdescription");
+
+    //getting the text of elements as per config
+    let feedbackHeading = opts.feedback.heading;
+    let feedbackDescription = opts.feedback.description;
+
+    //changing the text of elements as per config
+    feedbackHeadingElement.innerHTML = feedbackHeading;
+    feedbackDescriptionElement.innerHTML = feedbackDescription;
+
+    //changing type of rating (star and thumbs)
+    let feedbackType = opts.feedback.type;
+    let feedback5starElement = document.getElementById("5star-rating");
+    let feedbackLikeElement = document.getElementById("like-rating")
+    if(feedbackType.toLocaleLowerCase() == "5-star"){
+      //feedback5starElement.style.display = "block";
+      feedbackLikeElement.style.display = "none";
+    }
+    else if(feedbackType.toLocaleLowerCase() == "like-dislike"){
+      feedback5starElement.style.display = "none";
+      //feedbackLikeElement.style.display = "block";
+    }
+    
+    //Applying theme
+    let feedbackBoxElement = document.getElementById('feedback-box');
+    let backButton = document.getElementById('feedback-back');
+    let submitButton = document.getElementById('feedback-submit');
+    let feedbackBoxDataElement = document.getElementById('feedbackboxdata');
+
+    if (this.tourTheme.isRounded) {
+      feedbackBoxElement.style.borderRadius = this.tourTheme.borderRadius ? `${this.tourTheme.borderRadius}px` : '10px';
+    } else {
+      feedbackBoxElement.style.borderRadius = '0px';
+    }
+
+    feedbackBoxElement.style.borderColor = this.tourTheme.primaryColor;
+    feedbackBoxElement.style.borderLeftWidth = '3px';
+    backButton.style.background = this.tourTheme.primaryColor;
+    submitButton.style.background = this.tourTheme.primaryColor;
+
+    backButton.style.color = this.tourTheme.secondaryColor;
+    submitButton.style.color = this.tourTheme.secondaryColor;
+    
+    feedbackBoxDataElement.style.borderColor = this.tourTheme.primaryColor;
+    feedbackBoxDataElement.style.color = this.tourTheme.textColor;
+    feedbackBoxDataElement.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily;
+    
+
+    submitButton.onclick = (event: MouseEvent) => {
+      event.preventDefault();
+      var rating = 0.0;
+      var ratingElementGroup;
+      if(feedbackType.toLocaleLowerCase() == "5-star"){
+        ratingElementGroup = document.getElementsByName('5starrating') as NodeListOf<HTMLInputElement>;
+      }
+      else if(feedbackType.toLocaleLowerCase() == "like-dislike"){
+        ratingElementGroup = document.getElementsByName('likerating') as NodeListOf<HTMLInputElement>;
+      }
+     
+      for (var i=0; i<ratingElementGroup.length; i++){
+        if(ratingElementGroup[i].checked){
+          rating = parseFloat(ratingElementGroup[i].value)/5;
+        }
+      }
+      
+      if (opts.navigator.callbackOnFeedbackSubmit != null) {
+        opts.navigator.callbackOnFeedbackSubmit(rating, this.tour);
+      }
+    }
+
+
   }
 }
 

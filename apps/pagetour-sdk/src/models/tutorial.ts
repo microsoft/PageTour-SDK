@@ -2,6 +2,7 @@ import { BaseEntity } from './baseentity'
 import { CoverPage } from './coverpage'
 import { Step } from './step'
 import { State } from './state'
+import { Feedback } from './feedback'
 
 interface Tutorial extends BaseEntity {
   id: string
@@ -15,6 +16,8 @@ interface Tutorial extends BaseEntity {
   pagecontext: string[]
 
   coverPage: CoverPage
+
+  feedback: Feedback
 
   applicationname: string
 

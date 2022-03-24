@@ -5,6 +5,13 @@
     url('./fonts/segmdl2/segmdl2.svg') format('svg');
 }
 
+$fa-font-path: "./fontawesome/webfonts";
+
+
+@import "./fontawesome/scss/fontawesome.scss";
+@import "./fontawesome/scss/solid.scss";
+
+
 @media screen and (-ms-high-contrast: active) {
   button {
     outline: 1px solid !important;
@@ -753,6 +760,13 @@ $input-text-focus-outline: 1px dotted black;
 
     &.icon-audio-mute:before {
       content: '\E992';
+    }
+
+    &.icon-star::before{
+      content: '\E734';
+    }
+    &.icon-star.active::before{
+      content: '\E735'
     }
   }
 
@@ -1738,6 +1752,12 @@ $input-text-focus-outline: 1px dotted black;
       font-size: 14px;
       overflow: hidden;
       text-overflow: ellipsis;
+
+      .rating {
+        display: none;
+      }
+
+
     }
 
     .pt-tourbox-footer {
@@ -2215,7 +2235,7 @@ $input-text-focus-outline: 1px dotted black;
 
 /* Annoucement Box Popup start*/
 .announcement-container {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -2229,7 +2249,7 @@ $input-text-focus-outline: 1px dotted black;
 
   .announcement-card{
     background: rgb(255, 255, 255);
-    flex-basis: 30%;
+    flex-basis: 30%; 
     border-radius: 2px !important;
     transition:0.3s;
     box-shadow: 0 4px 20px 0 rgba(34,68,123,0.2);
@@ -2657,3 +2677,245 @@ $input-text-focus-outline: 1px dotted black;
 }
 
 /* Annoucement Box Popup end*/
+
+// FEEDBACK PAGE CONTAINER --- START
+.feedback-container {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  
+
+  .feedback-card{
+    background: rgb(255, 255, 255);
+    width: 380px;
+    flex-basis: 24%; 
+    border-radius: 2px !important;
+    transition:0.3s;
+    box-shadow: 0 4px 20px 0 rgba(34,68,123,0.2);
+    word-break: break-all;
+    max-width: 576px;
+    padding: 10px;
+  }
+  
+  .feedback-header {
+    margin: 0;
+    padding: 0;
+    width: 350px;
+    max-width: 576px;
+    height: 50px;
+    max-height: 216px;
+    
+    .close-button-div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-direction: row;
+    }
+
+    .close-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0px 3px;
+      align-self: flex-start;
+      outline: inherit;
+      position: fixed;
+      float: right;
+      align-items: flex-end;
+      z-index: 100;
+    }
+
+    .close-button:focus {
+      outline: #000000 dotted 1px;
+    }
+
+    .feedback-heading {
+      line-height: 1.5;
+      color: #000000;
+      margin:0;
+      font-family: "Segoe UI";
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+  }
+
+  .feedback-content {
+    // padding: 1.3rem 2rem;
+    align-items: center;
+    height: 120px;
+    max-height: 100%;
+    overflow: auto;
+    border-top: 1px solid lightgrey;
+
+
+    .feedback-description{
+      padding-top: 10px;
+      line-height: 1.5;
+      color: #000000;
+      margin:0;
+      font-family: "Segoe UI";
+      font-size: 18px;
+      font-weight: 400;
+
+    }
+
+    .feedback-type{
+      padding:10px;
+      height: 60px;
+    }
+  
+  }
+  .feedback-footer {
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    button {
+      width: 93px;
+      height: 32px;
+      background-color:#0078d1;
+      color: white;
+      border: 1px solid #646464;
+      border-radius: 2px;
+      box-sizing: border-box;
+      font-family: 'Segoe UI';
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+  }
+}
+
+
+
+//FEEDBACK ----END
+
+// 5 star rating
+.pt-feedback_5star-rating {
+  .rating__label {
+    cursor: pointer;
+    padding: 3px;
+    font-size: 35px;
+  }
+  
+  .rating__input {
+    display: none
+   }
+  
+  .rating__input--none {
+    display: none
+  }
+  .rating__input--none:checked .rating__label .rating__icon--star{
+    color: #ddd;
+  }
+
+  .rating__icon--star {
+    color: orange;
+  }
+  
+  .rating__input:checked ~ .rating__label .rating__icon--star {
+    color: #ddd;
+  }
+
+}
+
+//10 star rating (half-full star)
+.pt-feedback_10star-rating {
+
+  .rating-group {
+    display: inline-flex;
+  }
+  
+
+  .rating__label {
+    cursor: pointer;
+    padding: 0 0.1em;
+    font-size: 2rem;
+  }
+
+  .rating__label--half {
+    padding-right: 0;
+    margin-right: -1.2em;
+    z-index: 2;
+  }
+
+  .rating__input {
+    display: none
+   }
+  
+  .rating__input--none {
+    display: none
+  }
+
+  .rating__icon--star {
+    color: orange;
+  }
+  
+  .rating__icon--none {
+    color: #eee;
+  }
+
+  .rating__input:checked ~ .rating__label .rating__icon--star {
+    color: #ddd;
+  }
+  .rating__input--none:checked .rating__label .rating__icon--star{
+    color: #ddd;
+  }
+  // /* make all stars orange on rating group hover */
+  .rating-group:hover .rating__label .rating__icon--star,
+  .rating-group:hover .rating__label--half .rating__icon--star {
+    color: orange;
+  }
+
+  /* make hovered input's following siblings grey on hover */
+  .rating__input:hover ~ .rating__label .rating__icon--star,
+  .rating__input:hover ~ .rating__label--half .rating__icon--star {
+    color: #ddd;
+  }
+  
+  /* make none icon grey on rating group hover */
+  .rating-group:hover .rating__input--none:not(:hover) + .rating__label .rating__icon--none {
+     color: #eee;
+  }
+
+  /* make none icon red on hover */
+  // .rating__input--none:hover + .rating__label .rating__icon--none {
+  //   color: red;
+  // }
+}
+
+//like dislike rating
+.pt-feedback_like-rating {
+  .rating__label {
+    cursor: pointer;
+    padding: 3px;
+    font-size: 40px;
+  }
+  .rating__input{
+    display:none;
+  }
+  .rating__label {
+    color: #ddd;
+  }
+  input:checked + label{
+    color: #0eabdb;
+  }
+}
+
+//feedback submit button
+.pt-feedback_submit-btn{
+  .btn btn-primary {
+    border-radius: 12px;
+  }
+}
+

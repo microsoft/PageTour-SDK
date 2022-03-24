@@ -3,6 +3,8 @@ import { PageTour, Tutorial, IPagetourRepository } from 'pagetour-sdk'
 import {LocalStorageRepository } from 'pagetour-sdk.localrepository'
 import { MatSnackBar } from '@angular/material'
 import { Router, NavigationEnd, NavigationStart } from '@angular/router'
+//import { FeedbackTypeEnum } from 'pagetour-sdk/dist/types/models/feedbacktypeenum'
+//import { FxpOCVFeedbackService } from '@fxp/fxpservices';
 
 @Component({
   selector: 'app-root',
@@ -20,12 +22,14 @@ export class AppComponent implements OnInit {
 
   constructor(private snackBar: MatSnackBar, private router: Router) {}
   ngOnInit(): void {
+
     this.repository = new LocalStorageRepository()
     this.repository.InitializeRepository()
     this.pageTourInit()
   }
 
   private pageTourInit = () => {
+
     PageTour.init(this.repository, {
       announcementDefaultImage : 'https://fxpsitstoragenew.z13.web.core.windows.net/perfectfit.jpg',
       enableTranscript: true,
@@ -39,7 +43,14 @@ export class AppComponent implements OnInit {
       tags: {
         tagHelpText: 'This is from sample app'
       },
-      enableBeacon: true
+      enableBeacon: true,
+      feedback: {
+        enabled: true,
+        type: '5-star',
+        heading: "Your feedback is important!",
+        description: "Please enter your feedback",
+        isFeedbackGiven: false
+      }
 
     });
   }
