@@ -39,7 +39,15 @@ export class AppComponent implements OnInit {
       tags: {
         tagHelpText: 'This is from sample app'
       },
-      enableBeacon: true
+      enableBeacon: true,
+      userInfo: {
+        getCurrentUser: () => {
+          return "";
+        },
+        getCurrentUserPermissions: () => {
+            return ["create", "delete", "update", "export"]
+        },
+      }
 
     });
   }
