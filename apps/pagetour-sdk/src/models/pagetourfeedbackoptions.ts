@@ -1,6 +1,4 @@
-import { FeedbackTypeEnum } from "./feedbacktypeenum"
-
-interface Feedback {
+interface PageTourFeedbackOptions {
     enabled: boolean
     type?: string 
     heading?: string
@@ -8,8 +6,6 @@ interface Feedback {
     //isFeedbackGiven?: boolean
     privacyDescription?: string
     privacyURL?: string
-    // not sure about this implmementation
-    //userFeedbackValue: number
 }
 
-export { Feedback }
+export {PageTourFeedbackOptions}

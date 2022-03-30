@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { PageTour, Tutorial, IPagetourRepository } from 'pagetour-sdk'
+import { PageTour, Tutorial, IPagetourRepository, FeedbackTypeEnum} from 'pagetour-sdk'
 import {LocalStorageRepository } from 'pagetour-sdk.localrepository'
 import { MatSnackBar } from '@angular/material'
 import { Router, NavigationEnd, NavigationStart } from '@angular/router'
+
 //import { FeedbackTypeEnum } from 'pagetour-sdk/dist/types/models/feedbacktypeenum'
 //import { FxpOCVFeedbackService } from '@fxp/fxpservices';
 
@@ -48,8 +49,9 @@ export class AppComponent implements OnInit {
         enabled: true,
         type: '5-star',
         heading: "Your feedback is important!",
-        description: "Please enter your feedback",
-        isFeedbackGiven: false
+        description: "Please rate this tour",
+        privacyDescription: "Your privacy is important to us",
+        privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
       }
 
     });

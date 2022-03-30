@@ -1,47 +1,61 @@
 <div class="announcement-container" id="anno-tourBox">
   <div class="announcement-card" id="announcementboxdata" >
-      <div class="announcement-header" id="announcementheader">
-        <div class="close-button-div" id="annoclosebtn">
-          <button class="close-button" id="anno-exit-step" aria-label="Close tour">
-            <i class="pagetour__icon close-button-icon" id="playtourBoxCloseIcon"></i>
+    <div class="announcement-header" id="announcementheader">
+      <div class="close-button-div" id="annoclosebtn">
+        <button class="close-button" id="anno-exit-step" aria-label="Close tour">
+          <i class="pagetour__icon close-button-icon" id="playtourBoxCloseIcon"></i>
+        </button>
+      </div>
+      <img id= "imgHeaderContainer" alt="image of the announcement">
+      <video id="videoHeaderContainer" oncontextmenu="return false;" preload="none" disablePictureInPicture controls controlsList="nodownload noremoteplayback">
+        <source id="videoSourceContainer" type="video/mp4">
+        Your browser does not support the video tag. Please use Edge or chrome
+      </video>
+    </div>
+    <div class="announcement-content"  id="annobodybox">
+      <h4 id="announcementboxtitle" class="announcement-heading">
+      </h4>
+      <div id="announcementboxdescription" class="anno-text"> </div>
+    </div>
+    <div class="announcement-footer">
+      <div class="announcement-page-counter" >
+        <div id="annoboxcounter"></div>
+        <div class="sound-buttons">
+          <button class="nav-buttons btn-audio" id="announcement-audio" title="Stop Audio" aria-label="Stop Audio" style="display: none;">
+            <i class="pagetour__icon icon-audio"></i>
+            Stop Audio
+          </button>
+          <button class="nav-buttons btn-audio" id="announcement-audio-stop" title="Play Audio" aria-label="Play Audio"  style="display: none;">
+            <i class="pagetour__icon icon-audio-mute"></i>
+            Play Audio
           </button>
         </div>
-          <img id= "imgHeaderContainer" alt="image of the announcement">
-          <video id="videoHeaderContainer" oncontextmenu="return false;" preload="none" disablePictureInPicture controls controlsList="nodownload noremoteplayback">
-              <source id="videoSourceContainer" type="video/mp4">
-              Your browser does not support the video tag. Please use Edge or chrome
-          </video>
       </div>
-      <div class="announcement-content"  id="annobodybox">
-          <h4 id="announcementboxtitle" class="announcement-heading">
-          </h4>
-          <div id="announcementboxdescription" class="anno-text"> </div>
+      
+      <div class="announcement-navigation-buttons" id="annonavigationdiv">
+        <button class="announcement-previous-button" id="anno-previous-step" aria-label="Previous step">
+          Previous
+        </button>
+        <button class="announcement-next-button" id="anno-next-step" aria-label="Next step">
+          Next
+        </button>
       </div>
-
-      <div class="announcement-footer">
-          <div class="announcement-page-counter" >
-            <div id="annoboxcounter"></div>
-            <div class="sound-buttons">
-              <button class="nav-buttons btn-audio" id="announcement-audio" title="Stop Audio" aria-label="Stop Audio" style="display: none;">
-                <i class="pagetour__icon icon-audio"></i>
-                Stop Audio
-              </button>
-              <button class="nav-buttons btn-audio" id="announcement-audio-stop" title="Play Audio" aria-label="Play Audio"  style="display: none;">
-                <i class="pagetour__icon icon-audio-mute"></i>
-                Play Audio
-              </button>
-            </div>
-          </div>
-          
-          <div class="announcement-navigation-buttons" id="annonavigationdiv">
-              <button class="announcement-previous-button" id="anno-previous-step" aria-label="Previous step">
-                  Previous
-              </button>
-              <button class="announcement-next-button" id="anno-next-step" aria-label="Next step">
-                  Next
-              </button>
-          </div>
+      
+    </div>
+    <div class="anno-feedback">
+      <div class="feedback">
+        <div class="anno-feedback-description">Was this helpful?</div>
+        <div class="anno-feedback-like-rating" id="like-rating">
+          <input class="rating__input" name="likerating" id="like" value="5" type="radio">
+          <label aria-label="like" class="rating__label pagetour__icon icon-like" for="like"></label>
+          <input class="rating__input" name="likerating" id="dislike" value="1" type="radio">
+          <label aria-label="dislike" class="rating__label pagetour__icon icon-dislike" for="dislike"></label>
+        </div>
       </div>
+      <div class="feedback-privacy" id="feedbackprivacy">
+        <a id="privacyurl" target="_blank"><div class="privacy-description" id="privacydescription">Your privacy is important to us</div></a>
+      </div>
+    </div>
   </div>
-
+  
 </div>

@@ -21,24 +21,25 @@
         <div class="pt-feedback_5star-rating" id="5star-rating">
           <div class="rating-group">
             <input disabled checked class="rating__input rating__input--none" name="5starrating" id="rating3-none" value="0" type="radio">
-            <label aria-label="1 star" class="rating__label" for="rating1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+
+            <label class="rating__label" aria-label="1 star" for="rating1"></label>
             <input class="rating__input" name="5starrating" id="rating1" value="1" type="radio">
-            <label aria-label="2 stars" class="rating__label" for="rating2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label class="rating__label" aria-label="2 stars" for="rating2"></label>
             <input class="rating__input" name="5starrating" id="rating2" value="2" type="radio">
-            <label aria-label="3 stars" class="rating__label" for="rating3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label class="rating__label" aria-label="3 stars" for="rating3"></label>
             <input class="rating__input" name="5starrating" id="rating3" value="3" type="radio">
-            <label aria-label="4 stars" class="rating__label" for="rating4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label class="rating__label" aria-label="4 stars"  for="rating4"></label>
             <input class="rating__input" name="5starrating" id="rating4" value="4" type="radio">
-            <label aria-label="5 stars" class="rating__label" for="rating5"><i class="rating__icon rating__icon--star fa fa-star">☆</i></label>
+            <label class="rating__label" aria-label="5 stars" for="rating5"></label>
             <input class="rating__input" name="5starrating" id="rating5" value="5" type="radio">
           </div>
         </div>
         
         <div class="pt-feedback_like-rating" id="like-rating">
           <input class="rating__input" name="likerating" id="like" value="5" type="radio">
-          <label aria-label="like" class="rating__label fa fa-thumbs-up" for="like"></label>
+          <label aria-label="like" class="rating__label pagetour__icon icon-like" for="like"></label>
           <input class="rating__input" name="likerating" id="dislike" value="1" type="radio">
-          <label aria-label="dislike" class="rating__label fa fa-thumbs-down fa-flip-horizontal" for="dislike"></label>
+          <label aria-label="dislike" class="rating__label pagetour__icon icon-dislike" for="dislike"></label>
         </div>
       </div>
     </div>
@@ -78,12 +79,14 @@
       </div>
       
     </p> -->
-    
+    <div class="feedback-privacy" id="feedbackprivacy">
+      <a id="privacyurl" target="_blank"><div class="privacy-description" id="privacydescription"></div></a>
+    </div>
     <div class="feedback-footer" id="feedbackfooter">
-      <button class="feedback-back-button" id="feedback-back" aria-label="Previous step">
-        Back
+      <button class="feedback-cancel-button" id="feedback-cancel" aria-label="Cancel">
+        Cancel
       </button>
-      <button class="feedback-submit-button" id="feedback-submit" aria-label="Next step">
+      <button class="feedback-submit-button" id="feedback-submit" aria-label="Submit">
         Submit
       </button>
 
