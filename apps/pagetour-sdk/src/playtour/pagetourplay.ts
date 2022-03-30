@@ -125,10 +125,12 @@ class PageTourPlay {
   }
 
   private makeSmartTipVisible(element : any, i: number, objTour: Tutorial, callback: any) {
-    let selectedElement = querySelectorDeep(element.selector) as HTMLElement;
+      let selectedElement = querySelectorDeep(element.selector) as HTMLElement;
       let zIndex = this.configStore.Options.zIndex;
       let smartTipId = `smarttip_${objTour.id}_${i}`;
       let smartTipElement = document.getElementById(smartTipId);
+      const opts = this.configStore.Options;
+      
       if(selectedElement && !selectedElement.getAttribute('disabled') && !smartTipElement)
         {
           let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
@@ -140,16 +142,6 @@ class PageTourPlay {
           let smartTip = DomUtils.appendToBody(this.smartTipFn());
           smartTip.id = smartTipId;
           smartTip.style.zIndex = zIndex;
-          // let smartTipDiv = smartTip.firstElementChild as HTMLElement;
-          // smartTipDiv.style.backgroundColor= 'rgba(11, 112, 245, 0.6)';
-          // smartTipDiv.style.borderRadius= '50%';
-          // smartTipDiv.style.animation= 'pulse-red 2s infinite';
-	        // smartTipDiv.style.height= '17px';
-	        // smartTipDiv.style.width= '17px';
-          // smartTipDiv.style.position= 'absolute';
-          // smartTipDiv.style.boxSizing= 'content-box';
-          // smartTipDiv.style.top= '-10px';
-          // smartTipDiv.style.left= '-10px';
           selectedElement.insertAdjacentElement('afterend', smartTip);
           let smartTipInstance = new Popper(selectedElement, smartTip, {
             placement: element.position as Placement,
@@ -227,6 +219,12 @@ class PageTourPlay {
             popperInstance.enableEventListeners();
             popperInstance.scheduleUpdate();
           });
+        } else {
+          if(opts.navigator.callbackOnTourStepFailure != null) {
+            let stepErrorMessage = "Elements are missing to run smart-tip"
+            opts.navigator.callbackOnTourStepFailure(objTour, 0, stepErrorMessage);
+          }
+          return;
         }
   }
 

@@ -864,6 +864,7 @@ class PageTourAuthor {
         chooseElement.innerText = 'Choose'
         chooseElement.disabled = false
         chooseElementText.innerText = ''
+        chosenElementTextArea.value = "";
         nextButton.setAttribute('disabled', 'disabled')
         this.showHideIgnoreKeyElement(false, editingStep)
         break
@@ -1787,8 +1788,8 @@ class PageTourAuthor {
     if (!this.checkRecordBoxInputs()) {
       return
     }
-    this.getStepDetails()
-    this.backToDetails('step-detail-modal')
+    this.getStepDetails();
+    this.backToDetails('step-detail-modal');
     this.stopTourRecording();
     this.removeStepDetailModal('step-detail-modal')
     this.toggleChooseElement(this.chooseState.Choose, null)
