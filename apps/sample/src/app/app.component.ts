@@ -45,13 +45,22 @@ export class AppComponent implements OnInit {
         tagHelpText: 'This is from sample app'
       },
       enableBeacon: true,
-      feedback: {
-        enabled: true,
-        type: '5-star',
-        heading: "Your feedback is important!",
-        description: "Please rate this tour",
-        privacyDescription: "Your privacy is important to us",
-        privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
+      feedback : {
+        pagetourFeedbackOptions: {
+          enabled: true,
+          type:'like-dislike',
+          heading: "Your Feedback is important!",
+          description: "Please rate this tour",
+          privacyDescription: "Your privacy is important to us",
+          privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
+        },
+        announcementFeedbackOptions: {
+          enabled: true,
+          type: 'like-dislike',
+          heading: 'Was this announcement helpful?',
+          privacyDescription: "Your privacy is important to us",
+          privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'     
+        }
       }
 
     });

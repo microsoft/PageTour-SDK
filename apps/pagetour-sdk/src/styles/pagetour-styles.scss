@@ -2269,57 +2269,96 @@ $input-text-focus-outline: 1px dotted black;
     word-break: break-all;
     max-width: 576px;
 
-    .anno-feedback{
-      padding-left: 2rem;
-      padding-bottom: 1.5rem;
-      .feedback{
-        display: inline-flex;
+    // .anno-feedback{
+    //   display: flex;
+    //   justify-content: space-between;
+    //   padding-left: 2rem;
+    //   padding-bottom: 1.2rem;
+    //   padding-right: 2rem;
+    //   .feedback-content{
+    //     display: inline-flex;
 
-        .anno-feedback-description{
-          font-size: 13px;
-        }
-        .anno-feedback-like-rating{
-          .rating__label {
-            cursor: pointer;
-            padding: 3px;
-            font-size: 15px;
-      
-            font-family: 'Full MDL2 Assets';
-            font-weight: normal;
-            font-style: normal;
-            position: relative;
-            top: 1px;
-            display: inline-block;
-            line-height: 1;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            
-          }
-          .rating__input {
-            display:none;
-          }
-          .rating__label{
-            
-            color: var(--like-dislike-onclick-color);
-          }
-          #like:checked + .rating__label.pagetour__icon.icon-like:before{
-            content: '\F3BF';
-            color: var(--like-dislike-onclick-color);
-          }
-      
-          #dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
-            content: '\F3C0';
-            color: var(--like-dislike-onclick-color);
-          }
-        }
-      }
+    //     .anno-feedback-heading{
+    //       font-size: 12px;
+    //     }
+    //     .anno-feedback-like-rating{
+    //       padding: 3px;
+    //       .rating__label {
+    //         cursor: pointer;
+    //         padding: 2px;
+    //         font-size: 15px;
+    //         vertical-align: top;
+    //         margin-top: -2px;
+    //         // vertical-align: middle;
+    //         // margin-top: -12px;
 
-      .feedback-privacy{
-        a .privacy-description{
-          font-size: 13px;
-        }
-      }
-    }
+    //         font-family: 'Full MDL2 Assets';
+    //         font-weight: normal;
+    //         font-style: normal;
+    //         position: relative;
+    //         top: 1px;
+    //         display: inline-block;
+    //         line-height: 1;
+    //         -webkit-font-smoothing: antialiased;
+    //         -moz-osx-font-smoothing: grayscale;
+            
+    //       }
+    //       .rating__input {
+    //         display:none;
+    //       }
+    //       .rating__label{
+            
+    //         color: var(--like-dislike-onclick-color);
+    //       }
+    //       #like:checked + .rating__label.pagetour__icon.icon-like:before{
+    //         content: '\F3BF';
+    //         color: var(--like-dislike-onclick-color);
+    //       }
+      
+    //       #dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
+    //         content: '\F3C0';
+    //         color: var(--like-dislike-onclick-color);
+    //       }
+    //     }
+    //     .anno-feedback-yesno-rating{
+    //       padding: 3px;
+    //       .rating__label {
+    //         cursor: pointer;
+    //         padding: 2px;
+    //         vertical-align: middle;
+    //         margin-top: -11px;
+    //         font-size: 12px;
+    //         font-weight: 700;
+    //       }
+    //       .rating__input{
+    //         display: none;
+    //       }
+    //       .rating__input:checked + .rating__label,
+    //       .rating__input:hover + .rating__label,
+    //       .rating__input:focus + .rating__label
+    //       {
+    //         text-decoration: underline;
+    //         font-weight: 700;
+    //         color: var(--like-dislike-onclick-color);
+            
+    //       }
+    //       // .rating__input:hover + .rating__label{
+    //       //   text-decoration: underline;
+    //       //   font-weight: 700;
+    //       //   color: var(--like-dislike-onclick-color);
+            
+    //       // }
+          
+    //     }
+    //   }
+
+    //   .anno-feedback-privacy{
+    //     //margin-left:160px;
+    //     a .anno-privacy-description{
+    //       font-size: 12px;
+    //     }
+    //   }
+    // }
     
   }
   
@@ -3071,7 +3110,94 @@ $input-text-focus-outline: 1px dotted black;
   }
   
 
-  
+// ----- announcement feedback
+.anno-feedback{
+  display: flex;
+  justify-content: space-between;
+  padding-left: 2rem;
+  padding-bottom: 1.2rem;
+  padding-right: 2rem;
+  .feedback-content{
+    display: inline-flex;
 
+    .anno-feedback-heading{
+      font-size: 12px;
+    }
+    .anno-feedback-like-rating{
+      padding: 3px;
+      .rating__label {
+        cursor: pointer;
+        padding: 2px;
+        font-size: 15px;
+        vertical-align: top;
+        margin-top: -2px;
+        // vertical-align: middle;
+        // margin-top: -12px;
+
+        font-family: 'Full MDL2 Assets';
+        font-weight: normal;
+        font-style: normal;
+        position: relative;
+        top: 1px;
+        display: inline-block;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        
+      }
+      .rating__input {
+        display:none;
+      }
+      .rating__label{
+        
+        color: var(--like-dislike-onclick-color);
+      }
+      #like:checked + .rating__label.pagetour__icon.icon-like:before{
+        content: '\F3BF';
+        color: var(--like-dislike-onclick-color);
+      }
   
-  
+      #dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
+        content: '\F3C0';
+        color: var(--like-dislike-onclick-color);
+      }
+    }
+    .anno-feedback-yesno-rating{
+      padding: 3px;
+      .rating__label {
+        cursor: pointer;
+        padding: 2px;
+        vertical-align: middle;
+        margin-top: -11px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .rating__input{
+        display: none;
+      }
+      .rating__input:checked + .rating__label,
+      .rating__input:hover + .rating__label,
+      .rating__input:focus + .rating__label
+      {
+        text-decoration: underline;
+        font-weight: 700;
+        color: var(--like-dislike-onclick-color);
+        
+      }
+      // .rating__input:hover + .rating__label{
+      //   text-decoration: underline;
+      //   font-weight: 700;
+      //   color: var(--like-dislike-onclick-color);
+        
+      // }
+      
+    }
+  }
+
+  .anno-feedback-privacy{
+    //margin-left:160px;
+    a .anno-privacy-description{
+      font-size: 12px;
+    }
+  }
+}

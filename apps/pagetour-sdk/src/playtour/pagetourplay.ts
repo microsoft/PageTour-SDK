@@ -1,6 +1,7 @@
 import { ConfigStore } from '../common/configstore'
 import * as tourBoxHtml from './tour-box.html'
 import * as feedbackPageHtml from './feedback-page.html'
+import * as announcementFeedbackPageHtml from './announcement-feedback-element.html'
 import * as AnnouncementBoxHtml from './announcement-page.html'
 import * as SmartTipBoxHtml from './smarttip.html'
 import * as SmartTipPopperHtml from './smarttip-popper.html'
@@ -18,6 +19,7 @@ import { TourTypeEnum } from '../models/tourtypeenum'
 import { querySelectorDeep } from 'query-selector-shadow-dom'
 import { PageTourOptions } from '../models/pagetouroptions'
 import { isUndefined } from 'util'
+import { type } from 'os'
 
 declare const $: any
 class PageTourPlay {
@@ -34,11 +36,12 @@ class PageTourPlay {
   private dock: any = null
   private defaultFontFamily = 'Segoe UI'
   private autoPlayTest: boolean
-  private isMuted: boolean = false;
-  
+  private isMuted: boolean = false
+ 
   // Template Functions
   private tourBoxHtmlFn: any = tourBoxHtml
   private feedbackPageFn: any = feedbackPageHtml
+  private announcementFeedbackPageFn: any = announcementFeedbackPageHtml
   private smartTipFn: any = SmartTipBoxHtml
   private smartTipPopperFn: any = SmartTipPopperHtml
   private announcementBoxFn: any = AnnouncementBoxHtml
@@ -534,7 +537,7 @@ class PageTourPlay {
           //if feedback is enabled show feedback here
         
         } else {
-          if(opts.feedback.enabled){
+          if(opts.feedback.pagetourFeedbackOptions.enabled){
             //this.removeTether();
             self.showFeedbackModal();
           }
@@ -614,7 +617,8 @@ class PageTourPlay {
       const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
       nextButton.classList.add('loadingNextStep')
       nextButton.disabled = true
-
+      let likeratingRadioButtons = document.querySelector('input[name="likerating"]:checked') as HTMLInputElement;
+      likeratingRadioButtons.checked = false;
       if (self.currentStep === this.totalSteps - 1) {
         self.isTourPlaying = false
       }
@@ -741,7 +745,15 @@ class PageTourPlay {
   private setupAnnouncementBox = (tour: any) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.announcementBoxFn())
-    this.tourBox.style.zIndex = '200000'
+    this.tourBox.style.zIndex = '200000';
+    let annoFeedbackOpts = this.configStore.Options.feedback.announcementFeedbackOptions;
+    if(annoFeedbackOpts.enabled){
+      let announcementFeedbackDivElement = document.getElementById('feedbackelement').querySelector('div') as HTMLElement;
+      //announcementFeedbackDivElement.id = 'rating' + stepCount;
+      announcementFeedbackDivElement = DomUtils.appendTo(announcementFeedbackDivElement, this.announcementFeedbackPageFn());
+
+    }
+    //this.showAnnouncementFeedback(announcementFeedbackDivElement, stepCount)
   }
 
   private executeAction = (tour: Tutorial, action: any, element: HTMLElement, step: number) => {
@@ -876,7 +888,7 @@ class PageTourPlay {
         if (stepCount === this.totalSteps - 1 && !tourEndsWithCoverPage) {
           //if feedback is enabled and user has not given feedback before
 
-          if(opts.feedback.enabled) {
+          if(opts.feedback.pagetourFeedbackOptions.enabled) {
             nextButton.hidden = false;
             nextButton.disabled = false;
             // this.removeTether();
@@ -1006,7 +1018,8 @@ class PageTourPlay {
           audioButton.style.display = 'inline'
           audioMuteButton.style.display = 'none'
         }
-      } else {
+      } 
+      else {
         audioButton.style.display = 'none'
         audioMuteButton.style.display = 'none'
       }
@@ -1073,6 +1086,35 @@ class PageTourPlay {
         stepCounter.innerText = stepCount + 1 + ' of ' + this.tour.steps.length
         stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
         stepDescriptionElement.innerHTML = stepDescription
+
+        //check for announcement feedback
+        //announcement Feedback config options
+        let annoFeedbackOpts = opts.feedback.announcementFeedbackOptions;
+        //let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.announcementFeedbackOptions;
+
+        if(annoFeedbackOpts.enabled && stepCount==0){
+          let announcementFeedbackDivElement = document.getElementById('feedbackelement').querySelector('div') as HTMLElement;
+          //announcementFeedbackDivElement.id = 'rating' + stepCount;
+          // announcementFeedbackDivElement = DomUtils.appendTo(announcementFeedbackDivElement, this.announcementFeedbackPageFn());
+          this.showAnnouncementFeedback(announcementFeedbackDivElement, stepCount)
+
+        }
+        // let announcementBoxElement = document.getElementById('feedbackelement');
+        // announcementBoxElement = DomUtils.appendTo(announcementBoxElement, this.announcementFeedbackPageFn());
+
+        let annoFeedbackElement = document.getElementById("annofeedback");
+
+        // if(!annoFeedbackOpts.enabled){
+        //   annoFeedbackElement.style.display = "none";
+        //   let annoFooterElement = document.getElementById('announcementfooter');
+        //   annoFooterElement.style.paddingBottom = '1.5rem';
+          
+        // }
+        // else{ //anno feedback enabled
+        //   //get all html elements
+        //  this.showAnnouncementFeedback(stepCount);
+
+        // }
 
         //this.tether = this.getTetherObject(stepCount)
         this.ApplyAnnouncementTheme(stepCount)
@@ -1629,7 +1671,7 @@ class PageTourPlay {
       //show feedback modal if enabled
       let opts = this.configStore.Options;
       let coverPageLocation = this.tour.coverPage.location;
-      if(opts.feedback.enabled && coverPageLocation.toLocaleLowerCase() == "end"){
+      if(opts.feedback.pagetourFeedbackOptions.enabled && coverPageLocation.toLocaleLowerCase() == "end"){
         this.showFeedbackModal();
       }
       // this.disablePageInspector(true);
@@ -1709,21 +1751,22 @@ class PageTourPlay {
     DomUtils.show(this.feedbackModal);
     //config Options is the get method(public) of configstore options(private)
     let opts = this.configStore.Options;
-    let defaultOpts = this.configStore.DefaultOptions;
+    let pagetourFeedbackOpts = this.configStore.Options.feedback.pagetourFeedbackOptions;
+    let defaultFeedbackOpts = this.configStore.DefaultOptions.feedback.pagetourFeedbackOptions;
     //getting html elements
     let feedbackHeadingElement= document.getElementById("feedbackheading");
     let feedbackDescriptionElement = document.getElementById("feedbackdescription");
 
     //getting the text of elements as per config
-    let feedbackHeading = opts.feedback.heading === undefined ? defaultOpts.feedback.heading: opts.feedback.heading;
-    let feedbackDescription = opts.feedback.description === undefined ? defaultOpts.feedback.description: opts.feedback.description;
+    let feedbackHeading = pagetourFeedbackOpts.heading === undefined ? defaultFeedbackOpts.heading: pagetourFeedbackOpts.heading;
+    let feedbackDescription = pagetourFeedbackOpts.description === undefined ? defaultFeedbackOpts.description: pagetourFeedbackOpts.description;
 
     //changing the text of elements as per config
     feedbackHeadingElement.innerHTML = feedbackHeading;
     feedbackDescriptionElement.innerHTML = feedbackDescription;
 
     //changing type of rating (star and thumbs)
-    let feedbackType = opts.feedback.type === undefined ? defaultOpts.feedback.type: opts.feedback.type;
+    let feedbackType = pagetourFeedbackOpts.type === undefined ? defaultFeedbackOpts.type: pagetourFeedbackOpts.type;
     let feedback5starElement = document.getElementById("5star-rating");
     let feedbackLikeElement = document.getElementById("like-rating")
     if(feedbackType.toLocaleLowerCase() == "5-star"){
@@ -1739,8 +1782,8 @@ class PageTourPlay {
     let feedbackPrivacyDescriptionElement = document.getElementById('privacydescription');
     let feedbackPrivacyURLElement = document.getElementById('privacyurl');
 
-    let feedbackPrivacyDescription = opts.feedback.privacyDescription === undefined ? defaultOpts.feedback.privacyDescription: opts.feedback.privacyDescription;
-    let feedbackPrivacyURL = opts.feedback.privacyURL === undefined ? defaultOpts.feedback.privacyURL: opts.feedback.privacyURL;
+    let feedbackPrivacyDescription = pagetourFeedbackOpts.privacyDescription === undefined ? defaultFeedbackOpts.privacyDescription: pagetourFeedbackOpts.privacyDescription;
+    let feedbackPrivacyURL = pagetourFeedbackOpts.privacyURL === undefined ? defaultFeedbackOpts.privacyURL: pagetourFeedbackOpts.privacyURL;
 
     feedbackPrivacyDescriptionElement.innerHTML = feedbackPrivacyDescription;
     feedbackPrivacyURLElement.setAttribute('href', feedbackPrivacyURL);
@@ -1810,6 +1853,69 @@ class PageTourPlay {
       }
     }
 
+  }
+
+  private showAnnouncementFeedback = (announcementFeedbackDivElement:HTMLElement, stepCount: number) => {
+    let annoFeedbackOpts = this.configStore.Options.feedback.announcementFeedbackOptions;
+    let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.announcementFeedbackOptions;
+    // let annoFeedbackHeadingElement = document.getElementById('annofeedbackheading');
+    // let annoPrivacyURLElement = document.getElementById('annoprivacyurl');
+    // let annoPrivacyDescElement = document.getElementById('annoprivacydescription');
+
+    let annoFeedbackHeadingElement = announcementFeedbackDivElement.querySelector('#annofeedbackheading');
+    let annoPrivacyURLElement = announcementFeedbackDivElement.querySelector('#annoprivacyurl');
+    let annoPrivacyDescElement = announcementFeedbackDivElement.querySelector('#annoprivacydescription');
+    //get config options
+    let annoFeedbackHeading = annoFeedbackOpts.heading === undefined ? defaultAnnoFeedbackOpts.heading : annoFeedbackOpts.heading;
+    let annoPrivacyURL= annoFeedbackOpts.privacyURL === undefined ? defaultAnnoFeedbackOpts.privacyURL : annoFeedbackOpts.privacyURL;
+    let annoPrivacyDesc = annoFeedbackOpts.privacyDescription === undefined ? defaultAnnoFeedbackOpts.privacyDescription : annoFeedbackOpts.privacyDescription;
+
+    annoFeedbackHeadingElement.innerHTML = annoFeedbackHeading;
+    annoPrivacyURLElement.setAttribute('href', annoPrivacyURL);
+    annoPrivacyDescElement.innerHTML = annoPrivacyDesc;
+
+    //selecting the type of feedback
+    let annoFeedbackType = annoFeedbackOpts.type === undefined ? defaultAnnoFeedbackOpts.type : annoFeedbackOpts.type;
+    var iconColor = document.querySelector(':root') as HTMLElement;
+    
+    iconColor.style.setProperty('--like-dislike-onclick-color', this.tourTheme.primaryColor);
+
+    var ratingElement: NodeListOf<HTMLInputElement>;
+    if(annoFeedbackType == 'like-dislike'){
+      //document.getElementById('yes-no-rating').style.display = 'none';
+      DomUtils.hide(announcementFeedbackDivElement.querySelector('#yes-no-rating'));
+
+      ratingElement = announcementFeedbackDivElement.querySelectorAll('input[name="likerating"]');
+      // if(ratingGroupElement == null){
+      //   ratingGroupElement = document.getElementById('rating'+(stepCount-1))
+      // }
+      // ratingGroupElement.id = 'rating'+stepCount;
+      // console.log(ratingGroupElement);
+      // ratingElement = document.getElementById('rating'+stepCount).querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+      
+    }
+    else if(annoFeedbackType == 'yes-no'){
+      document.getElementById('anno-like-rating').style.display = 'none';
+      ratingElement = document.getElementsByName('yesnorating') as NodeListOf<HTMLInputElement>;
+    }
+    var rating = 0.0;
+    // var newrating //= ratingElement;
+    // ratingElement[0].name = 'rating'+stepCount;
+    // ratingElement[1].name = 'rating'+stepCount;
+    // console.log(ratingElement);
+    // for(var i=0; i<2; i++){
+    //   ratingElement[i].name = 'rating'+stepCount;
+    // }
+    //newrating = document.getElementsByName('rating' + stepCount)  as NodeListOf<HTMLInputElement>;
+    for(var i=0; i<ratingElement.length; i++){
+      ratingElement[i].addEventListener('change', function(e){             
+        if(this.checked){
+          rating = parseFloat(this.value)/5;
+          console.log(rating);
+        }
+      })
+
+    }
   }
 }
 

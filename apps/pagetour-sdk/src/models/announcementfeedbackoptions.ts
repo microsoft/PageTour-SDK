@@ -5,3 +5,5 @@ interface AnnouncementFeedbackOptions {
     privacyDescription?: string
     privacyURL?: string
 }
+
+export {AnnouncementFeedbackOptions}

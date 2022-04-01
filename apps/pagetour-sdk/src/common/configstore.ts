@@ -69,29 +69,31 @@ class ConfigStore {
     zIndex: "100000",
     textAreaCharacterLength: 500,
     enableBeacon: false,
-    // feedback : {
-    //   pageTour: {
-    //     enabled: true,
-    //     type:'5-star',
-    //     heading: "Your Feedback is important!",
-    //     description: "Please rate this Guide out of 5 stars",
-    //     privacyDescription: "Your privacy is important to us",
-    //     privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
-    //   }
-    //   announcements: {
-    //     enabled: true
-            // message:
-            // type:
-    //   }
-    // }
-    feedback: {
-      enabled: false,
-      type:'5-star',
-      heading: "Your Feedback is important!",
-      description: "Please rate this Guide out of 5 stars",
-      privacyDescription: "Your privacy is important to us",
-      privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
+    feedback : {
+      pagetourFeedbackOptions: {
+        enabled: true,
+        type:'5-star',
+        heading: "Your Feedback is important!",
+        description: "Please rate this Guide out of 5 stars",
+        privacyDescription: "Your privacy is important to us",
+        privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
+      },
+      announcementFeedbackOptions: {
+        enabled: true,
+        type: 'like-dislike',
+        heading: 'Was this announcement helpful?',
+        privacyDescription: "Your privacy is important to us",
+        privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'     
+      }
     }
+    // feedback: {
+    //   enabled: false,
+    //   type:'5-star',
+    //   heading: "Your Feedback is important!",
+    //   description: "Please rate this Guide out of 5 stars",
+    //   privacyDescription: "Your privacy is important to us",
+    //   privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
+    // }
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)
