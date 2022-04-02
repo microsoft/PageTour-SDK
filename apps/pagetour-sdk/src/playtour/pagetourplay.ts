@@ -131,101 +131,103 @@ class PageTourPlay {
       let smartTipElement = document.getElementById(smartTipId);
       const opts = this.configStore.Options;
       
-      if(selectedElement && !selectedElement.getAttribute('disabled') && !smartTipElement)
-        {
-          let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
-          smartTipPopup.id = `${smartTipId}-popup`;
-          (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
-          (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
-          (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
-
-          let smartTip = DomUtils.appendToBody(this.smartTipFn());
-          smartTip.id = smartTipId;
-          smartTip.style.zIndex = zIndex;
-          selectedElement.insertAdjacentElement('afterend', smartTip);
-          let smartTipInstance = new Popper(selectedElement, smartTip, {
-            placement: element.position as Placement,
-          });
-          smartTipInstance.update();
-
-          let arrowDiv = document.createElement('div');
-          arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
-          smartTipPopup.appendChild(arrowDiv);
-
-          smartTip.addEventListener("mouseover", function() {
-            Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
-              element.style.display = "none"
+      if(!smartTipElement) {
+        if(selectedElement && !selectedElement.getAttribute('disabled'))
+          {
+            let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
+            smartTipPopup.id = `${smartTipId}-popup`;
+            (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
+            (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
+            (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
+  
+            let smartTip = DomUtils.appendToBody(this.smartTipFn());
+            smartTip.id = smartTipId;
+            smartTip.style.zIndex = zIndex;
+            selectedElement.insertAdjacentElement('afterend', smartTip);
+            let smartTipInstance = new Popper(selectedElement, smartTip, {
+              placement: element.position as Placement,
             });
-            let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
-            toolTipPopper.style.display = "flex";
-            toolTipPopper.style.zIndex = zIndex;
-            let popperPlacement = element.position as Placement
-            switch (element.position) {
-              case 'top':
-                arrowDiv.className = 'arrow-pointer arrow-down'
-                smartTipPopup.style.flexDirection = 'column'
-                arrowDiv.style.alignSelf = 'center'
-                arrowDiv.style.margin = '0px 0px'
-                // todo : apply as per the theme color
-                arrowDiv.style.borderTopColor = '#0078D4'
-                arrowDiv.style.borderLeftColor = 'transparent'
-                arrowDiv.style.borderRightColor = 'transparent'
-                arrowDiv.style.borderBottomColor = 'transparent'
-                break
-
-              case 'bottom':
-                arrowDiv.className = 'arrow-pointer arrow-up'
-                smartTipPopup.style.flexDirection = 'column-reverse'
-                arrowDiv.style.alignSelf = 'center'
-                arrowDiv.style.margin = '0px 0px'
-                arrowDiv.style.borderTopColor = 'transparent'
-                arrowDiv.style.borderLeftColor = 'transparent'
-                arrowDiv.style.borderRightColor = 'transparent'
-                arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
-                break
-
-              case 'left':
-                smartTipPopup.style.flexDirection = 'row'
-                arrowDiv.className = 'arrow-pointer arrow-right'
-                arrowDiv.style.alignSelf = 'center'
-                arrowDiv.style.margin = '0px 0px'
-                arrowDiv.style.borderTopColor = 'transparent'
-                arrowDiv.style.borderLeftColor = '#0078D4'
-                arrowDiv.style.borderRightColor = 'transparent'
-                arrowDiv.style.borderBottomColor = 'transparent'
-                break
-
-              case 'right':
-                smartTipPopup.style.flexDirection = 'row-reverse'
-                arrowDiv.className = 'arrow-pointer arrow-left'
-                arrowDiv.style.alignSelf = 'center'
-                arrowDiv.style.margin = '0px 0px'
-                arrowDiv.style.borderTopColor = 'transparent'
-                arrowDiv.style.borderLeftColor = 'transparent'
-                arrowDiv.style.borderRightColor = '#0078D4'
-                arrowDiv.style.borderBottomColor = 'transparent'
-                break
-
-            }
-
-            let popperInstance = new Popper(smartTip, toolTipPopper, {
-              placement: popperPlacement,
-              modifiers: {
-                offset: {
-                  offset: '0, 10'
-                }
+            smartTipInstance.update();
+  
+            let arrowDiv = document.createElement('div');
+            arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
+            smartTipPopup.appendChild(arrowDiv);
+  
+            smartTip.addEventListener("mouseover", function() {
+              Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+                element.style.display = "none"
+              });
+              let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
+              toolTipPopper.style.display = "flex";
+              toolTipPopper.style.zIndex = zIndex;
+              let popperPlacement = element.position as Placement
+              switch (element.position) {
+                case 'top':
+                  arrowDiv.className = 'arrow-pointer arrow-down'
+                  smartTipPopup.style.flexDirection = 'column'
+                  arrowDiv.style.alignSelf = 'center'
+                  arrowDiv.style.margin = '0px 0px'
+                  // todo : apply as per the theme color
+                  arrowDiv.style.borderTopColor = '#0078D4'
+                  arrowDiv.style.borderLeftColor = 'transparent'
+                  arrowDiv.style.borderRightColor = 'transparent'
+                  arrowDiv.style.borderBottomColor = 'transparent'
+                  break
+  
+                case 'bottom':
+                  arrowDiv.className = 'arrow-pointer arrow-up'
+                  smartTipPopup.style.flexDirection = 'column-reverse'
+                  arrowDiv.style.alignSelf = 'center'
+                  arrowDiv.style.margin = '0px 0px'
+                  arrowDiv.style.borderTopColor = 'transparent'
+                  arrowDiv.style.borderLeftColor = 'transparent'
+                  arrowDiv.style.borderRightColor = 'transparent'
+                  arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
+                  break
+  
+                case 'left':
+                  smartTipPopup.style.flexDirection = 'row'
+                  arrowDiv.className = 'arrow-pointer arrow-right'
+                  arrowDiv.style.alignSelf = 'center'
+                  arrowDiv.style.margin = '0px 0px'
+                  arrowDiv.style.borderTopColor = 'transparent'
+                  arrowDiv.style.borderLeftColor = '#0078D4'
+                  arrowDiv.style.borderRightColor = 'transparent'
+                  arrowDiv.style.borderBottomColor = 'transparent'
+                  break
+  
+                case 'right':
+                  smartTipPopup.style.flexDirection = 'row-reverse'
+                  arrowDiv.className = 'arrow-pointer arrow-left'
+                  arrowDiv.style.alignSelf = 'center'
+                  arrowDiv.style.margin = '0px 0px'
+                  arrowDiv.style.borderTopColor = 'transparent'
+                  arrowDiv.style.borderLeftColor = 'transparent'
+                  arrowDiv.style.borderRightColor = '#0078D4'
+                  arrowDiv.style.borderBottomColor = 'transparent'
+                  break
+  
               }
+  
+              let popperInstance = new Popper(smartTip, toolTipPopper, {
+                placement: popperPlacement,
+                modifiers: {
+                  offset: {
+                    offset: '0, 10'
+                  }
+                }
+              });
+              popperInstance.enableEventListeners();
+              popperInstance.scheduleUpdate();
             });
-            popperInstance.enableEventListeners();
-            popperInstance.scheduleUpdate();
-          });
-        } else {
-          if(opts.navigator.callbackOnTourStepFailure != null) {
-            let stepErrorMessage = "Elements are missing to run smart-tip"
-            opts.navigator.callbackOnTourStepFailure(objTour, 0, stepErrorMessage);
+          } else {
+            if(opts.navigator.callbackOnTourStepFailure != null) {
+              let stepErrorMessage = "Elements are missing to run smart-tip"
+              opts.navigator.callbackOnTourStepFailure(objTour, 0, stepErrorMessage);
+            }
+            return;
           }
-          return;
-        }
+      }
   }
 
   private async dismissSmartTip(id: string, tour: Tutorial, userAction: string, step: string, operation: string) {
