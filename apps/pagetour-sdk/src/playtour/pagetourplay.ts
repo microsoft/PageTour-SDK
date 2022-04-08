@@ -1144,7 +1144,7 @@ class PageTourPlay {
             
             for(var i=0; i<ratingElement.length; i++){
               ratingElement[i].addEventListener('change', function(e){     
-                //console.log(this);        
+                   
                 if(this.checked &&  self.announcementFeedbackObj[self.currentStep].submitted==false){
           
                   rating = parseFloat(this.value)/5;
@@ -1154,8 +1154,6 @@ class PageTourPlay {
                   if (opts.navigator.callbackOnAnnouncementFeedbackSubmit != null) {
                     opts.navigator.callbackOnAnnouncementFeedbackSubmit(rating, self.tour, self.currentStep);
                   }
-                  console.log(self.currentStep);
-                  console.log(rating);
                   let feedbackContentElement = document.getElementById('feedbackcontent');
                   let privacyElement = document.getElementById('annofeedbackprivacy');
                   let submitMessageElement = document.getElementById('annothanksmsg');
@@ -1885,7 +1883,7 @@ class PageTourPlay {
           rating = parseFloat(ratingElementGroup[i].value)/5;
         }
       }
-      console.log(rating);
+      
       if (opts.navigator.callbackOnFeedbackSubmit != null) {
         opts.navigator.callbackOnFeedbackSubmit(rating, this.tour);
       }
