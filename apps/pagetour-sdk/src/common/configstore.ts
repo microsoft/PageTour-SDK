@@ -74,7 +74,7 @@ class ConfigStore {
         enabled: false,
         type:'5-star',
         heading: "Your Feedback is important!",
-        description: "Please rate this Guide out of 5 stars",
+        description: "Please rate this tour",
         privacyDescription: "Your privacy is important to us",
         privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
       },

@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
       feedback : {
         pagetourFeedbackOptions: {
           enabled: true,
-          type:'like-dislike',
+          type:'5-star',
           heading: "Your Feedback is important!",
           description: "Please rate this tour",
           privacyDescription: "Your privacy is important to us",
@@ -54,8 +54,8 @@ export class AppComponent implements OnInit {
         },
         announcementFeedbackOptions: {
           enabled: true,
-          type: 'yes-no',
-          heading: 'Was this helpful?',
+          type: 'like-dislike',
+          heading: 'Was this announcement helpful?',
           privacyDescription: "Your privacy is important to us",
           privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice',
           submitMessage: 'Thank you for your feedback!'          
