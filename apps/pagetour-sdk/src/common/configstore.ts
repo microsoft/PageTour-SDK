@@ -1,6 +1,6 @@
 import { PageTourOptions } from '../models/pagetouroptions'
 import { PageContext } from '../models/pagecontext'
-import { FeedbackTypeEnum } from '../models/feedbacktypeenum'
+
 //adding default config values
 class ConfigStore {
   private options: PageTourOptions
@@ -71,7 +71,7 @@ class ConfigStore {
     enableBeacon: false,
     feedback : {
       pagetourFeedbackOptions: {
-        enabled: true,
+        enabled: false,
         type:'5-star',
         heading: "Your Feedback is important!",
         description: "Please rate this Guide out of 5 stars",
@@ -79,21 +79,14 @@ class ConfigStore {
         privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
       },
       announcementFeedbackOptions: {
-        enabled: true,
+        enabled: false,
         type: 'like-dislike',
         heading: 'Was this announcement helpful?',
         privacyDescription: "Your privacy is important to us",
-        privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'     
+        privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice',
+        submitMessage: 'Thank you for your feedback!'     
       }
     }
-    // feedback: {
-    //   enabled: false,
-    //   type:'5-star',
-    //   heading: "Your Feedback is important!",
-    //   description: "Please rate this Guide out of 5 stars",
-    //   privacyDescription: "Your privacy is important to us",
-    //   privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
-    // }
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)

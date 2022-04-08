@@ -22,6 +22,7 @@ interface NavigatorOptions {
   callbackOnVolumeMute?: () => void
   callbackOnVolumeUnmute?: (transcript: string) => void
   callbackOnFeedbackSubmit?: (rating: number, tour: Tutorial) => void
+  callbackOnAnnouncementFeedbackSubmit?:(rating: number, tour:Tutorial, step:number) => void
 }
 
 export { NavigatorOptions }

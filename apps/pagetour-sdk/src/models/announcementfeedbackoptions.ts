@@ -4,6 +4,7 @@ interface AnnouncementFeedbackOptions {
     heading?: string
     privacyDescription?: string
     privacyURL?: string
+    submitMessage?: string
 }
 
 export {AnnouncementFeedbackOptions}

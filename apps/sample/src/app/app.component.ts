@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { PageTour, Tutorial, IPagetourRepository, FeedbackTypeEnum} from 'pagetour-sdk'
+import { PageTour, Tutorial, IPagetourRepository} from 'pagetour-sdk'
 import {LocalStorageRepository } from 'pagetour-sdk.localrepository'
 import { MatSnackBar } from '@angular/material'
 import { Router, NavigationEnd, NavigationStart } from '@angular/router'
 
-//import { FeedbackTypeEnum } from 'pagetour-sdk/dist/types/models/feedbacktypeenum'
-//import { FxpOCVFeedbackService } from '@fxp/fxpservices';
 
 @Component({
   selector: 'app-root',
@@ -56,10 +54,11 @@ export class AppComponent implements OnInit {
         },
         announcementFeedbackOptions: {
           enabled: true,
-          type: 'like-dislike',
-          heading: 'Was this announcement helpful?',
+          type: 'yes-no',
+          heading: 'Was this helpful?',
           privacyDescription: "Your privacy is important to us",
-          privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'     
+          privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice',
+          submitMessage: 'Thank you for your feedback!'          
         }
       }
 

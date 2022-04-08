@@ -12,12 +12,6 @@
   url('./fonts/fullmdl2/FullMDL2.svg') format('svg');
 }
 
-$fa-font-path: "./fontawesome/webfonts";
-
-
-@import "./fontawesome/scss/fontawesome.scss";
-@import "./fontawesome/scss/solid.scss";
-
 
 @media screen and (-ms-high-contrast: active) {
   button {
@@ -2268,97 +2262,6 @@ $input-text-focus-outline: 1px dotted black;
     box-shadow: 0 4px 20px 0 rgba(34,68,123,0.2);
     word-break: break-all;
     max-width: 576px;
-
-    // .anno-feedback{
-    //   display: flex;
-    //   justify-content: space-between;
-    //   padding-left: 2rem;
-    //   padding-bottom: 1.2rem;
-    //   padding-right: 2rem;
-    //   .feedback-content{
-    //     display: inline-flex;
-
-    //     .anno-feedback-heading{
-    //       font-size: 12px;
-    //     }
-    //     .anno-feedback-like-rating{
-    //       padding: 3px;
-    //       .rating__label {
-    //         cursor: pointer;
-    //         padding: 2px;
-    //         font-size: 15px;
-    //         vertical-align: top;
-    //         margin-top: -2px;
-    //         // vertical-align: middle;
-    //         // margin-top: -12px;
-
-    //         font-family: 'Full MDL2 Assets';
-    //         font-weight: normal;
-    //         font-style: normal;
-    //         position: relative;
-    //         top: 1px;
-    //         display: inline-block;
-    //         line-height: 1;
-    //         -webkit-font-smoothing: antialiased;
-    //         -moz-osx-font-smoothing: grayscale;
-            
-    //       }
-    //       .rating__input {
-    //         display:none;
-    //       }
-    //       .rating__label{
-            
-    //         color: var(--like-dislike-onclick-color);
-    //       }
-    //       #like:checked + .rating__label.pagetour__icon.icon-like:before{
-    //         content: '\F3BF';
-    //         color: var(--like-dislike-onclick-color);
-    //       }
-      
-    //       #dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
-    //         content: '\F3C0';
-    //         color: var(--like-dislike-onclick-color);
-    //       }
-    //     }
-    //     .anno-feedback-yesno-rating{
-    //       padding: 3px;
-    //       .rating__label {
-    //         cursor: pointer;
-    //         padding: 2px;
-    //         vertical-align: middle;
-    //         margin-top: -11px;
-    //         font-size: 12px;
-    //         font-weight: 700;
-    //       }
-    //       .rating__input{
-    //         display: none;
-    //       }
-    //       .rating__input:checked + .rating__label,
-    //       .rating__input:hover + .rating__label,
-    //       .rating__input:focus + .rating__label
-    //       {
-    //         text-decoration: underline;
-    //         font-weight: 700;
-    //         color: var(--like-dislike-onclick-color);
-            
-    //       }
-    //       // .rating__input:hover + .rating__label{
-    //       //   text-decoration: underline;
-    //       //   font-weight: 700;
-    //       //   color: var(--like-dislike-onclick-color);
-            
-    //       // }
-          
-    //     }
-    //   }
-
-    //   .anno-feedback-privacy{
-    //     //margin-left:160px;
-    //     a .anno-privacy-description{
-    //       font-size: 12px;
-    //     }
-    //   }
-    // }
     
   }
   
@@ -2786,7 +2689,13 @@ $input-text-focus-outline: 1px dotted black;
 
 /* Annoucement Box Popup end*/
 
-// FEEDBACK PAGE CONTAINER --- START
+//css variables to change color of star and like
+:root {
+  --star-color: #0063b1;
+  --like-dislike-onclick-color: #0063b1;
+}
+
+// feedback page container - start
 .feedback-container {
   display: flex !important;
   justify-content: center;
@@ -2885,20 +2794,113 @@ $input-text-focus-outline: 1px dotted black;
       .feedback-type{
         display: flex;
         justify-content: center;
-        padding:13px
-        //height: 60px;
+        padding:13px;
+        
+        //5star rating
+        .pt-feedback_5star-rating {
+          .rating__label {
+            cursor: pointer;
+            padding: 3px;
+            font-size: 25px;
+            color: var(--star-color);
+        
+            font-family: 'Segoe MDL2 Assets';
+            font-weight: normal;
+            font-style: normal;
+            position: relative;
+            top: 1px;
+            display: inline-block;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+          
+          .rating__input {
+            display: none
+          }
+          
+          .rating__input--none {
+            display: none
+          }
+          .rating__input--none:checked .rating__label{
+         
+            &:before{
+              content: '\E734';
+            }
+        
+          }
+          .rating__label{
+
+            &:before{
+              content: "\E735";
+            }
+          }
+          .rating__input:checked ~ .rating__label{
+            &:before{
+              content: "\E734";
+            }
+          }
+          .rating-group:hover .rating__label{
+            &:before{
+              content: "\E735"; 
+            }
+          }
+        
+          
+          .rating__input:hover ~ .rating__label:before{
+            content: "\E734";
+          }
+          
+        }
+
+          //like dislike rating
+        .pt-feedback_like-rating {
+          .rating__label {
+            cursor: pointer;
+            padding: 3px;
+            font-size: 30px;
+
+            font-family: 'Full MDL2 Assets';
+            font-weight: normal;
+            font-style: normal;
+            position: relative;
+            top: 1px;
+            display: inline-block;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            
+          }
+          .rating__input {
+            display:none;
+          }
+          .rating__label{
+            
+            color: var(--like-dislike-onclick-color);
+          }
+          #like:hover + .rating__label.pagetour__icon.icon-like:before,
+          #like:checked + .rating__label.pagetour__icon.icon-like:before{
+            content: '\F3BF';
+            color: var(--like-dislike-onclick-color);
+          }
+          #dislike:hover + .rating__label.pagetour__icon.icon-dislike:before,
+          #dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
+            content: '\F3C0';
+            color: var(--like-dislike-onclick-color);
+          }
+        }
+
       }
       
-      // .feedback-privacy a .privacy-description{
-      //   padding: 5px;
-      //   font-family: "Segoe UI";
-      //   font-size: 2px;
-        
-      // }
       
     }
+
+    .feedback-privacy a .privacy-description{
+      padding-bottom: 15px;
+      font-family: "Segoe UI";      
+    }
     .feedback-footer {
-      padding-top: 20px;
+      padding-top: 5px;
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
@@ -2909,12 +2911,7 @@ $input-text-focus-outline: 1px dotted black;
         outline: inherit;
         margin-right: 5px;
       }
-      // .feedback-cancel-button:hover,
-      // .feedback-cancel-button:focus{
-      //   //background-color: #dee2e6ab;
-      //   background-color: #ddd;
-      // }
-      
+
       button {
         outline: inherit;
         width: 70px;
@@ -2935,180 +2932,8 @@ $input-text-focus-outline: 1px dotted black;
 }
 
 //FEEDBACK ----END
-//css variables to change color of star and like
-:root {
-  --star-color: #0063b1;
-  --like-dislike-onclick-color: #0063b1;
-}
-
-// 5 star rating
-.pt-feedback_5star-rating {
-  .rating__label {
-    cursor: pointer;
-    padding: 3px;
-    font-size: 25px;
-    color: var(--star-color);
-
-    font-family: 'Segoe MDL2 Assets';
-    font-weight: normal;
-    font-style: normal;
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  .rating__input {
-    display: none
-  }
-  
-  .rating__input--none {
-    display: none
-  }
-  .rating__input--none:checked .rating__label{
- 
-    &:before{
-      content: '\E734';
-    }
-
-  }
-  .rating__label{
-    // cursor:pointer;
-    // font-size: 40px;
-    // color: var(--star-color);
 
 
-    &:before{
-      content: "\E735";
-    }
-  }
-  .rating__input:checked ~ .rating__label{
-    &:before{
-      content: "\E734";
-    }
-  }
-  .rating-group:hover .rating__label{
-    &:before{
-      content: "\E735"; 
-    }
-  }
-
-  
-  .rating__input:hover ~ .rating__label:before{
-    content: "\E734";
-  }
-  
-}
-
-  //like dislike rating
-  .pt-feedback_like-rating {
-    .rating__label {
-      cursor: pointer;
-      padding: 3px;
-      font-size: 30px;
-
-      font-family: 'Full MDL2 Assets';
-      font-weight: normal;
-      font-style: normal;
-      position: relative;
-      top: 1px;
-      display: inline-block;
-      line-height: 1;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      
-    }
-    .rating__input {
-      display:none;
-    }
-    .rating__label{
-      
-      color: var(--like-dislike-onclick-color);
-    }
-    #like:checked + .rating__label.pagetour__icon.icon-like:before{
-      content: '\F3BF';
-      color: var(--like-dislike-onclick-color);
-    }
-
-    #dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
-      content: '\F3C0';
-      color: var(--like-dislike-onclick-color);
-    }
-    // input + label:hover
-    // ,input + label:focus
-    // {
-    //   //background-color: #000;
-    //   color: #0eabdb;
-    // }
-  }
-
-//10 star rating (half-full star)
-.pt-feedback_10star-rating {
-  
-  .rating-group {
-    display: inline-flex;
-  }
-  
-  
-  .rating__label {
-    cursor: pointer;
-    padding: 0 0.1em;
-    font-size: 2rem;
-  }
-  
-  .rating__label--half {
-    padding-right: 0;
-    margin-right: -1.2em;
-    z-index: 2;
-  }
-  
-  .rating__input {
-    display: none
-  }
-  
-  .rating__input--none {
-    display: none
-  }
-  
-  .rating__icon--star {
-    color: orange;
-  }
-  
-  .rating__icon--none {
-    color: #eee;
-  }
-  
-  .rating__input:checked ~ .rating__label .rating__icon--star {
-    color: #ddd;
-  }
-  .rating__input--none:checked .rating__label .rating__icon--star{
-    color: #ddd;
-  }
-  // /* make all stars orange on rating group hover */
-  .rating-group:hover .rating__label .rating__icon--star,
-  .rating-group:hover .rating__label--half .rating__icon--star {
-    color: orange;
-  }
-  
-  /* make hovered input's following siblings grey on hover */
-  .rating__input:hover ~ .rating__label .rating__icon--star,
-  .rating__input:hover ~ .rating__label--half .rating__icon--star {
-    color: #ddd;
-  }
-  
-  /* make none icon grey on rating group hover */
-  .rating-group:hover .rating__input--none:not(:hover) + .rating__label .rating__icon--none {
-    color: #eee;
-  }
-  
-  /* make none icon red on hover */
-  // .rating__input--none:hover + .rating__label .rating__icon--none {
-    //   color: red;
-    // }
-  }
-  
 
 // ----- announcement feedback
 .anno-feedback{
@@ -3121,18 +2946,17 @@ $input-text-focus-outline: 1px dotted black;
     display: inline-flex;
 
     .anno-feedback-heading{
+      
       font-size: 12px;
     }
     .anno-feedback-like-rating{
-      padding: 3px;
+      padding-left: 3px;
       .rating__label {
         cursor: pointer;
-        padding: 2px;
+        padding-left: 2px;
+        padding-right:2px;
         font-size: 15px;
         vertical-align: top;
-        margin-top: -2px;
-        // vertical-align: middle;
-        // margin-top: -12px;
 
         font-family: 'Full MDL2 Assets';
         font-weight: normal;
@@ -3152,23 +2976,32 @@ $input-text-focus-outline: 1px dotted black;
         
         color: var(--like-dislike-onclick-color);
       }
-      #like:checked + .rating__label.pagetour__icon.icon-like:before{
+      .rating__input.like:checked + .rating__label.pagetour__icon.icon-like:before{
         content: '\F3BF';
         color: var(--like-dislike-onclick-color);
       }
+      .rating__input.like:hover + .rating__label.pagetour__icon.icon-like:before{
+        content: '\F3BF';
+        color: var(--like-dislike-onclick-color);
+      }
+
+      .rating__input.dislike:hover + .rating__label.pagetour__icon.icon-dislike:before{
+        content: '\F3C0';
+        color: var(--like-dislike-onclick-color);
+      }
   
-      #dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
+      .rating__input.dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
         content: '\F3C0';
         color: var(--like-dislike-onclick-color);
       }
     }
     .anno-feedback-yesno-rating{
-      padding: 3px;
+      padding-left: 3px;
       .rating__label {
-        cursor: pointer;
+        //cursor: pointer;
         padding: 2px;
         vertical-align: middle;
-        margin-top: -11px;
+        margin-top: -8px;
         font-size: 12px;
         font-weight: 700;
       }
@@ -3179,23 +3012,23 @@ $input-text-focus-outline: 1px dotted black;
       .rating__input:hover + .rating__label,
       .rating__input:focus + .rating__label
       {
+        cursor: pointer;
         text-decoration: underline;
         font-weight: 700;
         color: var(--like-dislike-onclick-color);
         
       }
-      // .rating__input:hover + .rating__label{
-      //   text-decoration: underline;
-      //   font-weight: 700;
-      //   color: var(--like-dislike-onclick-color);
-        
-      // }
       
     }
   }
 
+  .anno-thanks{
+    display:none;
+    height: 24px;
+    font-size: 12px;
+  }
+
   .anno-feedback-privacy{
-    //margin-left:160px;
     a .anno-privacy-description{
       font-size: 12px;
     }

@@ -37,7 +37,8 @@ class PageTourPlay {
   private defaultFontFamily = 'Segoe UI'
   private autoPlayTest: boolean
   private isMuted: boolean = false
- 
+  private announcementFeedbackObj: any = JSON.parse('{}')
+
   // Template Functions
   private tourBoxHtmlFn: any = tourBoxHtml
   private feedbackPageFn: any = feedbackPageHtml
@@ -520,7 +521,7 @@ class PageTourPlay {
         //remove the last element(tour box)
         self.removeTether()
         if (tourEndsWithCoverPage) {
-          self.showCoverPageModal(tour, action, callback, startInterval)
+          self.showCoverPageModal(tour, action, callback, startInterval);
           // let startTourCoverPageButton = document.getElementById('starttour-cover-page-btn') as HTMLButtonElement
           // let closeBtn = document.getElementById('cover-page-close-btn') as HTMLButtonElement
           // let cancelBtn = document.getElementById('cancel-cover-page-btn') as HTMLButtonElement
@@ -613,12 +614,20 @@ class PageTourPlay {
   ) => {
     const self = this
     const opts = self.configStore.Options
+    // let likeratingRadioButtons = document.querySelector('input[name="likerating"]:checked') as HTMLInputElement;
+    //   likeratingRadioButtons.checked = false;
     if (stepAction === StepAction.Next) {
       const nextButton: HTMLButtonElement = document.querySelector('#anno-next-step')
       nextButton.classList.add('loadingNextStep')
-      nextButton.disabled = true
-      let likeratingRadioButtons = document.querySelector('input[name="likerating"]:checked') as HTMLInputElement;
-      likeratingRadioButtons.checked = false;
+      nextButton.disabled = true;
+
+      // let annoFeedbackOpts = this.configStore.Options.feedback.announcementFeedbackOptions;
+
+      // if(annoFeedbackOpts.enabled){
+      //   let feedbackPrevElement = document.getElementById('rating'+ (self.currentStep));
+      //   DomUtils.hide(feedbackPrevElement);
+      // }
+
       if (self.currentStep === this.totalSteps - 1) {
         self.isTourPlaying = false
       }
@@ -676,6 +685,15 @@ class PageTourPlay {
       let prevStep = self.currentStep === 1 ? tour.steps[0] : tour.steps[self.currentStep - 2]
       self.currentStep = self.currentStep - 1
       let newStep = tour.steps[self.currentStep]
+
+      // let annoFeedbackOpts = this.configStore.Options.feedback.announcementFeedbackOptions;
+
+      // if(annoFeedbackOpts.enabled){
+      //   let feedbackNextElement = document.getElementById('rating'+ (self.currentStep + 1));
+      //   DomUtils.hide(feedbackNextElement);
+      //   let feedbackCurrentElement = document.getElementById('rating'+ (self.currentStep));
+      //   DomUtils.show(feedbackCurrentElement);
+      // }
       let delay = self.getDelayBeforeNextStep(prevStep, newStep)
 
       setTimeout(() => {
@@ -716,6 +734,15 @@ class PageTourPlay {
     this.totalSteps = tour.steps.length
     this.currentStep = 0
     this.isMuted = false;
+    //initialize the feedback object
+    var jsonFeedbackObj: any = {};
+    var ratingStep : any = {submitted: false, rating: 0.0, ratingElement:null}; 
+    for(var i=0; i<this.totalSteps; i++){
+      jsonFeedbackObj[i] = ratingStep;
+    }
+    var jsonFeedbackString = JSON.stringify(jsonFeedbackObj);
+    this.announcementFeedbackObj = JSON.parse(jsonFeedbackString);
+    
     //setup the basic announcement html box on the screen
     this.setupAnnouncementBox(tour)
   }
@@ -748,12 +775,9 @@ class PageTourPlay {
     this.tourBox.style.zIndex = '200000';
     let annoFeedbackOpts = this.configStore.Options.feedback.announcementFeedbackOptions;
     if(annoFeedbackOpts.enabled){
-      let announcementFeedbackDivElement = document.getElementById('feedbackelement').querySelector('div') as HTMLElement;
-      //announcementFeedbackDivElement.id = 'rating' + stepCount;
+      let announcementFeedbackDivElement = document.getElementById('feedbackelement') as HTMLElement;
       announcementFeedbackDivElement = DomUtils.appendTo(announcementFeedbackDivElement, this.announcementFeedbackPageFn());
-
     }
-    //this.showAnnouncementFeedback(announcementFeedbackDivElement, stepCount)
   }
 
   private executeAction = (tour: Tutorial, action: any, element: HTMLElement, step: number) => {
@@ -1090,32 +1114,71 @@ class PageTourPlay {
         //check for announcement feedback
         //announcement Feedback config options
         let annoFeedbackOpts = opts.feedback.announcementFeedbackOptions;
-        //let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.announcementFeedbackOptions;
+        let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.announcementFeedbackOptions;
+        
+        if(!annoFeedbackOpts.enabled){
+          let annoFooterElement = document.getElementById('announcementfooter');
+          annoFooterElement.style.paddingBottom = '1.5rem';
+          
+        }
 
-        if(annoFeedbackOpts.enabled && stepCount==0){
-          let announcementFeedbackDivElement = document.getElementById('feedbackelement').querySelector('div') as HTMLElement;
-          //announcementFeedbackDivElement.id = 'rating' + stepCount;
-          // announcementFeedbackDivElement = DomUtils.appendTo(announcementFeedbackDivElement, this.announcementFeedbackPageFn());
-          this.showAnnouncementFeedback(announcementFeedbackDivElement, stepCount)
+        if(annoFeedbackOpts.enabled){
+          let annoFeedbackType = annoFeedbackOpts.type === undefined ? defaultAnnoFeedbackOpts.type : annoFeedbackOpts.type;
+          var ratingElement: NodeListOf<HTMLInputElement>;
+          if(this.announcementFeedbackObj[this.currentStep].submitted == false){
+;
+            this.updateAnnouncementFeedbackElement();
+            if(annoFeedbackType == 'like-dislike'){
+              let likeratingRadioButtons = document.querySelector('input[name="likerating"]:checked') as HTMLInputElement;
+              if(likeratingRadioButtons) likeratingRadioButtons.checked = false;
+              ratingElement = document.getElementsByName('likerating') as NodeListOf<HTMLInputElement>;
+            }
+            else if(annoFeedbackType == 'yes-no'){
+              let yesratingRadio = document.querySelector('input[name="yesnorating"]:checked') as HTMLInputElement;
+              if(yesratingRadio) yesratingRadio.checked = false;
+              ratingElement = ratingElement = document.getElementsByName('yesnorating') as NodeListOf<HTMLInputElement>;
+            }
+
+            var self = this;  
+            var rating =0.0;
+            
+            for(var i=0; i<ratingElement.length; i++){
+              ratingElement[i].addEventListener('change', function(e){     
+                //console.log(this);        
+                if(this.checked &&  self.announcementFeedbackObj[self.currentStep].submitted==false){
+          
+                  rating = parseFloat(this.value)/5;
+                  self.announcementFeedbackObj[self.currentStep].submitted = true;
+                  self.announcementFeedbackObj[self.currentStep].rating = rating;
+                  self.announcementFeedbackObj[self.currentStep].ratingElement = this;
+                  if (opts.navigator.callbackOnAnnouncementFeedbackSubmit != null) {
+                    opts.navigator.callbackOnAnnouncementFeedbackSubmit(rating, self.tour, self.currentStep);
+                  }
+                  console.log(self.currentStep);
+                  console.log(rating);
+                  let feedbackContentElement = document.getElementById('feedbackcontent');
+                  let privacyElement = document.getElementById('annofeedbackprivacy');
+                  let submitMessageElement = document.getElementById('annothanksmsg');
+                  DomUtils.hide(feedbackContentElement);
+                  DomUtils.hide(privacyElement);
+                  DomUtils.show(submitMessageElement);
+                }
+              })
+            }
+
+          }
+          else if(this.announcementFeedbackObj[this.currentStep].submitted == true){
+            let feedbackContentElement = document.getElementById('feedbackcontent');
+            let privacyElement = document.getElementById('annofeedbackprivacy');
+            let submitMessageElement = document.getElementById('annothanksmsg');
+            DomUtils.hide(feedbackContentElement);
+            DomUtils.hide(privacyElement);
+            DomUtils.show(submitMessageElement);
+            //this.announcementFeedbackObj[this.currentStep].ratingElement.checked = true;
+          }
 
         }
-        // let announcementBoxElement = document.getElementById('feedbackelement');
-        // announcementBoxElement = DomUtils.appendTo(announcementBoxElement, this.announcementFeedbackPageFn());
-
-        let annoFeedbackElement = document.getElementById("annofeedback");
-
-        // if(!annoFeedbackOpts.enabled){
-        //   annoFeedbackElement.style.display = "none";
-        //   let annoFooterElement = document.getElementById('announcementfooter');
-        //   annoFooterElement.style.paddingBottom = '1.5rem';
-          
-        // }
-        // else{ //anno feedback enabled
-        //   //get all html elements
-        //  this.showAnnouncementFeedback(stepCount);
-
-        // }
-
+      
         //this.tether = this.getTetherObject(stepCount)
         this.ApplyAnnouncementTheme(stepCount)
         this.srSpeak(`${this.tour.headerText} dialog`, 'assertive', 'dialog')
@@ -1130,6 +1193,7 @@ class PageTourPlay {
           this.updateUserActions(tour, 'Completed', stepCount.toString(), 'Competed all steps')
         }
       }
+    
   }
   
   private validImageURL(text: string) {
@@ -1628,14 +1692,6 @@ class PageTourPlay {
       startTourCoverPageButton.innerHTML = 'Finish tour'
       startTourCoverPageButton.title = 'Finish Tour'
       let opts = this.configStore.Options;
-      // startTourCoverPageButton.onclick = (event) => {
-      //   if(opts.feedback.enabled){
-      //     this.showFeedbackModal();
-      //   }
-      //   return this.closeCoverPageModal(callback);
-       
-
-      // }
       startTourCoverPageButton.onclick = this.closeCoverPageModal(callback);
       //if cover page at the end - call feedback page(another button for Submit feedback in place of Finish tour)
     }
@@ -1782,12 +1838,17 @@ class PageTourPlay {
     let feedbackPrivacyDescriptionElement = document.getElementById('privacydescription');
     let feedbackPrivacyURLElement = document.getElementById('privacyurl');
 
-    let feedbackPrivacyDescription = pagetourFeedbackOpts.privacyDescription === undefined ? defaultFeedbackOpts.privacyDescription: pagetourFeedbackOpts.privacyDescription;
-    let feedbackPrivacyURL = pagetourFeedbackOpts.privacyURL === undefined ? defaultFeedbackOpts.privacyURL: pagetourFeedbackOpts.privacyURL;
+    let feedbackPrivacyDescription = pagetourFeedbackOpts.privacyDescription;
+    let feedbackPrivacyURL = pagetourFeedbackOpts.privacyURL;
 
-    feedbackPrivacyDescriptionElement.innerHTML = feedbackPrivacyDescription;
-    feedbackPrivacyURLElement.setAttribute('href', feedbackPrivacyURL);
-
+    if(feedbackPrivacyDescription !== undefined && feedbackPrivacyURL !== undefined) {
+      feedbackPrivacyDescriptionElement.innerHTML = feedbackPrivacyDescription;
+      feedbackPrivacyURLElement.setAttribute('href', feedbackPrivacyURL);
+      
+    }
+    else{
+      DomUtils.hide(document.getElementById('feedbackprivacy'));
+    }
     
     let cancelButton = document.getElementById('feedback-cancel');
     let submitButton = document.getElementById('feedback-submit');
@@ -1802,17 +1863,7 @@ class PageTourPlay {
     iconColor.style.setProperty('--star-color', this.tourTheme.primaryColor);
     iconColor.style.setProperty('--like-dislike-onclick-color', this.tourTheme.primaryColor);
     feedbackBoxDataElement.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily;
-    // feedbackBoxElement.style.borderColor = this.tourTheme.primaryColor;
-    // feedbackBoxElement.style.borderLeftWidth = '3px';
-    // backButton.style.background = this.tourTheme.primaryColor;
-    // submitButton.style.background = this.tourTheme.primaryColor;
 
-    // backButton.style.color = this.tourTheme.secondaryColor;
-    // submitButton.style.color = this.tourTheme.secondaryColor;
-    
-    // feedbackBoxDataElement.style.borderColor = this.tourTheme.primaryColor;
-    // feedbackBoxDataElement.style.color = this.tourTheme.textColor;
-    // feedbackBoxDataElement.style.fontFamily = this.tourTheme.fontFamily ? this.tourTheme.fontFamily : this.defaultFontFamily;
     
     //get the rating;
     var rating = 0.0;
@@ -1852,27 +1903,36 @@ class PageTourPlay {
         this.feedbackModal.parentNode.removeChild(this.feedbackModal);
       }
     }
-
   }
 
-  private showAnnouncementFeedback = (announcementFeedbackDivElement:HTMLElement, stepCount: number) => {
+  private updateAnnouncementFeedbackElement = () => {
     let annoFeedbackOpts = this.configStore.Options.feedback.announcementFeedbackOptions;
     let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.announcementFeedbackOptions;
-    // let annoFeedbackHeadingElement = document.getElementById('annofeedbackheading');
-    // let annoPrivacyURLElement = document.getElementById('annoprivacyurl');
-    // let annoPrivacyDescElement = document.getElementById('annoprivacydescription');
+    let annoFeedbackHeadingElement = document.getElementById('annofeedbackheading');
+    let annoPrivacyURLElement = document.getElementById('annoprivacyurl');
+    let annoPrivacyDescElement = document.getElementById('annoprivacydescription');
+    let submitMessageElement = document.getElementById('annothanksmsg');
+    let privacyElement = document.getElementById('annofeedbackprivacy');
 
-    let annoFeedbackHeadingElement = announcementFeedbackDivElement.querySelector('#annofeedbackheading');
-    let annoPrivacyURLElement = announcementFeedbackDivElement.querySelector('#annoprivacyurl');
-    let annoPrivacyDescElement = announcementFeedbackDivElement.querySelector('#annoprivacydescription');
     //get config options
     let annoFeedbackHeading = annoFeedbackOpts.heading === undefined ? defaultAnnoFeedbackOpts.heading : annoFeedbackOpts.heading;
-    let annoPrivacyURL= annoFeedbackOpts.privacyURL === undefined ? defaultAnnoFeedbackOpts.privacyURL : annoFeedbackOpts.privacyURL;
-    let annoPrivacyDesc = annoFeedbackOpts.privacyDescription === undefined ? defaultAnnoFeedbackOpts.privacyDescription : annoFeedbackOpts.privacyDescription;
+    let annoPrivacyURL= annoFeedbackOpts.privacyURL 
+    let annoPrivacyDesc = annoFeedbackOpts.privacyDescription 
+    let annoFeedbackSubmitMsg = annoFeedbackOpts.submitMessage === undefined ? defaultAnnoFeedbackOpts.submitMessage : annoFeedbackOpts.submitMessage;
 
     annoFeedbackHeadingElement.innerHTML = annoFeedbackHeading;
-    annoPrivacyURLElement.setAttribute('href', annoPrivacyURL);
-    annoPrivacyDescElement.innerHTML = annoPrivacyDesc;
+    if(annoPrivacyDesc !== undefined && annoPrivacyURL !== undefined){
+      
+      annoPrivacyDescElement.innerHTML = annoPrivacyDesc;
+      annoPrivacyURLElement.setAttribute('href', annoPrivacyURL);
+      DomUtils.show(privacyElement);
+    }
+    else{
+      DomUtils.hide(privacyElement);
+    }
+    
+    submitMessageElement.innerHTML = annoFeedbackSubmitMsg;
+    
 
     //selecting the type of feedback
     let annoFeedbackType = annoFeedbackOpts.type === undefined ? defaultAnnoFeedbackOpts.type : annoFeedbackOpts.type;
@@ -1880,43 +1940,24 @@ class PageTourPlay {
     
     iconColor.style.setProperty('--like-dislike-onclick-color', this.tourTheme.primaryColor);
 
-    var ratingElement: NodeListOf<HTMLInputElement>;
+    // var ratingElement: NodeListOf<HTMLInputElement>;
     if(annoFeedbackType == 'like-dislike'){
-      //document.getElementById('yes-no-rating').style.display = 'none';
-      DomUtils.hide(announcementFeedbackDivElement.querySelector('#yes-no-rating'));
-
-      ratingElement = announcementFeedbackDivElement.querySelectorAll('input[name="likerating"]');
-      // if(ratingGroupElement == null){
-      //   ratingGroupElement = document.getElementById('rating'+(stepCount-1))
-      // }
-      // ratingGroupElement.id = 'rating'+stepCount;
-      // console.log(ratingGroupElement);
-      // ratingElement = document.getElementById('rating'+stepCount).querySelectorAll('input') as NodeListOf<HTMLInputElement>;
+      
+      DomUtils.hide(document.getElementById('yes-no-rating'));
+         
+    }
+    else if(annoFeedbackType=='yes-no'){
+      DomUtils.hide(document.getElementById('anno-like-rating'));
       
     }
-    else if(annoFeedbackType == 'yes-no'){
-      document.getElementById('anno-like-rating').style.display = 'none';
-      ratingElement = document.getElementsByName('yesnorating') as NodeListOf<HTMLInputElement>;
-    }
-    var rating = 0.0;
-    // var newrating //= ratingElement;
-    // ratingElement[0].name = 'rating'+stepCount;
-    // ratingElement[1].name = 'rating'+stepCount;
-    // console.log(ratingElement);
-    // for(var i=0; i<2; i++){
-    //   ratingElement[i].name = 'rating'+stepCount;
-    // }
-    //newrating = document.getElementsByName('rating' + stepCount)  as NodeListOf<HTMLInputElement>;
-    for(var i=0; i<ratingElement.length; i++){
-      ratingElement[i].addEventListener('change', function(e){             
-        if(this.checked){
-          rating = parseFloat(this.value)/5;
-          console.log(rating);
-        }
-      })
-
-    }
+    let feedbackContentElement = document.getElementById('feedbackcontent');
+    
+    feedbackContentElement.style.display = 'inline-flex';
+    
+    DomUtils.hide(submitMessageElement);
   }
+
+  
 }
 
 export { PageTourPlay }
