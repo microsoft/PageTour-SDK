@@ -1,6 +1,6 @@
 {
   "name": "pagetour-sdk",
-  "version": "2.0.8",
+  "version": "2.0.11",
   "license": "MIT",
   "description": "Lightweight Typescript SDK for designing tours in Web Apps",
   "main": "dist/umd/pagetour.umd.js",
@@ -41,17 +41,17 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^31.0.0",
     "@ckeditor/ckeditor5-word-count": "^31.0.0",
+    "css-selector-generator": "3.5.2",
     "debounce": "1.2.0",
     "popper.js": "1.14.7",
-    "unique-selector": "0.4.1",
     "query-selector-shadow-dom": "1.0.0",
-    "css-selector-generator": "3.5.2"
+    "unique-selector": "0.4.1"
   },
   "devDependencies": {
     "@types/debounce": "1.2.0",
     "@types/node": "10.12.24",
-    "@types/webpack": "4.4.24",
     "@types/query-selector-shadow-dom": "1.0.0",
+    "@types/webpack": "4.4.24",
     "autoprefixer": "9.4.7",
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",

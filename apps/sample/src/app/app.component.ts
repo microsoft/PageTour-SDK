@@ -60,6 +60,14 @@ export class AppComponent implements OnInit {
           privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice',
           submitMessage: 'Thank you for your feedback!'          
         }
+      },
+      userInfo: {
+        getCurrentUser: () => {
+          return "";
+        },
+        getCurrentUserPermissions: () => {
+            return ["create", "delete", "update", "export"]
+        },
       }
 
     });
