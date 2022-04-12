@@ -14,22 +14,22 @@ class AuthorizationService {
 
   public isAuthorizedToAddTour = async (): Promise<Boolean> => {
     const roles: any = await this.getCurrentUserRoles()
-    return roles.indexOf('admin') !== 1 || roles.indexOf('create') !== -1
+    return roles.length > 0 && (roles.indexOf('all') !== -1 || roles.indexOf('create') !== -1)
   }
 
   public isAuthorizedToEditTour = async (): Promise<Boolean> => {
     const roles: any = await this.getCurrentUserRoles()
-    return roles.indexOf('admin') !== 1 || roles.indexOf('update') !== -1
+    return roles.length > 0 && (roles.indexOf('all') !== -1 || roles.indexOf('update') !== -1)
   }
 
   public isAuthorizedToExportTour = async (): Promise<Boolean> => {
     const roles: any = await this.getCurrentUserRoles()
-    return roles.indexOf('admin') !== 1 || roles.indexOf('export') !== -1
+    return roles.length > 0 && (roles.indexOf('all') !== -1 || roles.indexOf('export') !== -1)
   }
 
   public isAuthorizedToDeleteTour = async (): Promise<Boolean> => {
     const roles: any = await this.getCurrentUserRoles()
-    return roles.indexOf('admin') !== 1 || roles.indexOf('delete') !== -1
+    return roles.length > 0 && (roles.indexOf('all') !== -1 || roles.indexOf('delete') !== -1)
   }
 }
 
