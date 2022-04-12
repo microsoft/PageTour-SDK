@@ -10,7 +10,7 @@ interface NavigatorOptions {
   callbackAfterTourStep?: (step: any, isMuted: boolean) => void
   callbackBeforeTourStart?: (tour: Tutorial) => void
   callbackOnTourStart?: (tour: Tutorial) => void
-  callbackAfterTourEnd?: (tour: Tutorial) => void
+  callbackAfterTourEnd?: (tour: Tutorial, currentStep: number) => void
   callbackOnTourStepFailure?: (tour: Tutorial, failedStepIndex: number, stepErrorMessage: string) => void
   callbackOnAuthoringStart?: () => void
   callbackOnAuthoringEnd?: () => void
