@@ -538,7 +538,7 @@ class PageTourPlay {
           //if feedback is enabled show feedback here
         
         } else {
-          if(opts.feedback.pagetourFeedbackOptions.enabled){
+          if(opts.feedback.pagetourFeedbackOptions.enabled && action != RunTourAction.Preview){
             //this.removeTether();
             self.showFeedbackModal();
           }
@@ -1690,12 +1690,12 @@ class PageTourPlay {
       startTourCoverPageButton.innerHTML = 'Finish tour'
       startTourCoverPageButton.title = 'Finish Tour'
       let opts = this.configStore.Options;
-      startTourCoverPageButton.onclick = this.closeCoverPageModal(callback);
+      startTourCoverPageButton.onclick = this.closeCoverPageModal(callback, action);
       //if cover page at the end - call feedback page(another button for Submit feedback in place of Finish tour)
     }
 
-    closeBtn.onclick = this.closeCoverPageModal(callback)
-    cancelBtn.onclick = this.closeCoverPageModal(callback)
+    closeBtn.onclick = this.closeCoverPageModal(callback, action)
+    cancelBtn.onclick = this.closeCoverPageModal(callback, action);
     DomUtils.manageTabbing(this.modal)
     if (autoplaytest === true) {
       let self = this
@@ -1711,13 +1711,13 @@ class PageTourPlay {
         }, startInterval)
       } else {
         setTimeout(() => {
-          self.closeCoverPageModal(callback)
+          self.closeCoverPageModal(callback, action);
         }, startInterval)
       }
     }
   }
 
-  private closeCoverPageModal = (callback: any) => {
+  private closeCoverPageModal = (callback: any, action: RunTourAction) => {
     return () => {
       this.isTourPlaying = false
       this.modal = document.getElementById('cover-page-modal')
@@ -1725,7 +1725,7 @@ class PageTourPlay {
       //show feedback modal if enabled
       let opts = this.configStore.Options;
       let coverPageLocation = this.tour.coverPage.location;
-      if(opts.feedback.pagetourFeedbackOptions.enabled && coverPageLocation.toLocaleLowerCase() == "end"){
+      if(opts.feedback.pagetourFeedbackOptions.enabled && coverPageLocation.toLocaleLowerCase() == "end" && action != RunTourAction.Preview){
         this.showFeedbackModal();
       }
       // this.disablePageInspector(true);

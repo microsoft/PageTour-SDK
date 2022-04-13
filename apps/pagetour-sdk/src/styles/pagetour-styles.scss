@@ -2944,7 +2944,7 @@ $input-text-focus-outline: 1px dotted black;
   padding-right: 2rem;
   .feedback-content{
     display: inline-flex;
-
+    height: 24px;
     .anno-feedback-heading{
       
       font-size: 12px;
@@ -3001,7 +3001,7 @@ $input-text-focus-outline: 1px dotted black;
         //cursor: pointer;
         padding: 2px;
         vertical-align: middle;
-        margin-top: -8px;
+        margin-top: -5px;
         font-size: 12px;
         font-weight: 700;
       }
