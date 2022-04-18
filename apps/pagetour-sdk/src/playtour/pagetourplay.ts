@@ -306,7 +306,7 @@ class PageTourPlay {
         opts.navigator.callbackBeforeTourStart(self.tour)
       }
       //sets up the basic announcement box
-      self.initializeAnnouncement(tour) 
+      self.initializeAnnouncement(tour, action) 
 
       let retVal = {} as PageContext
       retVal.state = tour.steps[0].pagestatename
@@ -730,21 +730,25 @@ class PageTourPlay {
     this.setupTourBox(tour)
   }
 
-  private initializeAnnouncement = (tour: any) => {
+  private initializeAnnouncement = (tour: any, action:RunTourAction) => {
     this.totalSteps = tour.steps.length
     this.currentStep = 0
     this.isMuted = false;
     //initialize the feedback object
-    var jsonFeedbackObj: any = {};
-    var ratingStep : any = {submitted: false, rating: 0.0, ratingElement:null}; 
-    for(var i=0; i<this.totalSteps; i++){
-      jsonFeedbackObj[i] = ratingStep;
+    let annoFeedbackOpts = this.configStore.Options.feedback.announcementFeedbackOptions;
+    if(annoFeedbackOpts.enabled == true && action != RunTourAction.Preview){
+      var jsonFeedbackObj: any = {};
+      var ratingStep : any = {submitted: false, rating: 0.0, ratingElement:null}; 
+      for(var i=0; i<this.totalSteps; i++){
+        jsonFeedbackObj[i] = ratingStep;
+      }
+      var jsonFeedbackString = JSON.stringify(jsonFeedbackObj);
+      this.announcementFeedbackObj = JSON.parse(jsonFeedbackString);
     }
-    var jsonFeedbackString = JSON.stringify(jsonFeedbackObj);
-    this.announcementFeedbackObj = JSON.parse(jsonFeedbackString);
+
     
     //setup the basic announcement html box on the screen
-    this.setupAnnouncementBox(tour)
+    this.setupAnnouncementBox(tour, action)
   }
 
   private navigateToStart = (pageContext: PageContext) => {
@@ -765,18 +769,18 @@ class PageTourPlay {
     //this.tourBox.style.zIndex = '20000'
   }
 
-  private setupFeedbackBox = (tour: any) =>{
-    this.totalSteps = tour.steps.length
-    this.tourBox = DomUtils.appendToBody(this.feedbackPageFn())
-  }
-  private setupAnnouncementBox = (tour: any) => {
+  private setupAnnouncementBox = (tour: any, action: RunTourAction) => {
     this.totalSteps = tour.steps.length
     this.tourBox = DomUtils.appendToBody(this.announcementBoxFn())
     this.tourBox.style.zIndex = '200000';
     let annoFeedbackOpts = this.configStore.Options.feedback.announcementFeedbackOptions;
-    if(annoFeedbackOpts.enabled){
+    if(annoFeedbackOpts.enabled && action == RunTourAction.Play){
       let announcementFeedbackDivElement = document.getElementById('feedbackelement') as HTMLElement;
       announcementFeedbackDivElement = DomUtils.appendTo(announcementFeedbackDivElement, this.announcementFeedbackPageFn());
+    }
+    else{
+      let annoFooterElement = document.getElementById('announcementfooter');
+      annoFooterElement.style.paddingBottom = '1.5rem';
     }
   }
 
@@ -1116,17 +1120,16 @@ class PageTourPlay {
         let annoFeedbackOpts = opts.feedback.announcementFeedbackOptions;
         let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.announcementFeedbackOptions;
         
-        if(!annoFeedbackOpts.enabled){
-          let annoFooterElement = document.getElementById('announcementfooter');
-          annoFooterElement.style.paddingBottom = '1.5rem';
+        // if(!annoFeedbackOpts.enabled){
+        //   let annoFooterElement = document.getElementById('announcementfooter');
+        //   annoFooterElement.style.paddingBottom = '1.5rem';
           
-        }
+        // }
 
-        if(annoFeedbackOpts.enabled){
+        if(annoFeedbackOpts.enabled && action == RunTourAction.Play){
           let annoFeedbackType = annoFeedbackOpts.type === undefined ? defaultAnnoFeedbackOpts.type : annoFeedbackOpts.type;
           var ratingElement: NodeListOf<HTMLInputElement>;
           if(this.announcementFeedbackObj[this.currentStep].submitted == false){
-;
             this.updateAnnouncementFeedbackElement();
             if(annoFeedbackType == 'like-dislike'){
               let likeratingRadioButtons = document.querySelector('input[name="likerating"]:checked') as HTMLInputElement;

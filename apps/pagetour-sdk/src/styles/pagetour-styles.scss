@@ -2911,7 +2911,12 @@ $input-text-focus-outline: 1px dotted black;
         outline: inherit;
         margin-right: 5px;
       }
-
+      .feedback-cancel-button:focus{
+        outline: #000000 dotted 1px;
+      }
+      .feedback-submit-button:focus{
+        outline: #000000 dotted 1px;
+      }
       button {
         outline: inherit;
         width: 70px;
@@ -2922,10 +2927,12 @@ $input-text-focus-outline: 1px dotted black;
         //border-radius: 2px;
         box-sizing: border-box;
         font-family: 'Segoe UI';
-        font-size: 14px;
+        font-size: 15px;
         line-height: 20px;
         //font-weight: 600;
       }
+
+      ;
     }
   }
   
@@ -2998,24 +3005,27 @@ $input-text-focus-outline: 1px dotted black;
     .anno-feedback-yesno-rating{
       padding-left: 3px;
       .rating__label {
-        //cursor: pointer;
+        cursor: pointer;
         padding: 2px;
         vertical-align: middle;
         margin-top: -5px;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 500;
+        color: #007bff;
+        text-decoration: none;
       }
       .rating__input{
         display: none;
       }
-      .rating__input:checked + .rating__label,
+      // .rating__input:checked + .rating__label,
       .rating__input:hover + .rating__label,
-      .rating__input:focus + .rating__label
+      .rating__label:focus
       {
         cursor: pointer;
         text-decoration: underline;
-        font-weight: 700;
-        color: var(--like-dislike-onclick-color);
+        font-weight: 500;
+        color: #0056b3;
+        // color: var(--like-dislike-onclick-color);
         
       }
       
