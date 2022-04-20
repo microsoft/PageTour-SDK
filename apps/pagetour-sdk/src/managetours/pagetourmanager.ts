@@ -823,7 +823,14 @@ class PageTourManager {
         button.classList.add('button-36')
         button.setAttribute('title', 'Copy Tour Url')
         button.setAttribute('id', 'button-copy_' + (tour.id ? tour.id : ''))
-        button.addEventListener('click', (event: Event) => this.copyTourUrl(tour))
+        button.addEventListener('click', (event: Event) => {this.copyTourUrl(tour); this.showToolTip(event.target as HTMLElement);})
+        button.addEventListener('keyup', (event) => {
+          if(event.key === "Enter")
+          {
+            this.copyTourUrl(tour);
+            this.showToolTip(event.target as HTMLElement);
+          }
+        });
         icon.classList.add('pagetour__icon', 'icon-copy')
         break
       case 'edit':
@@ -947,6 +954,16 @@ class PageTourManager {
     }
     let url = `${hostName}${startUrl}?tourId=${tour.id}`
     this.copyTextToClipboard(url)
+  }
+
+  private showToolTip(targetElement:HTMLElement)
+  {
+    let spanElement = document.getElementById("spanToolTipUrlCopyMsg");
+    let targetElementRect = targetElement.getBoundingClientRect();            
+    spanElement.style.display = 'block';
+    spanElement.style.left = (targetElementRect.left - 50)+'px';
+    spanElement.style.top = (targetElementRect.top + 26)+'px';          
+    setTimeout(function(){spanElement.style.display = 'none';}, 1000);
   }
 
   private fallbackCopyTextToClipboard = (text: string) => {
