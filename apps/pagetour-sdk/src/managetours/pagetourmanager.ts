@@ -156,7 +156,7 @@ class PageTourManager {
     document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
     document.getElementById('option-smart-tip').onclick = this.addSmartTip
     document.getElementById('option-guided-tour').onclick = this.addGuidedTour
-    // document.getElementById('manage-tours-modal-add-tour-div').onmouseleave = this.hideOptions
+    document.getElementById('manage-tours-modal-add-tour-div').onmouseleave = this.hideOptions
     // document.getElementById('manage-tours-modal-add-tour-btn').onblur = this.hideOptions
     document.getElementById('option-smart-tip').onblur = this.hideOptions
     document.getElementById('manage-tours-sort').onclick = this.sortTours
@@ -327,16 +327,6 @@ class PageTourManager {
     document.getElementById("add-new-dropdown").style.display = 'inline';
   }
 
-  private tabOptions = () => {
-    document.getElementById("add-new-dropdown").style.display = 'inline';
-    // var pagetourdrop = document.getElementById('option-page-tour');
-    // var guidedrop = document.getElementById('option-guided-tour');
-    // var smarttipdrop = document.getElementById('option-smart-tip');
-    // var annodrop = document.getElementById('option-system-announcement');
-    // pagetourdrop.onfocus = function()  {
-    //   pagetourdrop.style.backgroundColor = 'red';
-    // }
-  }
 
   private hideOptions = () => {
     document.getElementById("add-new-dropdown").style.display = 'none'
