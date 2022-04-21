@@ -1887,8 +1887,8 @@ class PageTourPlay {
         }
       }
       
-      if (opts.navigator.callbackOnFeedbackSubmit != null) {
-        opts.navigator.callbackOnFeedbackSubmit(rating, this.tour);
+      if (opts.navigator.callbackOnPagetourFeedbackSubmit != null) {
+        opts.navigator.callbackOnPagetourFeedbackSubmit(rating, this.tour);
       }
     }
     cancelButton.onclick = this.closeFeedbackModal();

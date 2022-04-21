@@ -73,8 +73,8 @@ class ConfigStore {
       pagetourFeedbackOptions: {
         enabled: false,
         type:'5-star',
-        heading: "Your Feedback is important!",
-        description: "Please rate this tour",
+        heading: "Your feedback is important!",
+        description: "Was this tour helpful?",
         privacyDescription: "Your privacy is important to us",
         privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
       },
