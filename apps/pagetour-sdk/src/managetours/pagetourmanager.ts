@@ -11,6 +11,7 @@ import { RunTourAction } from '../models/runtouraction'
 import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
 import { TourTypeEnum } from '../models/tourtypeenum'
+import { ToolTipConstants } from '../constants/tooltip.constants'
 declare const navigator: any
 class PageTourManager {
   private toursList: any = [] // This holds an array of tours
@@ -958,12 +959,11 @@ class PageTourManager {
 
   private showToolTip(targetElement:HTMLElement)
   {
-    let spanElement = document.getElementById("spanToolTipUrlCopyMsg");
-    let targetElementRect = targetElement.getBoundingClientRect();            
-    spanElement.style.display = 'block';
-    spanElement.style.left = (targetElementRect.left - 50)+'px';
-    spanElement.style.top = (targetElementRect.top + 26)+'px';          
-    setTimeout(function(){spanElement.style.display = 'none';}, 1000);
+    let spanElement = document.getElementById("spanToolTipUrlCopyMsg")     
+    spanElement.style.display = 'block'
+    spanElement.style.left = (DomUtils.offset(targetElement).left - ToolTipConstants.leftMoveInPx)+'px'
+    spanElement.style.top = (DomUtils.offsetBrowserViewPort(targetElement).top + ToolTipConstants.topMoveInPx)+'px'
+    setTimeout(function(){spanElement.style.display = 'none'}, ToolTipConstants.timeOutInMs)
   }
 
   private fallbackCopyTextToClipboard = (text: string) => {

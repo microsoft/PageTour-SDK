@@ -220,52 +220,35 @@ class PageTourPlay {
     toolTipPopper.style.display = "flex";
     toolTipPopper.style.zIndex = zIndex;
     let popperPlacement = element.position as Placement
+
+    arrowDiv.style.alignSelf = 'center'
+    arrowDiv.style.margin = '0px 0px'
+    arrowDiv.style.borderColor = 'transparent'
+
     switch (element.position) {
       case 'top':
         arrowDiv.className = 'arrow-pointer arrow-down'
         smartTipPopup.style.flexDirection = 'column'
-        arrowDiv.style.alignSelf = 'center'
-        arrowDiv.style.margin = '0px 0px'
-        // todo : apply as per the theme color
         arrowDiv.style.borderTopColor = '#0078D4'
-        arrowDiv.style.borderLeftColor = 'transparent'
-        arrowDiv.style.borderRightColor = 'transparent'
-        arrowDiv.style.borderBottomColor = 'transparent'
         break
 
       case 'bottom':
         arrowDiv.className = 'arrow-pointer arrow-up'
         smartTipPopup.style.flexDirection = 'column-reverse'
-        arrowDiv.style.alignSelf = 'center'
-        arrowDiv.style.margin = '0px 0px'
-        arrowDiv.style.borderTopColor = 'transparent'
-        arrowDiv.style.borderLeftColor = 'transparent'
-        arrowDiv.style.borderRightColor = 'transparent'
-        arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
+        arrowDiv.style.borderBottomColor = '#0078D4'
         break
 
       case 'left':
         smartTipPopup.style.flexDirection = 'row'
         arrowDiv.className = 'arrow-pointer arrow-right'
-        arrowDiv.style.alignSelf = 'center'
-        arrowDiv.style.margin = '0px 0px'
-        arrowDiv.style.borderTopColor = 'transparent'
         arrowDiv.style.borderLeftColor = '#0078D4'
-        arrowDiv.style.borderRightColor = 'transparent'
-        arrowDiv.style.borderBottomColor = 'transparent'
         break
 
       case 'right':
         smartTipPopup.style.flexDirection = 'row-reverse'
         arrowDiv.className = 'arrow-pointer arrow-left'
-        arrowDiv.style.alignSelf = 'center'
-        arrowDiv.style.margin = '0px 0px'
-        arrowDiv.style.borderTopColor = 'transparent'
-        arrowDiv.style.borderLeftColor = 'transparent'
         arrowDiv.style.borderRightColor = '#0078D4'
-        arrowDiv.style.borderBottomColor = 'transparent'
         break
-
     }
 
     let popperInstance = new Popper(smartTip, toolTipPopper, {
