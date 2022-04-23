@@ -914,6 +914,10 @@ $input-text-focus-outline: 1px dotted black;
       background-color: transparent;
       border: 0;
     }
+    .pagetour-dropdown-item:hover,
+    .pagetour-dropdown-item:focus{
+      text-decoration: underline;
+    }
 
     .btn-outline-primary{
       border: none;
@@ -1785,7 +1789,7 @@ $input-text-focus-outline: 1px dotted black;
         }
       }
       .nav-buttons:focus {
-        outline: #000000 dotted 1px;
+        outline: #000000 dotted 2px;
       }
 
       .pt-counter {

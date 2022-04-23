@@ -1174,11 +1174,17 @@ class PageTourAuthor {
       link: {
         addTargetToExternalLinks: true
       }
+      
     })
     .then((editor: any) => {
+      var items = document.getElementsByClassName('ck ck-button ck-off');
+      for(var i=0; i<items.length; i++){
+        items[i].setAttribute('tabindex', '0');
+      }
       this.ckEditor = editor;
+      
       this.checkCharacterLength($(editor.getData()).text().length);
-
+      
       editor.model.document.on('change:data', () => {
         document.getElementById("announcementboxdescription").innerHTML = editor.getData();
         this.checkCharacterLength($(editor.getData()).text().length);
