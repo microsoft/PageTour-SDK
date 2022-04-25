@@ -549,7 +549,8 @@ class PageTourAuthor {
     switch (buttonType) {
       case 'expander':
         button.classList.add('button-44')
-        button.setAttribute('title', 'Expand row')
+        button.setAttribute("title", "Row Collapsed");
+        button.setAttribute("aria-label", "Collapse Row Button");
         button.setAttribute('id', 'button-drop_' + index)
         icon.setAttribute('id', 'icon-drop_' + index)
         if (this.stepList[index].message.length <= 100) {
