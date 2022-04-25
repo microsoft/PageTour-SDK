@@ -1183,7 +1183,6 @@ class PageTourPlay {
       
         //this.tether = this.getTetherObject(stepCount)
         this.ApplyAnnouncementTheme(stepCount)
-        this.srSpeak(`${this.tour.headerText} dialog`, 'assertive', 'dialog')
         let tourBoxElement: HTMLElement = document.getElementById('anno-tourBox')
         DomUtils.manageTabbing(tourBoxElement)
         if (opts.navigator.callbackAfterTourStep != null) {

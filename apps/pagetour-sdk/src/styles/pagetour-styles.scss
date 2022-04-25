@@ -935,7 +935,11 @@ $input-text-focus-outline: 1px dotted black;
       background-color: transparent;
       border: 0;
     }
-    
+    .pagetour-dropdown-item:hover,
+    .pagetour-dropdown-item:focus{
+      text-decoration: underline;
+    }
+
     .btn-outline-primary{
       border: none;
     }
@@ -1812,7 +1816,7 @@ $input-text-focus-outline: 1px dotted black;
         }
       }
       .nav-buttons:focus {
-        outline: #000000 dotted 1px;
+        outline: #000000 dotted 2px;
       }
       
       .pt-counter {
@@ -2262,7 +2266,16 @@ $input-text-focus-outline: 1px dotted black;
     box-shadow: 0 4px 20px 0 rgba(34,68,123,0.2);
     word-break: break-all;
     max-width: 576px;
-    
+
+    @media only screen and (max-width: 1240px) {
+      max-width: 336px;
+      max-height: 287px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      max-width: 203px;
+      max-height: 181px;
+    }
   }
   
   .announcement-header {
@@ -2273,6 +2286,16 @@ $input-text-focus-outline: 1px dotted black;
     height: 216px;
     max-height: 216px;
     
+    @media only screen and (max-width: 1240px) {
+      max-width: 336px;
+      max-height: 126px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      max-width: 203px;
+      max-height: 76px;
+    }
+
     .close-button-div {
       display: flex;
       align-items: center;
@@ -2304,21 +2327,8 @@ $input-text-focus-outline: 1px dotted black;
     .close-button:focus {
       outline: #000000 dotted 1px;
     }
-    
-    .announcement-heading {
-      font-size:18px;
-      font-weight: 500;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin: 0 2rem;
-      padding: 1rem 0;
-      height: 100%;
-      display: flex !important;
-      align-items: flex-end;
-      // Todo: make this color contrast to background
-      color: white;
-    }
-    
+
+
     img {
       width: 100%;
       height: 100%;
@@ -2344,12 +2354,39 @@ $input-text-focus-outline: 1px dotted black;
     overflow: auto;
     border-top: 1px solid lightgrey;
     
+    @media only screen and (max-width: 1240px) {
+      padding: 0.6rem 1.4rem;
+      height: 108px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      padding: 0.3rem 0.7rem;
+      height: 83px;
+    }
+
     .card-title{
       font-size: 18px;
       color: #000000;
       margin-top: 1rem;
     }
+
+    .announcement-heading {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex !important;
+      align-items: flex-end;
+
+      @media only screen and (max-width: 1240px) {
+        font-size: 12px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        font-size: 8px;
+      }
+    }
+
     
+
     .anno-text{
       line-height: 1.5;
       color: #000000;
@@ -2358,6 +2395,14 @@ $input-text-focus-outline: 1px dotted black;
       font-size: 14px;
       font-weight: 400;
       
+      @media only screen and (max-width: 1240px) {
+        font-size: 8px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        font-size: 6px;
+      }
+
       ul {
         padding-left: 5%;
         
@@ -2386,17 +2431,43 @@ $input-text-focus-outline: 1px dotted black;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    
+
+    @media only screen and (max-width: 1240px) {
+      padding: 0.6rem 1.4rem;
+    }
+
+    @media only screen and (max-width: 600px) {
+      padding: 0.3rem 0.7rem;
+    }
+
     .announcement-page-counter {
       font-size: 14px;
       line-height: 20px;
       font-family: 'Segoe UI';
       display:flex;
       align-items: center;
-      
+
+      @media only screen and (max-width: 1240px) {
+        font-size: 8px;
+        line-height: 20px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        font-size: 6px;
+        line-height: 12px;
+      }
+
       .sound-buttons {
         padding-left: 4px;
         padding-top: 3px;
+
+        @media only screen and (max-width: 1240px) {
+          padding-top: 0px;
+        }
+
+        @media only screen and (max-width: 600px) {
+          padding-top: 0px;
+        }
       }
     }
     
@@ -2418,6 +2489,22 @@ $input-text-focus-outline: 1px dotted black;
         font-size: 14px;
         line-height: 20px;
         font-weight: 600;
+
+        @media only screen and (max-width: 1024px) {
+          width: 51px;
+          height: 19px;
+          font-size: 8px;
+          margin-left: 10px;
+          line-height: 15px;
+        }
+
+        @media only screen and (max-width: 600px) {
+          width: 27px;
+          height: 12px;
+          font-size: 3px;
+          margin-left: 10px;
+          line-height: 0px;
+        }
       }
       
       .announcement-next-button {
@@ -2433,6 +2520,22 @@ $input-text-focus-outline: 1px dotted black;
         line-height: 20px;
         font-weight: 600;
         margin-left: 10px;
+
+        @media only screen and (max-width: 1024px) {
+          width: 51px;
+          height: 19px;
+          font-size: 8px;
+          margin-left: 10px;
+          line-height: 15px;
+        }
+
+        @media only screen and (max-width: 600px) {
+          width: 27px;
+          height: 12px;
+          font-size: 3px;
+          margin-left: 10px;
+          line-height: 0px;
+        }
       }
     }
   }
@@ -2503,7 +2606,17 @@ $input-text-focus-outline: 1px dotted black;
     box-shadow: 0 0px 30px 18px rgba(34,68,123,0.2);
     word-break: break-all;
     max-width: 576px;
-    
+
+    @media only screen and (max-width: 1240px) {
+      max-width: 336px;
+      max-height: 287px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      max-width: 203px;
+      max-height: 181px;
+    }
+
     .announcement-header {
       margin: 0;
       padding: 0;
@@ -2511,6 +2624,16 @@ $input-text-focus-outline: 1px dotted black;
       max-width: 576px;
       height: 216px;
       max-height: 216px;
+
+      @media only screen and (max-width: 1240px) {
+        max-width: 336px;
+        max-height: 126px;
+      }
+  
+      @media only screen and (max-width: 600px) {
+        max-width: 203px;
+        max-height: 76px;
+      }
       
       .close-button-div {
         display: flex;
@@ -2543,21 +2666,6 @@ $input-text-focus-outline: 1px dotted black;
       .close-button:focus {
         outline: #000000 dotted 1px;
       }
-      
-      .announcement-heading {
-        font-size:18px;
-        font-weight: 500;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin: 0 2rem;
-        padding: 1rem 0;
-        height: 100%;
-        display: flex !important;
-        align-items: flex-end;
-        // Todo: make this color contrast to background
-        color: white;
-      }
-      
       img {
         width: 100%;
         height: 100%;
@@ -2576,23 +2684,44 @@ $input-text-focus-outline: 1px dotted black;
       
     }
   }
-  
-  
-  
-  
   .announcement-content {
     padding: 1.3rem 2rem;
     height: 202px;
     max-height: 100%;
     overflow: auto;
     border-top: 1px solid lightgrey;
-    
+
+    @media only screen and (max-width: 1240px) {
+      padding: 0.6rem 1.4rem;
+      height: 108px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      padding: 0.3rem 0.7rem;
+      height: 83px;
+    }
+
     .card-title{
       font-size: 18px;
       color: #000000;
       margin-top: 1rem;
     }
-    
+
+    .announcement-heading {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex !important;
+      align-items: flex-end;
+
+      @media only screen and (max-width: 1240px) {
+        font-size: 12px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        font-size: 8px;
+      }
+    }
+
     .card-excerpt{
       font-size: 15px;
       line-height: 1.5rem;
@@ -2607,7 +2736,15 @@ $input-text-focus-outline: 1px dotted black;
       font-family: "Segoe UI";
       font-size: 14px;
       font-weight: 400;
-      
+
+      @media only screen and (max-width: 1240px) {
+        font-size: 8px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        font-size: 6px;
+      }
+
       ul {
         padding-left: 5%;
         
@@ -2634,17 +2771,43 @@ $input-text-focus-outline: 1px dotted black;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    
+
+    @media only screen and (max-width: 1240px) {
+      padding: 0.6rem 1.4rem;
+    }
+
+    @media only screen and (max-width: 600px) {
+      padding: 0.3rem 0.7rem;
+    }
+
     .announcement-page-counter {
       font-size: 14px;
       line-height: 20px;
       font-family: 'Segoe UI';
       display:flex;
       align-items: center;
-      
+
+      @media only screen and (max-width: 1240px) {
+        font-size: 8px;
+        line-height: 20px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        font-size: 6px;
+        line-height: 12px;
+      }
+
       .sound-buttons {
         padding-left: 4px;
         padding-top: 3px;
+
+        @media only screen and (max-width: 1240px) {
+          padding-top: 0px;
+        }
+
+        @media only screen and (max-width: 600px) {
+          padding-top: 0px;
+        }
       }
     }
     
@@ -2666,6 +2829,22 @@ $input-text-focus-outline: 1px dotted black;
         font-size: 14px;
         line-height: 20px;
         font-weight: 600;
+
+        @media only screen and (max-width: 1024px) {
+          width: 51px;
+          height: 19px;
+          font-size: 8px;
+          margin-left: 10px;
+          line-height: 15px;
+        }
+
+        @media only screen and (max-width: 600px) {
+          width: 27px;
+          height: 12px;
+          font-size: 3px;
+          margin-left: 10px;
+          line-height: 0px;
+        }
       }
       
       .announcement-next-button {
@@ -2681,6 +2860,22 @@ $input-text-focus-outline: 1px dotted black;
         line-height: 20px;
         font-weight: 600;
         margin-left: 10px;
+
+        @media only screen and (max-width: 1024px) {
+          width: 51px;
+          height: 19px;
+          font-size: 8px;
+          margin-left: 10px;
+          line-height: 15px;
+        }
+
+        @media only screen and (max-width: 600px) {
+          width: 27px;
+          height: 12px;
+          font-size: 3px;
+          margin-left: 10px;
+          line-height: 0px;
+        }
       }
     }
   }
