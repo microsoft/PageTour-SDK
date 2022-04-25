@@ -2740,6 +2740,10 @@ $input-text-focus-outline: 1px dotted black;
         justify-content: flex-end;
         flex-direction: row;
       }
+
+      .close-button-div:focus{
+        outline: #000000 dotted 1px;
+      }
       
       .close-button {
         background-color: transparent;
@@ -2851,6 +2855,7 @@ $input-text-focus-outline: 1px dotted black;
             content: "\E734";
           }
           
+          
         }
 
           //like dislike rating
@@ -2895,9 +2900,13 @@ $input-text-focus-outline: 1px dotted black;
       
     }
 
-    .feedback-privacy a .privacy-description{
+    .feedback-privacy 
+    {
       padding-bottom: 15px;
-      font-family: "Segoe UI";      
+      .a .privacy-description{
+        color: #006ee5;      
+        font-family: "Segoe UI";      
+      }
     }
     .feedback-footer {
       padding-top: 5px;
@@ -2987,17 +2996,26 @@ $input-text-focus-outline: 1px dotted black;
         content: '\F3BF';
         color: var(--like-dislike-onclick-color);
       }
-      .rating__input.like:hover + .rating__label.pagetour__icon.icon-like:before{
+      .rating__input.like:hover + .rating__label.pagetour__icon.icon-like:before
+      {
         content: '\F3BF';
         color: var(--like-dislike-onclick-color);
       }
 
+      .rating__label.pagetour__icon.icon-like:focus-visible::before{
+        content: '\F3BF';
+        color: var(--like-dislike-onclick-color);
+      }
       .rating__input.dislike:hover + .rating__label.pagetour__icon.icon-dislike:before{
         content: '\F3C0';
         color: var(--like-dislike-onclick-color);
       }
   
       .rating__input.dislike:checked + .rating__label.pagetour__icon.icon-dislike:before{
+        content: '\F3C0';
+        color: var(--like-dislike-onclick-color);
+      }
+      .rating__label.pagetour__icon.icon-dislike:focus-visible::before{
         content: '\F3C0';
         color: var(--like-dislike-onclick-color);
       }
@@ -3019,7 +3037,7 @@ $input-text-focus-outline: 1px dotted black;
       }
       // .rating__input:checked + .rating__label,
       .rating__input:hover + .rating__label,
-      .rating__label:focus
+      .rating__label:focus-visible
       {
         cursor: pointer;
         text-decoration: underline;
@@ -3040,6 +3058,7 @@ $input-text-focus-outline: 1px dotted black;
 
   .anno-feedback-privacy{
     a .anno-privacy-description{
+      color: #006ee5;
       font-size: 12px;
     }
   }
