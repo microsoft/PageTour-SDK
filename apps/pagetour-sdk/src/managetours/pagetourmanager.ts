@@ -11,6 +11,7 @@ import { RunTourAction } from "../models/runtouraction";
 import { PageTourTheme } from "../models/pagetourtheme";
 import { DataStore } from "../common/datastore";
 import { TourTypeEnum } from "../models/tourtypeenum";
+import { ToolTipConstants } from "../constants/tooltip.constants";
 declare const navigator: any;
 class PageTourManager {
   private toursList: any = []; // This holds an array of tours
@@ -927,9 +928,18 @@ class PageTourManager {
         button.classList.add("button-36");
         button.setAttribute("title", "Copy Tour Url");
         button.setAttribute("id", "button-copy_" + (tour.id ? tour.id : ""));
-        button.addEventListener("click", (event: Event) =>
-          this.copyTourUrl(tour)
-        );
+        button.addEventListener("click", (event: Event) => 
+        {
+          this.copyTourUrl(tour); 
+          this.showToolTip(event.target as HTMLElement);
+        });
+        button.addEventListener("keyup", (event) => {
+          if(event.key === "Enter")
+          {
+            this.copyTourUrl(tour);
+            this.showToolTip(event.target as HTMLElement);
+          }
+        });
         icon.classList.add("pagetour__icon", "icon-copy");
         break;
       case "edit":
@@ -1074,6 +1084,15 @@ class PageTourManager {
     let url = `${hostName}${startUrl}?tourId=${tour.id}`; 
     this.copyTextToClipboard(url);
   };
+
+  private showToolTip(targetElement:HTMLElement)
+  {
+    let spanElement = document.getElementById("spanToolTipUrlCopyMsg")     
+    spanElement.style.display = 'block'
+    spanElement.style.left = (DomUtils.offset(targetElement).left - ToolTipConstants.leftMoveInPx)+'px'
+    spanElement.style.top = (DomUtils.offsetBrowserViewPort(targetElement).top + ToolTipConstants.topMoveInPx)+'px'
+    setTimeout(function(){spanElement.style.display = 'none'}, ToolTipConstants.timeOutInMs)
+  }
 
   private fallbackCopyTextToClipboard = (text: string) => {
     let textArea = document.createElement("textarea");

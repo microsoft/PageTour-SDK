@@ -2859,3 +2859,14 @@ $input-text-focus-outline: 1px dotted black;
 }
 
 /* Annoucement Box Popup end*/
+
+.pagetour-tooltip
+{
+  display:none;
+  position:absolute;
+  background-color:black;
+  color: #fff;
+  z-index:1;
+  padding: 5px;
+  font-size: 13px !important;
+}
