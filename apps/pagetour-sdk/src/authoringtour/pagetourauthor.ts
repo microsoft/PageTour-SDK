@@ -115,13 +115,14 @@ class PageTourAuthor {
     if (!addTourModal) {
       let addTourBox = this.addTourModalTemplateFn()
       const addTourModal = DomUtils.appendToBody(addTourBox)
-      DomUtils.show(addTourModal)
+      DomUtils.show(addTourModal)     
     } else {
       addTourModal.style.display = 'block'
     }
     let tourForm = document.getElementById('add-tour-form')
-    DomUtils.manageTabbing(tourForm)
-    ;(document.getElementById('tour-activeon') as HTMLInputElement).value = new Date().toISOString().split('T')[0]
+    DomUtils.manageTabbing(tourForm);
+    if(tourType == 'SmartTip') document.getElementById('preview-tour-step-btn').focus();
+    (document.getElementById('tour-activeon') as HTMLInputElement).value = new Date().toISOString().split('T')[0]
     let defaultExpiresOn = new Date().setMonth(new Date().getMonth() + 6)
     ;(document.getElementById('tour-expireson') as HTMLInputElement).value = new Date(defaultExpiresOn)
       .toISOString()
