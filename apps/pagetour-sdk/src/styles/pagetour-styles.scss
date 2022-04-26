@@ -840,6 +840,10 @@ $input-text-focus-outline: 1px dotted black;
         position: absolute;
         top: 26px;
       }
+
+      #searchresultsnumber{
+        margin-top: 5px;
+      }
     }
 
     @media (min-width: 1200px) {
