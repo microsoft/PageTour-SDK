@@ -622,6 +622,24 @@ class PageTourManager {
       tours = tours;
     }
 
+
+    let searchResultsElement = document.getElementById('searchresultsnumber');
+    if(searchText.length>1){
+      searchResultsElement.style.display="block";  
+      if(tours.length == 0){
+        searchResultsElement.innerHTML = "No results found";
+        searchResultsElement.setAttribute('aria-label', "No results found")
+      }
+      else{
+        searchResultsElement.innerHTML = `${tours.length} results found`;
+        searchResultsElement.setAttribute('aria-label', `${tours.length} results found`);
+      }
+      searchResultsElement.focus();
+    }
+    else{
+      searchResultsElement.style.display="none";
+    }
+
     /// updating tours based on Page size selection
     /// Filter display based on items to display
     let itemstoDisplayElement: HTMLSelectElement = document.getElementById(
