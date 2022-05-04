@@ -1,6 +1,6 @@
 {
   "name": "pagetour-sdk.localrepository",
-  "version": "2.0.13",
+  "version": "2.0.14",
   "description": "Local storage repository plugin for pagetour sdk",
   "author": {
     "name": "PageTour-Team",
@@ -33,7 +33,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "pagetour-sdk": "^2.0.13",
+    "pagetour-sdk": "^2.0.14",
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
