@@ -8,6 +8,7 @@
   <div class="tour-dialog">
     <div class="tour-modal">
       <form id="tour-form" method="" onsubmit="return false;">
+        <span id="spanToolTipUrlCopyMsg" class="pagetour-tooltip">Copied to clipboard!</span>
         <div class="all-tour-list-modal tour-content">
           <div class="row margin-bottom-24 display-block">
             <div class="pull-right">
@@ -53,6 +54,7 @@
               >
                 <span class="pagetour__icon icon-search"></span>
               </button>
+              <div id="searchresultsnumber" aria-live="assertive"></div>
             </div>
             <div class="col-lg-4 col-sm-5 items-to-display-box">
               <label title="itemstodisplay">Items to display</label>
@@ -102,32 +104,41 @@
                 id="add-new-dropdown"
                 aria-labelledby="manage-tours-modal-add-tour-btn"
               >
-                <a
+                <button
                   class="pagetour-dropdown-item"
+                  type="button"
+                  tabindex="0"
                   id="option-page-tour"
                   style="cursor: pointer"
-                  >Page Tour</a
+                  >Page Tour</button
                 >
-                <a
+                <button
                   class="pagetour-dropdown-item"
+                  type="button"
+                  tabindex="0"
                   id="option-guided-tour"
                   style="cursor: pointer"
-                  >Interactive Guide</a
+                  >Interactive Guide</button
                 >
-                <a
+                <button
                   class="pagetour-dropdown-item"
+                  type="button"
+                  tabindex="0"
                   id="option-system-announcement"
                   style="cursor: pointer"
-                  >Announcement</a
+                  >Announcement</button
                 >
-                <a
+                <button
                   class="pagetour-dropdown-item"
+                  type="button"
+                  tabindex="0"
                   id="option-smart-tip"
                   style="cursor: pointer"
-                  >Smart Tip</a
+                  >Smart Tip</button
                 >
               </div>
             </div>
+
           </div>
           <div class="row margin-bottom-12">
             <div class="col-lg-12 col-sm-12 button-col pull-right">
@@ -172,6 +183,7 @@
               <table
                 class="pagetour-table pagetour-table-header"
                 summary="Table of tours with options to Edit, Delete and Play Tours"
+                
               >
                 <thead>
                   <tr>

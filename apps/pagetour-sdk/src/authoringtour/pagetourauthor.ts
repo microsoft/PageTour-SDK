@@ -115,13 +115,14 @@ class PageTourAuthor {
     if (!addTourModal) {
       let addTourBox = this.addTourModalTemplateFn()
       const addTourModal = DomUtils.appendToBody(addTourBox)
-      DomUtils.show(addTourModal)
+      DomUtils.show(addTourModal)     
     } else {
       addTourModal.style.display = 'block'
     }
     let tourForm = document.getElementById('add-tour-form')
-    DomUtils.manageTabbing(tourForm)
-    ;(document.getElementById('tour-activeon') as HTMLInputElement).value = new Date().toISOString().split('T')[0]
+    DomUtils.manageTabbing(tourForm);
+    if(tourType == 'SmartTip') document.getElementById('preview-tour-step-btn').focus();
+    (document.getElementById('tour-activeon') as HTMLInputElement).value = new Date().toISOString().split('T')[0]
     let defaultExpiresOn = new Date().setMonth(new Date().getMonth() + 6)
     ;(document.getElementById('tour-expireson') as HTMLInputElement).value = new Date(defaultExpiresOn)
       .toISOString()
@@ -549,7 +550,8 @@ class PageTourAuthor {
     switch (buttonType) {
       case 'expander':
         button.classList.add('button-44')
-        button.setAttribute('title', 'Expand row')
+        button.setAttribute("title", "Row Collapsed");
+        button.setAttribute("aria-label", "Collapse Row Button");
         button.setAttribute('id', 'button-drop_' + index)
         icon.setAttribute('id', 'icon-drop_' + index)
         if (this.stepList[index].message.length <= 100) {
@@ -1174,11 +1176,17 @@ class PageTourAuthor {
       link: {
         addTargetToExternalLinks: true
       }
+      
     })
     .then((editor: any) => {
+      var items = document.getElementsByClassName('ck ck-button ck-off');
+      for(var i=0; i<items.length; i++){
+        items[i].setAttribute('tabindex', '0');
+      }
       this.ckEditor = editor;
+      
       this.checkCharacterLength($(editor.getData()).text().length);
-
+      
       editor.model.document.on('change:data', () => {
         document.getElementById("announcementboxdescription").innerHTML = editor.getData();
         this.checkCharacterLength($(editor.getData()).text().length);
