@@ -1103,7 +1103,7 @@ class PageTourManager {
     let spanElement = document.getElementById("spanToolTipUrlCopyMsg")     
     spanElement.style.display = 'block'
     spanElement.style.left = (DomUtils.offset(targetElement).left - ToolTipConstants.leftMoveInPx)+'px'
-    spanElement.style.top = (DomUtils.offsetBrowserViewPort(targetElement).top + ToolTipConstants.topMoveInPx)+'px'
+    spanElement.style.top = (DomUtils.offsetBrowserViewPort(targetElement).top - document.getElementById('divTblScroll').scrollTop + ToolTipConstants.topMoveInPx)+'px'
     setTimeout(function(){spanElement.style.display = 'none'}, ToolTipConstants.timeOutInMs)
   }
 
