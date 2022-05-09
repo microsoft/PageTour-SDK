@@ -153,30 +153,43 @@ class PageTourManager {
       document.getElementById("option-smart-tip").style.display = "none";
     }
 
-    document.getElementById('all-list-x-btn').onclick = this.closeManageToursModal
-    document.getElementById('manage-tours-modal-close-btn').onclick = this.closeManageToursModal
-    document.getElementById('manage-tours-modal-add-tour-btn').onclick = this.showOptions
-    document.getElementById('option-page-tour').onclick = this.addPageTour
-    document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
-    document.getElementById('option-smart-tip').onclick = this.addSmartTip
-    document.getElementById('option-guided-tour').onclick = this.addGuidedTour
-    document.getElementById('manage-tours-modal-add-tour-div').onmouseleave = this.hideOptions
-    document.getElementById('option-smart-tip').onblur = this.hideOptions
-    document.getElementById('manage-tours-sort').onclick = this.sortTours
-    document.getElementById('searchbytitle').onkeyup = this.searchTours
-    document.getElementById('showexpiredtours-chkbox').onchange = this.searchTours
-    document.getElementById('search-tour-btn-cancel').onclick = this.cancelToursSearch
-    document.getElementById('itemstodisplay').onchange = this.changePageSize
-    document.getElementById('current-tours-page-top').onkeyup = this.changeCurrentPageTop
-    document.getElementById('current-tours-page-bottom').onkeyup = this.changeCurrentPageBottom
-    document.getElementById('tours-table-previous-page-top').onclick = this.movetoToursPreviousPage
-    document.getElementById('tours-table-previous-page-bottom').onclick = this.movetoToursPreviousPage
-    document.getElementById('tours-table-next-page-top').onclick = this.movetoToursNextPage
-    document.getElementById('tours-table-next-page-bottom').onclick = this.movetoToursNextPage
+    document.getElementById("all-list-x-btn").onclick =
+      this.closeManageToursModal;
+    document.getElementById("manage-tours-modal-close-btn").onclick =
+      this.closeManageToursModal;
+    document.getElementById("manage-tours-modal-add-tour-btn").onclick =
+      this.showOptions;
+    document.getElementById("option-page-tour").onclick = this.addPageTour;
+    document.getElementById("option-system-announcement").onclick =
+      this.addSystemAnnouncement;
+    document.getElementById("option-smart-tip").onclick = this.addSmartTip;
+    document.getElementById("option-guided-tour").onclick = this.addGuidedTour;
+    document.getElementById("manage-tours-modal-add-tour-div").onmouseleave =
+      this.hideOptions;
+    document.getElementById("option-smart-tip").onblur = this.hideOptions;
+    document.getElementById("manage-tours-sort").onclick = this.sortTours;
+    document.getElementById("searchbytitle").onkeyup = this.searchTours;
+    document.getElementById("showexpiredtours-chkbox").onchange =
+      this.searchTours;
+    document.getElementById("search-tour-btn-cancel").onclick =
+      this.cancelToursSearch;
+    document.getElementById("itemstodisplay").onchange = this.changePageSize;
+    document.getElementById("current-tours-page-top").onkeyup =
+      this.changeCurrentPageTop;
+    document.getElementById("current-tours-page-bottom").onkeyup =
+      this.changeCurrentPageBottom;
+    document.getElementById("tours-table-previous-page-top").onclick =
+      this.movetoToursPreviousPage;
+    document.getElementById("tours-table-previous-page-bottom").onclick =
+      this.movetoToursPreviousPage;
+    document.getElementById("tours-table-next-page-top").onclick =
+      this.movetoToursNextPage;
+    document.getElementById("tours-table-next-page-bottom").onclick =
+      this.movetoToursNextPage;
 
-    let manageTourFormModal = document.getElementById('tour-form')
-    DomUtils.manageTabbing(manageTourFormModal)
-    this.hideOptions()
+    let manageTourFormModal = document.getElementById("tour-form");
+    DomUtils.manageTabbing(manageTourFormModal);
+    this.hideOptions();
 
     try {
       const tours: Tutorial[] = await this.dataStore.GetToursByPageContext(
@@ -362,9 +375,8 @@ class PageTourManager {
 
   // Opens the option
   private showOptions = () => {
-    document.getElementById("add-new-dropdown").style.display = 'inline';
-  }
-
+    document.getElementById("add-new-dropdown").style.display = "inline";
+  };
 
   private hideOptions = () => {
     document.getElementById("add-new-dropdown").style.display = "none";
@@ -879,6 +891,7 @@ class PageTourManager {
         icon.setAttribute("id", "icon-drop_" + (tour.id ? tour.id : ""));
         button.classList.add("button-44");
         button.setAttribute("title", "Row Collapsed");
+        button.setAttribute("aria-label", "Expand Row Button");
         button.setAttribute("id", "button-drop_" + (tour.id ? tour.id : ""));
         if (
           (tour.description != null && tour.description.length > 50) ||
@@ -1053,7 +1066,7 @@ class PageTourManager {
     if (opts.navigator && opts.navigator.getStartPageUrl) {
       startUrl = opts.navigator.getStartPageUrl(startUrl);
     }
-    let url = `${hostName}${startUrl}?tourId=${tour.id}`; 
+    let url = `${hostName}${startUrl}?tourId=${tour.id}`;
     this.copyTextToClipboard(url);
   };
 
@@ -1106,7 +1119,7 @@ class PageTourManager {
       iconExpander.parentElement.setAttribute("title", "Row Expanded");
       iconExpander.parentElement.setAttribute(
         "aria-label",
-        "Expand Row Button"
+        "Collapse Row Button"
       );
       messageClass = "message-desc-expanded";
       document
@@ -1116,7 +1129,7 @@ class PageTourManager {
       iconExpander.parentElement.setAttribute("title", "Row Collapsed");
       iconExpander.parentElement.setAttribute(
         "aria-label",
-        "Collapse Row Button"
+        "Expand Row Button"
       );
       document
         .getElementById("icon-drop_" + tourId)
