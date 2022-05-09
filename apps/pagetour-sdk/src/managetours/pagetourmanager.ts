@@ -910,7 +910,7 @@ class PageTourManager {
         icon.setAttribute("id", "icon-drop_" + (tour.id ? tour.id : ""));
         button.classList.add("button-44");
         button.setAttribute("title", "Row Collapsed");
-        button.setAttribute("aria-label", "Expand Row Button");
+        button.setAttribute("aria-label", "Expand Row");
         button.setAttribute("id", "button-drop_" + (tour.id ? tour.id : ""));
         if (
           (tour.description != null && tour.description.length > 50) ||
@@ -1154,20 +1154,14 @@ class PageTourManager {
 
     if (iconExpander.classList.contains("icon-drop")) {
       iconExpander.parentElement.setAttribute("title", "Row Expanded");
-      iconExpander.parentElement.setAttribute(
-        "aria-label",
-        "Collapse Row Button"
-      );
+      iconExpander.parentElement.setAttribute("aria-label", "Collapse Row");
       messageClass = "message-desc-expanded";
       document
         .getElementById("icon-drop_" + tourId)
         .setAttribute("class", "pagetour__icon icon-drop-up");
     } else {
       iconExpander.parentElement.setAttribute("title", "Row Collapsed");
-      iconExpander.parentElement.setAttribute(
-        "aria-label",
-        "Expand Row Button"
-      );
+      iconExpander.parentElement.setAttribute("aria-label", "Expand Row");
       document
         .getElementById("icon-drop_" + tourId)
         .setAttribute("class", "pagetour__icon icon-drop");
