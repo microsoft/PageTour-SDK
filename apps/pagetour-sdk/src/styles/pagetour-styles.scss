@@ -2898,7 +2898,7 @@ $input-text-focus-outline: 1px dotted black;
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.32);
-  box-sizing: border-box;
+  // box-sizing: border-box;
   color: rgb(51, 51, 51);
   opacity: 1;
   top: 0;
@@ -2910,14 +2910,14 @@ $input-text-focus-outline: 1px dotted black;
   
   .feedback-card{
     background: rgb(255, 255, 255);
-    width: 380px;
-    flex-basis: 24%; 
+    // width: 380px;
+    flex-basis: 20%; 
     transition:0.3s;
-    box-shadow: 0px 11px 20px 2px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 25.6px 57.6px rgba(0, 0, 0, 0.22), 0px 4.8px 14.4px rgba(0, 0, 0, 0.18);
     word-break: break-all;
     max-width: 576px;
     padding:24px;
-    color: #000000de;
+    // color: #000000de;
     outline-color: rgba(0, 0, 0, 0.87);
 
     .feedback-header {
@@ -2959,11 +2959,12 @@ $input-text-focus-outline: 1px dotted black;
       
       .feedback-heading {
         word-break: break-word;
-        line-height: 32px;
+        line-height: 20px;
         color: #000000;
-        //margin:0;
+        margin-bottom: 20px;
         font-family: "Segoe UI";
-        font-size: 20px;
+        font-size: 16px;
+        // font-weight: 500;
         font-weight: bold;
       }
       
@@ -2979,54 +2980,54 @@ $input-text-focus-outline: 1px dotted black;
      
     
       .feedback-description{
-        //padding-bottom: 10px;
+        padding-bottom: 8px;
         word-break: break-word;
-        line-height: 23px;
+        line-height: 20px;
         color: rgba(0, 0, 0, 0.87);
         margin:0;
         font-family: "Segoe UI";
-        font-size: 17px;
-        
-        
+        font-size: 14px;   
       }
       
       .feedback-type{
-        display: flex;
-        justify-content: center;
-        padding:13px;
+        // display: flex;
+        // justify-content: center;
+        // padding-top:13px;
+        padding-left: 4px;
+        padding-bottom: 13px;
         
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
         //5star rating
         .pt-feedback_5star-rating {
           .rating__label {
             cursor: pointer;
-            padding: 3px;
-            font-size: 25px;
+            // padding: 3px;
+            font-size: 30px;
             color: var(--star-color);
-        
+            margin-bottom: 0px;
             font-family: 'Segoe MDL2 Assets';
             font-weight: normal;
             font-style: normal;
             position: relative;
-            top: 1px;
+            // top: 1px;
             display: inline-block;
-            line-height: 1;
+            // line-height: 1;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-          }
-          
+          }         
           .rating__input {
             display: none
-          }
-          
+          }         
           .rating__input--none {
             display: none
           }
-          .rating__input--none:checked .rating__label{
-         
+          .rating__input--none:checked .rating__label
+          {
             &:before{
               content: '\E734';
-            }
-        
+            }        
           }
           .rating__label{
 
@@ -3034,19 +3035,24 @@ $input-text-focus-outline: 1px dotted black;
               content: "\E735";
             }
           }
-          .rating__input:checked ~ .rating__label{
+          .rating__input:checked ~ .rating__label
+          {
             &:before{
               content: "\E734";
             }
           }
-          .rating-group:hover .rating__label{
+          .rating-group:hover .rating__label,
+          .rating-group:focus-visible .rating__label
+          {
             &:before{
               content: "\E735"; 
             }
           }
         
           
-          .rating__input:hover ~ .rating__label:before{
+          .rating__input:hover ~ .rating__label:before,
+          .rating__input:focus ~ .rating__label:before
+          {
             content: "\E734";
           }
           
@@ -3057,19 +3063,21 @@ $input-text-focus-outline: 1px dotted black;
         .pt-feedback_like-rating {
           .rating__label {
             cursor: pointer;
-            padding: 3px;
+            // padding-left: 1px;
+            // padding-right: 6px;
+            padding-top: 6px;
+            padding-right: 5px;
             font-size: 30px;
 
             font-family: 'Full MDL2 Assets';
             font-weight: normal;
             font-style: normal;
             position: relative;
-            top: 1px;
+            // top: 1px;
             display: inline-block;
-            line-height: 1;
+            // line-height: 1;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            
           }
           .rating__input {
             display:none;
@@ -3089,31 +3097,31 @@ $input-text-focus-outline: 1px dotted black;
             color: var(--like-dislike-onclick-color);
           }
         }
-
-      }
-      
-      
+      }      
     }
 
     .feedback-privacy 
     {
-      padding-bottom: 15px;
-      .a .privacy-description{
+      padding-bottom: 6px;
+      a .privacy-description{
+        font-size: 14px;
+        line-height: 16px;
         color: #006ee5;      
         font-family: "Segoe UI";      
       }
     }
     .feedback-footer {
-      padding-top: 5px;
+      // padding-top: 5px;
       display: flex;
+      gap: 12px;
       flex-direction: row;
-      justify-content: flex-end;
+      justify-content: flex-start;
       
       .feedback-cancel-button {
         background: rgba(0, 0, 0, 0.2);
         color: #000;
         outline: inherit;
-        margin-right: 5px;
+        // margin-right: 5px;
       }
       .feedback-cancel-button:focus{
         outline: #000000 dotted 1px;
@@ -3123,17 +3131,20 @@ $input-text-focus-outline: 1px dotted black;
       }
       button {
         outline: inherit;
-        width: 70px;
+        width: 110px;
         height: 32px;
         background-color:#0063b1;
         color: white;
         border: 0px;
-        //border-radius: 2px;
-        box-sizing: border-box;
+        padding: 0px 12px;
+        gap: 10px;
+        // border-radius: 2px;
+        // box-sizing: border-box;
+        text-align: center;
         font-family: 'Segoe UI';
-        font-size: 15px;
-        line-height: 20px;
-        //font-weight: 600;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
       }
 
       ;
@@ -3148,14 +3159,16 @@ $input-text-focus-outline: 1px dotted black;
 
 // ----- announcement feedback
 .anno-feedback{
-  display: flex;
+  // display: flex; --changed
+  display: block;
   justify-content: space-between;
   padding-left: 2rem;
   padding-bottom: 1.2rem;
   padding-right: 2rem;
   .feedback-content{
     display: inline-flex;
-    height: 24px;
+    // height: 24px; --changed
+    height: 18px;
     .anno-feedback-heading{
       
       font-size: 12px;
