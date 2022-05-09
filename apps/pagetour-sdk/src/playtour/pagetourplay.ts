@@ -49,10 +49,16 @@ class PageTourPlay {
   }
 
   private hideSmartTipOnClick() {
+    let objThis = this;
     window.addEventListener("mouseup", function() {
-      Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
-        element.style.display = "none"
-      });
+      objThis.hideSmartTip();
+    });
+  }
+
+  private hideSmartTip()
+  {
+    Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+      element.style.display = "none"
     });
   }
 
@@ -138,7 +144,33 @@ class PageTourPlay {
             smartTipPopup.id = `${smartTipId}-popup`;
             (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
             (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
+            (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('keyup', (event) => 
+            { 
+              if(event.key === "Enter")
+              {
+                this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed');
+
+                if (callback != null) 
+                  callback(objTour.tourtype);
+              }
+              
+              if(event.key === "Enter" || event.key === "Escape")
+              {
+                this.hideSmartTip();
+              }              
+            });
+
             (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
+            (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('keyup', (event) => 
+            {
+              if(event.key === "Enter" || event.key === "Escape")
+              {
+                this.hideSmartTip();              
+
+                if (event.key === "Enter" && callback != null) 
+                  callback(objTour.tourtype);
+              }
+            });
   
             let smartTip = DomUtils.appendToBody(this.smartTipFn());
             smartTip.id = smartTipId;
@@ -153,72 +185,21 @@ class PageTourPlay {
             arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
             smartTipPopup.appendChild(arrowDiv);
   
+            let objThis = this;
+
             smartTip.addEventListener("mouseover", function() {
-              Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
-                element.style.display = "none"
-              });
-              let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
-              toolTipPopper.style.display = "flex";
-              toolTipPopper.style.zIndex = zIndex;
-              let popperPlacement = element.position as Placement
-              switch (element.position) {
-                case 'top':
-                  arrowDiv.className = 'arrow-pointer arrow-down'
-                  smartTipPopup.style.flexDirection = 'column'
-                  arrowDiv.style.alignSelf = 'center'
-                  arrowDiv.style.margin = '0px 0px'
-                  // todo : apply as per the theme color
-                  arrowDiv.style.borderTopColor = '#0078D4'
-                  arrowDiv.style.borderLeftColor = 'transparent'
-                  arrowDiv.style.borderRightColor = 'transparent'
-                  arrowDiv.style.borderBottomColor = 'transparent'
-                  break
-  
-                case 'bottom':
-                  arrowDiv.className = 'arrow-pointer arrow-up'
-                  smartTipPopup.style.flexDirection = 'column-reverse'
-                  arrowDiv.style.alignSelf = 'center'
-                  arrowDiv.style.margin = '0px 0px'
-                  arrowDiv.style.borderTopColor = 'transparent'
-                  arrowDiv.style.borderLeftColor = 'transparent'
-                  arrowDiv.style.borderRightColor = 'transparent'
-                  arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
-                  break
-  
-                case 'left':
-                  smartTipPopup.style.flexDirection = 'row'
-                  arrowDiv.className = 'arrow-pointer arrow-right'
-                  arrowDiv.style.alignSelf = 'center'
-                  arrowDiv.style.margin = '0px 0px'
-                  arrowDiv.style.borderTopColor = 'transparent'
-                  arrowDiv.style.borderLeftColor = '#0078D4'
-                  arrowDiv.style.borderRightColor = 'transparent'
-                  arrowDiv.style.borderBottomColor = 'transparent'
-                  break
-  
-                case 'right':
-                  smartTipPopup.style.flexDirection = 'row-reverse'
-                  arrowDiv.className = 'arrow-pointer arrow-left'
-                  arrowDiv.style.alignSelf = 'center'
-                  arrowDiv.style.margin = '0px 0px'
-                  arrowDiv.style.borderTopColor = 'transparent'
-                  arrowDiv.style.borderLeftColor = 'transparent'
-                  arrowDiv.style.borderRightColor = '#0078D4'
-                  arrowDiv.style.borderBottomColor = 'transparent'
-                  break
-  
+              objThis.setToolTipPopupArrowPointer(objTour, element, arrowDiv, smartTipPopup, smartTip, i, zIndex);
+            });
+
+            smartTip.addEventListener("keyup", function(event) {
+              if(event.key === "Enter")
+              {
+                objThis.setToolTipPopupArrowPointer(objTour, element, arrowDiv, smartTipPopup, smartTip, i, zIndex);
               }
-  
-              let popperInstance = new Popper(smartTip, toolTipPopper, {
-                placement: popperPlacement,
-                modifiers: {
-                  offset: {
-                    offset: '0, 10'
-                  }
-                }
-              });
-              popperInstance.enableEventListeners();
-              popperInstance.scheduleUpdate();
+              else if(event.key === "Escape")
+              {
+                objThis.hideSmartTip();
+              }
             });
           } else {
             if(opts.navigator.callbackOnTourStepFailure != null) {
@@ -228,6 +209,60 @@ class PageTourPlay {
             return;
           }
       }
+  }
+
+  private setToolTipPopupArrowPointer(objTour: Tutorial, element : any, arrowDiv:HTMLDivElement, smartTipPopup:HTMLElement, smartTip:HTMLElement, i:number, zIndex:string) 
+  {
+    Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+      element.style.display = "none"
+    });
+    let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
+    toolTipPopper.style.display = "flex";
+    toolTipPopper.style.zIndex = zIndex;
+    let popperPlacement = element.position as Placement
+
+    arrowDiv.style.alignSelf = 'center'
+    arrowDiv.style.margin = '0px 0px'
+    arrowDiv.style.borderColor = 'transparent'
+
+    switch (element.position) {
+      case 'top':
+        arrowDiv.className = 'arrow-pointer arrow-down'
+        smartTipPopup.style.flexDirection = 'column'
+        arrowDiv.style.borderTopColor = '#0078D4'
+        break
+
+      case 'bottom':
+        arrowDiv.className = 'arrow-pointer arrow-up'
+        smartTipPopup.style.flexDirection = 'column-reverse'
+        arrowDiv.style.borderBottomColor = '#0078D4'
+        break
+
+      case 'left':
+        smartTipPopup.style.flexDirection = 'row'
+        arrowDiv.className = 'arrow-pointer arrow-right'
+        arrowDiv.style.borderLeftColor = '#0078D4'
+        break
+
+      case 'right':
+        smartTipPopup.style.flexDirection = 'row-reverse'
+        arrowDiv.className = 'arrow-pointer arrow-left'
+        arrowDiv.style.borderRightColor = '#0078D4'
+        break
+    }
+
+    let popperInstance = new Popper(smartTip, toolTipPopper, {
+      placement: popperPlacement,
+      modifiers: {
+        offset: {
+          offset: '0, 10'
+        }
+      }
+    });
+    popperInstance.enableEventListeners();
+    popperInstance.scheduleUpdate();
+
+    return;
   }
 
   private async dismissSmartTip(id: string, tour: Tutorial, userAction: string, step: string, operation: string) {

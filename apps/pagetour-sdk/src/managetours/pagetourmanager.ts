@@ -11,6 +11,7 @@ import { RunTourAction } from "../models/runtouraction";
 import { PageTourTheme } from "../models/pagetourtheme";
 import { DataStore } from "../common/datastore";
 import { TourTypeEnum } from "../models/tourtypeenum";
+import { ToolTipConstants } from "../constants/tooltip.constants";
 declare const navigator: any;
 class PageTourManager {
   private toursList: any = []; // This holds an array of tours
@@ -634,6 +635,24 @@ class PageTourManager {
       tours = tours;
     }
 
+
+    let searchResultsElement = document.getElementById('searchresultsnumber');
+    if(searchText.length>1){
+      searchResultsElement.style.display="block";  
+      if(tours.length == 0){
+        searchResultsElement.innerHTML = "No results found";
+        searchResultsElement.setAttribute('aria-label', "No results found")
+      }
+      else{
+        searchResultsElement.innerHTML = `${tours.length} results found`;
+        searchResultsElement.setAttribute('aria-label', `${tours.length} results found`);
+      }
+      searchResultsElement.focus();
+    }
+    else{
+      searchResultsElement.style.display="none";
+    }
+
     /// updating tours based on Page size selection
     /// Filter display based on items to display
     let itemstoDisplayElement: HTMLSelectElement = document.getElementById(
@@ -922,9 +941,18 @@ class PageTourManager {
         button.classList.add("button-36");
         button.setAttribute("title", "Copy Tour Url");
         button.setAttribute("id", "button-copy_" + (tour.id ? tour.id : ""));
-        button.addEventListener("click", (event: Event) =>
-          this.copyTourUrl(tour)
-        );
+        button.addEventListener("click", (event: Event) => 
+        {
+          this.copyTourUrl(tour); 
+          this.showToolTip(event.target as HTMLElement);
+        });
+        button.addEventListener("keyup", (event) => {
+          if(event.key === "Enter")
+          {
+            this.copyTourUrl(tour);
+            this.showToolTip(event.target as HTMLElement);
+          }
+        });
         icon.classList.add("pagetour__icon", "icon-copy");
         break;
       case "edit":
@@ -1069,6 +1097,15 @@ class PageTourManager {
     let url = `${hostName}${startUrl}?tourId=${tour.id}`;
     this.copyTextToClipboard(url);
   };
+
+  private showToolTip(targetElement:HTMLElement)
+  {
+    let spanElement = document.getElementById("spanToolTipUrlCopyMsg")     
+    spanElement.style.display = 'block'
+    spanElement.style.left = (DomUtils.offset(targetElement).left - ToolTipConstants.leftMoveInPx)+'px'
+    spanElement.style.top = (DomUtils.offsetBrowserViewPort(targetElement).top + ToolTipConstants.topMoveInPx)+'px'
+    setTimeout(function(){spanElement.style.display = 'none'}, ToolTipConstants.timeOutInMs)
+  }
 
   private fallbackCopyTextToClipboard = (text: string) => {
     let textArea = document.createElement("textarea");

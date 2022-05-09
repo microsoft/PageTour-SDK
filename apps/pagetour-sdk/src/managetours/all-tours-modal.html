@@ -3,6 +3,7 @@
   <div class="tour-dialog">
     <div class="tour-modal">
       <form id="tour-form" method="" onsubmit="return false;">
+        <span id="spanToolTipUrlCopyMsg" class="pagetour-tooltip">Copied to clipboard!</span>
         <div class="all-tour-list-modal tour-content">
           <div class="row margin-bottom-24 display-block">
             <div class="pull-right">
@@ -27,6 +28,7 @@
               <button class="pagetour-btn--search search" aria-label="search" type="button">
                 <span class="pagetour__icon icon-search"></span>
               </button>
+              <div id="searchresultsnumber" aria-live="assertive"></div>
             </div>
             <div class="col-lg-4 col-sm-5 items-to-display-box">
               <label title="itemstodisplay">Items to display</label>
