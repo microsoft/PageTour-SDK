@@ -166,6 +166,7 @@ class PageTourPlay {
               if(event.key === "Enter" || event.key === "Escape")
               {
                 this.hideSmartTip();              
+                (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement).focus();
 
                 if (event.key === "Enter" && callback != null) 
                   callback(objTour.tourtype);
@@ -192,13 +193,47 @@ class PageTourPlay {
             });
 
             smartTip.addEventListener("keyup", function(event) {
+              let objThisEvnt = event;
               if(event.key === "Enter")
               {
                 objThis.setToolTipPopupArrowPointer(objTour, element, arrowDiv, smartTipPopup, smartTip, i, zIndex);
+                
+                let focusableElements = smartTipPopup.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                let firstFocusableElement = focusableElements[0] as HTMLElement;
+                let lastFocusableElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+                firstFocusableElement.focus();
+                
+                lastFocusableElement.addEventListener("keydown", function(event) {
+                  if(event.key === "Escape")
+                  {
+                    objThis.hideSmartTip();
+                    (objThisEvnt.target as HTMLElement).focus();
+                  }
+                  else if(event.key === "Tab" && event.target === event.currentTarget && !event.shiftKey)
+                  {
+                    firstFocusableElement.focus();
+                    event.preventDefault();
+                  }
+                });
+
+                firstFocusableElement.addEventListener("keydown", function(event) {
+                  if(event.key === "Escape")
+                  {
+                    objThis.hideSmartTip();
+                    (objThisEvnt.target as HTMLElement).focus();
+                  }
+                  else if(event.key === "Tab" && event.target === event.currentTarget && event.shiftKey)
+                  {
+                    lastFocusableElement.focus();
+                    event.preventDefault();
+                  }
+                });
               }
               else if(event.key === "Escape")
               {
                 objThis.hideSmartTip();
+                (event.target as HTMLElement).focus();
               }
             });
           } else {
