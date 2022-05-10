@@ -1,9 +1,4 @@
-<div
-  id="manage-tours-modal"
-  role="dialog"
-  aria-label="Page Tour"
-  class="pagetour"
->
+<div id="manage-tours-modal" role="dialog" aria-label="Page Tour" class="pagetour">
   <div id="msg-announcement" aria-live="assertive"></div>
   <div class="tour-dialog">
     <div class="tour-modal">
@@ -12,13 +7,8 @@
         <div class="all-tour-list-modal tour-content">
           <div class="row margin-bottom-24 display-block">
             <div class="pull-right">
-              <button
-                id="all-list-x-btn"
-                type="button"
-                class="icon-holder-36-close-with-margin"
-                title="Close"
-                aria-label="Close Page Tour dialog"
-              >
+              <button id="all-list-x-btn" type="button" class="icon-holder-36-close-with-margin" title="Close"
+                aria-label="Close Page Tour dialog">
                 <i class="pagetour__icon icon-close"></i>
               </button>
             </div>
@@ -29,29 +19,13 @@
           <div class="row margin-bottom-12">
             <div class="col-lg-4 col-sm-6 search-box">
               <label title="searchbytitle">Search</label>
-              <input
-                id="searchbytitle"
-                title="Search by keyword"
-                class="pagetour__input__search"
-                type="text"
-                aria-live="assertive"
-                aria-label="Edit Search text"
-                placeholder="Enter keyword to search"
-              />
-              <button
-                class="pagetour-btn--search clear"
-                id="search-tour-btn-cancel"
-                type="button"
-                style="display: none"
-                aria-label="clear search"
-              >
+              <input id="searchbytitle" title="Search by keyword" class="pagetour__input__search" type="text"
+                aria-live="assertive" aria-label="Edit Search text" placeholder="Enter keyword to search" />
+              <button class="pagetour-btn--search clear" id="search-tour-btn-cancel" type="button" style="display: none"
+                aria-label="clear search">
                 <span class="pagetour__icon icon-close"></span>
               </button>
-              <button
-                class="pagetour-btn--search search"
-                aria-label="search"
-                type="button"
-              >
+              <button class="pagetour-btn--search search" aria-label="search" type="button">
                 <span class="pagetour__icon icon-search"></span>
               </button>
               <div id="searchresultsnumber" aria-live="assertive"></div>
@@ -59,12 +33,8 @@
             <div class="col-lg-4 col-sm-5 items-to-display-box">
               <label title="itemstodisplay">Items to display</label>
               <span class="pagetour__input__select--icon">
-                <select
-                  id="itemstodisplay"
-                  class="pagetour__input__select pagetour__input__select--small"
-                  title="Items to display"
-                  aria-label="page size select box"
-                >
+                <select id="itemstodisplay" class="pagetour__input__select pagetour__input__select--small"
+                  title="Items to display" aria-label="page size select box">
                   <option label="10" value="10" selected="selected">10</option>
                   <option label="25" value="25">25</option>
                   <option label="50" value="50">50</option>
@@ -74,68 +44,29 @@
             <div class="col-lg-2 col-sm-5 items-to-display-box">
               <div style="min-height: 30px"></div>
               <div>
-                <input
-                  id="showexpiredtours-chkbox"
-                  title="Check"
-                  type="checkbox"
-                  aria-label="Show Expired Tours"
-                />
+                <input id="showexpiredtours-chkbox" title="Check" type="checkbox" aria-label="Show Expired Tours" />
                 <label for="showexpiredtours-chkbox" id="showexpiredtours-lbl">
                   Include Expired Tours
                 </label>
               </div>
             </div>
 
-            <div
-              class="dropdown col-lg-2 col-sm-5 items-to-display-box add-new"
-              id="manage-tours-modal-add-tour-div"
-            >
-              <button
-                class="btn pull-right btn-outline-primary"
-                type="button"
-                id="manage-tours-modal-add-tour-btn"
-                data-toggle="dropdown"
-              >
+            <div class="dropdown col-lg-2 col-sm-5 items-to-display-box add-new" id="manage-tours-modal-add-tour-div">
+              <button class="btn pull-right btn-outline-primary" type="button" id="manage-tours-modal-add-tour-btn"
+                data-toggle="dropdown">
                 <i class="pagetour__icon icon-plus icon-inline"></i>
                 Add New
               </button>
-              <div
-                class="pagetour-dropdown-menu"
-                id="add-new-dropdown"
-                aria-labelledby="manage-tours-modal-add-tour-btn"
-              >
-                <button
-                  class="pagetour-dropdown-item"
-                  type="button"
-                  tabindex="0"
-                  id="option-page-tour"
-                  style="cursor: pointer"
-                  >Page Tour</button
-                >
-                <button
-                  class="pagetour-dropdown-item"
-                  type="button"
-                  tabindex="0"
-                  id="option-guided-tour"
-                  style="cursor: pointer"
-                  >Interactive Guide</button
-                >
-                <button
-                  class="pagetour-dropdown-item"
-                  type="button"
-                  tabindex="0"
-                  id="option-system-announcement"
-                  style="cursor: pointer"
-                  >Announcement</button
-                >
-                <button
-                  class="pagetour-dropdown-item"
-                  type="button"
-                  tabindex="0"
-                  id="option-smart-tip"
-                  style="cursor: pointer"
-                  >Smart Tip</button
-                >
+              <div class="pagetour-dropdown-menu" id="add-new-dropdown"
+                aria-labelledby="manage-tours-modal-add-tour-btn">
+                <button class="pagetour-dropdown-item" type="button" tabindex="0" id="option-page-tour"
+                  style="cursor: pointer">Page Tour</button>
+                <button class="pagetour-dropdown-item" type="button" tabindex="0" id="option-guided-tour"
+                  style="cursor: pointer">Interactive Guide</button>
+                <button class="pagetour-dropdown-item" type="button" tabindex="0" id="option-system-announcement"
+                  style="cursor: pointer">Announcement</button>
+                <button class="pagetour-dropdown-item" type="button" tabindex="0" id="option-smart-tip"
+                  style="cursor: pointer">Smart Tip</button>
               </div>
             </div>
 
@@ -143,35 +74,17 @@
           <div class="row margin-bottom-12">
             <div class="col-lg-12 col-sm-12 button-col pull-right">
               <div class="pagetour-pagination pull-right">
-                <button
-                  id="tours-table-previous-page-top"
-                  class="pagetour-btn pagetour-btn--action"
-                  type="button"
-                  aria-label="Previous Page"
-                >
+                <button id="tours-table-previous-page-top" class="pagetour-btn pagetour-btn--action" type="button"
+                  aria-label="Previous Page">
                   <span class="pagetour__icon icon-chevron-left"></span>
                   <span class="font-caption-alt">Prev</span>
                 </button>
-                <input
-                  class="font-caption-alt page-number"
-                  id="current-tours-page-top"
-                  type="number"
-                  value="1"
-                  min="1"
-                  placeholder="1"
-                />
+                <input class="font-caption-alt page-number" id="current-tours-page-top" type="number" value="1" min="1"
+                  placeholder="1" />
                 <span class="font-caption-alt page-text">of</span>
-                <span
-                  id="total-tours-pages-top"
-                  class="font-caption-alt page-text"
-                  >1</span
-                >
-                <button
-                  id="tours-table-next-page-top"
-                  class="pagetour-btn pagetour-btn--action"
-                  type="button"
-                  aria-label="Next Page"
-                >
+                <span id="total-tours-pages-top" class="font-caption-alt page-text">1</span>
+                <button id="tours-table-next-page-top" class="pagetour-btn pagetour-btn--action" type="button"
+                  aria-label="Next Page">
                   <span class="font-caption-alt">Next</span>
                   <span class="pagetour__icon icon-chevron-right"></span>
                 </button>
@@ -179,12 +92,9 @@
             </div>
           </div>
           <div class="row margin-bottom-24">
-            <div class="scrollable">
-              <table
-                class="pagetour-table pagetour-table-header"
-                summary="Table of tours with options to Edit, Delete and Play Tours"
-                
-              >
+            <div class="scrollable" id="divTblScroll">
+              <table class="pagetour-table pagetour-table-header"
+                summary="Table of tours with options to Edit, Delete and Play Tours">
                 <thead>
                   <tr>
                     <th class="expander-column-header">
@@ -195,17 +105,10 @@
                     <th class="desc-column-header">Description</th>
                     <th class="title-column-header">Start Page Name</th>
                     <th class="date-column-header">
-                      <button
-                        id="manage-tours-sort"
-                        type="button"
-                        class="button-sortcolumn"
-                        aria-label="sort tours by date"
-                      >
+                      <button id="manage-tours-sort" type="button" class="button-sortcolumn"
+                        aria-label="sort tours by date">
                         Date Added
-                        <i
-                          class="pagetour__icon icon-order-down"
-                          id="icon-tours-sortorder"
-                        ></i>
+                        <i class="pagetour__icon icon-order-down" id="icon-tours-sortorder"></i>
                       </button>
                     </th>
                     <th class="button-column-header" id="edit_button_header">
@@ -223,43 +126,22 @@
                     <th class="button-column-header">Play</th>
                   </tr>
                 </thead>
-                <tbody
-                  id="all-tours-table-body"
-                  class="font-caption-alt"
-                ></tbody>
+                <tbody id="all-tours-table-body" class="font-caption-alt"></tbody>
               </table>
             </div>
             <div class="pagination-panel width-100">
               <div class="pagetour-pagination pull-right">
-                <button
-                  id="tours-table-previous-page-bottom"
-                  class="pagetour-btn pagetour-btn--action"
-                  type="button"
-                  aria-label="Previous Page"
-                >
+                <button id="tours-table-previous-page-bottom" class="pagetour-btn pagetour-btn--action" type="button"
+                  aria-label="Previous Page">
                   <span class="pagetour__icon icon-chevron-left"></span>
                   <span class="font-caption-alt">Prev</span>
                 </button>
-                <input
-                  class="font-caption-alt page-number"
-                  id="current-tours-page-bottom"
-                  type="number"
-                  value="1"
-                  min="1"
-                  placeholder="1"
-                />
+                <input class="font-caption-alt page-number" id="current-tours-page-bottom" type="number" value="1"
+                  min="1" placeholder="1" />
                 <span class="font-caption-alt page-text">of</span>
-                <span
-                  id="total-tours-pages-bottom"
-                  class="font-caption-alt page-text"
-                  >1</span
-                >
-                <button
-                  id="tours-table-next-page-bottom"
-                  class="pagetour-btn pagetour-btn--action"
-                  type="button"
-                  aria-label="Next Page"
-                >
+                <span id="total-tours-pages-bottom" class="font-caption-alt page-text">1</span>
+                <button id="tours-table-next-page-bottom" class="pagetour-btn pagetour-btn--action" type="button"
+                  aria-label="Next Page">
                   <span class="font-caption-alt">Next</span>
                   <span class="pagetour__icon icon-chevron-right"></span>
                 </button>
@@ -268,12 +150,8 @@
           </div>
           <div class="row margin-0">
             <div class="width-100">
-              <button
-                id="manage-tours-modal-close-btn"
-                class="pagetour-btn--secondary footer-btn pull-right"
-                title="Close"
-                aria-label="Close Page Tour dialog"
-              >
+              <button id="manage-tours-modal-close-btn" class="pagetour-btn--secondary footer-btn pull-right"
+                title="Close" aria-label="Close Page Tour dialog">
                 Close
               </button>
             </div>
