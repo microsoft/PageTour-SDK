@@ -144,24 +144,46 @@ class PageTourPlay {
             smartTipPopup.id = `${smartTipId}-popup`;
             (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
             (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
-            (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('keyup', (event) => 
-            { 
+            (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('keydown', (event) => 
+            {
               if(event.key === "Enter")
               {
+                let smartTipFocasibleElement = (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement);
+                let focusableElementsOutSide = document.body.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                Array.from(focusableElementsOutSide).forEach((element, indexOfElemet) => {
+                  if(element === smartTipFocasibleElement)
+                  {
+                    if(focusableElementsOutSide.length > indexOfElemet + 1)
+                    {
+                      (focusableElementsOutSide[indexOfElemet + 1] as HTMLElement).focus();
+                    }
+                    else
+                    {
+                      (focusableElementsOutSide[0] as HTMLElement).focus();
+                    }
+
+                    return;
+                  }
+                });
+
                 this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed');
 
                 if (callback != null) 
                   callback(objTour.tourtype);
+                
+                event.preventDefault();
+                this.hideSmartTip();
               }
               
-              if(event.key === "Enter" || event.key === "Escape")
+              if(event.key === "Escape")
               {
                 this.hideSmartTip();
+                (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement).focus();
               }              
             });
 
             (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
-            (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('keyup', (event) => 
+            (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('keydown', (event) => 
             {
               if(event.key === "Enter" || event.key === "Escape")
               {
@@ -170,6 +192,8 @@ class PageTourPlay {
 
                 if (event.key === "Enter" && callback != null) 
                   callback(objTour.tourtype);
+
+                event.preventDefault();
               }
             });
   
@@ -192,7 +216,7 @@ class PageTourPlay {
               objThis.setToolTipPopupArrowPointer(objTour, element, arrowDiv, smartTipPopup, smartTip, i, zIndex);
             });
 
-            smartTip.addEventListener("keyup", function(event) {
+            smartTip.addEventListener("keydown", function(event) {
               let objThisEvnt = event;
               if(event.key === "Enter")
               {
@@ -202,13 +226,23 @@ class PageTourPlay {
                 let firstFocusableElement = focusableElements[0] as HTMLElement;
                 let lastFocusableElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
-                firstFocusableElement.focus();
+                let availableSmartPopUps = document.getElementsByClassName('smarttip-container');
                 
+                for(let i = 0; i<availableSmartPopUps.length;i++)
+                {
+                  let currPopupInst = availableSmartPopUps[i] as HTMLElement;
+                  if(currPopupInst.id === smartTipPopup.id && currPopupInst.style.display != 'none')
+                  {
+                    (currPopupInst.getElementsByClassName('smarttip-close')[0] as HTMLElement).focus();
+                    break;
+                  }                 
+                }
+
                 lastFocusableElement.addEventListener("keydown", function(event) {
                   if(event.key === "Escape")
                   {
                     objThis.hideSmartTip();
-                    (objThisEvnt.target as HTMLElement).focus();
+                    (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement).focus();
                   }
                   else if(event.key === "Tab" && event.target === event.currentTarget && !event.shiftKey)
                   {
@@ -221,7 +255,7 @@ class PageTourPlay {
                   if(event.key === "Escape")
                   {
                     objThis.hideSmartTip();
-                    (objThisEvnt.target as HTMLElement).focus();
+                    (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement).focus();
                   }
                   else if(event.key === "Tab" && event.target === event.currentTarget && event.shiftKey)
                   {
