@@ -910,7 +910,7 @@ class PageTourManager {
         icon.setAttribute("id", "icon-drop_" + (tour.id ? tour.id : ""));
         button.classList.add("button-44");
         button.setAttribute("title", "Row Collapsed");
-        button.setAttribute("aria-label", "Expand Row Button");
+        button.setAttribute("aria-label", "Expand Row");
         button.setAttribute("id", "button-drop_" + (tour.id ? tour.id : ""));
 
         button.addEventListener("keydown", function(event) {          
