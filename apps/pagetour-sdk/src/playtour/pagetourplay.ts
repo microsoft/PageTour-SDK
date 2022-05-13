@@ -140,6 +140,10 @@ class PageTourPlay {
       if(!smartTipElement) {
         if(selectedElement && !selectedElement.getAttribute('disabled'))
           {
+            if(document.contains(document.getElementById(`${smartTipId}-popup`)))
+            {
+              document.getElementById(`${smartTipId}-popup`).remove();
+            }
             let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
             smartTipPopup.id = `${smartTipId}-popup`;
             (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
@@ -269,6 +273,18 @@ class PageTourPlay {
                 objThis.hideSmartTip();
                 (event.target as HTMLElement).focus();
               }
+            });
+
+            let smartTipFocusObj = smartTip.getElementsByClassName('smart-tip')[0] as HTMLElement;
+
+            smartTipFocusObj.addEventListener("focusin", function(event) {
+              smartTipFocusObj.setAttribute("role", "application");
+              smartTipFocusObj.setAttribute("aria-label","Smart tip icon for " + objTour.title);
+            });
+
+            smartTipFocusObj.addEventListener("focusout", function(event) {
+              smartTipFocusObj.removeAttribute("role");
+              smartTipFocusObj.removeAttribute("aria-label");
             });
           } else {
             if(opts.navigator.callbackOnTourStepFailure != null) {

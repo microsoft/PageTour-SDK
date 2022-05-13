@@ -912,6 +912,24 @@ class PageTourManager {
         button.setAttribute("title", "Row Collapsed");
         button.setAttribute("aria-label", "Expand Row Button");
         button.setAttribute("id", "button-drop_" + (tour.id ? tour.id : ""));
+
+        button.addEventListener("keydown", function(event) {          
+          let iconExpander = button.getElementsByTagName("i")[0] as HTMLElement;
+          if (iconExpander.classList.contains("icon-drop")) {
+            iconExpander.parentElement.setAttribute(
+              "aria-label",
+              "Expan Row Button"
+            );
+          }
+          else
+          {
+            iconExpander.parentElement.setAttribute(
+              "aria-label",
+              "Collapse Row Button"
+            );
+          }        
+        });
+        
         if (
           (tour.description != null && tour.description.length > 50) ||
           (tour.title != null && tour.title.length > 21) ||
@@ -934,6 +952,7 @@ class PageTourManager {
         button.addEventListener("click", (event: Event) =>
           this.openExportPopup(tour.id)
         );
+        button.setAttribute("aria-label","Export tour");
         icon.classList.add("pagetour__icon", "icon-export");
         break;
       case "copy":
@@ -953,6 +972,7 @@ class PageTourManager {
             this.showToolTip(event.target as HTMLElement);
           }
         });
+        button.setAttribute("aria-label","Copy Tour Url");
         icon.classList.add("pagetour__icon", "icon-copy");
         break;
       case "edit":
@@ -963,6 +983,7 @@ class PageTourManager {
         button.addEventListener("click", (event: Event) =>
           this.editTour(tour.id)
         );
+        button.setAttribute("aria-label","Edit tour");
         icon.classList.add("pagetour__icon", "icon-pencil");
         break;
       case "delete":
@@ -974,6 +995,7 @@ class PageTourManager {
         button.addEventListener("click", (event: Event) =>
           this.openDeletePopup(tour.id)
         );
+        button.setAttribute("aria-label","Delete tour");
         icon.classList.add("pagetour__icon", "icon-recyclebin");
         break;
       case "play":
@@ -984,6 +1006,7 @@ class PageTourManager {
         button.addEventListener("click", (event: Event) =>
           this.playTour(tour.id, this.configStore.Options.tourStartDelayInMs)
         );
+        button.setAttribute("aria-label","Play tour");
         icon.classList.add("pagetour__icon", "icon-play");
         break;
       case "cancel":
@@ -1154,20 +1177,12 @@ class PageTourManager {
 
     if (iconExpander.classList.contains("icon-drop")) {
       iconExpander.parentElement.setAttribute("title", "Row Expanded");
-      iconExpander.parentElement.setAttribute(
-        "aria-label",
-        "Collapse Row Button"
-      );
       messageClass = "message-desc-expanded";
       document
         .getElementById("icon-drop_" + tourId)
         .setAttribute("class", "pagetour__icon icon-drop-up");
     } else {
       iconExpander.parentElement.setAttribute("title", "Row Collapsed");
-      iconExpander.parentElement.setAttribute(
-        "aria-label",
-        "Expand Row Button"
-      );
       document
         .getElementById("icon-drop_" + tourId)
         .setAttribute("class", "pagetour__icon icon-drop");
