@@ -1833,7 +1833,13 @@ class PageTourAuthor {
     let stepDetailModal = document.getElementById("step-detail-modal");
     if (!stepDetailModal) {
       let recordBox = this.smartTipDetailModalFn();
-      recordBox = DomUtils.appendToBody(recordBox);
+      let smartTipDetModalExising = document.getElementById('tip-detail-modal');
+      
+      if(smartTipDetModalExising !== null)
+        recordBox = smartTipDetModalExising;
+      else
+        recordBox = DomUtils.appendToBody(recordBox);
+        
       DomUtils.show(recordBox);
 
       let delayBeforeStepSlider: HTMLInputElement = document.getElementById(
