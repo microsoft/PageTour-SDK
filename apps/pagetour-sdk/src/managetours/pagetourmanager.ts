@@ -11,6 +11,7 @@ import { RunTourAction } from "../models/runtouraction";
 import { PageTourTheme } from "../models/pagetourtheme";
 import { DataStore } from "../common/datastore";
 import { TourTypeEnum } from "../models/tourtypeenum";
+import { ToolTipConstants } from "../constants/tooltip.constants";
 declare const navigator: any;
 class PageTourManager {
   private toursList: any = []; // This holds an array of tours
@@ -153,30 +154,43 @@ class PageTourManager {
       document.getElementById("option-smart-tip").style.display = "none";
     }
 
-    document.getElementById('all-list-x-btn').onclick = this.closeManageToursModal
-    document.getElementById('manage-tours-modal-close-btn').onclick = this.closeManageToursModal
-    document.getElementById('manage-tours-modal-add-tour-btn').onclick = this.showOptions
-    document.getElementById('option-page-tour').onclick = this.addPageTour
-    document.getElementById('option-system-announcement').onclick = this.addSystemAnnouncement
-    document.getElementById('option-smart-tip').onclick = this.addSmartTip
-    document.getElementById('option-guided-tour').onclick = this.addGuidedTour
-    document.getElementById('manage-tours-modal-add-tour-div').onmouseleave = this.hideOptions
-    document.getElementById('option-smart-tip').onblur = this.hideOptions
-    document.getElementById('manage-tours-sort').onclick = this.sortTours
-    document.getElementById('searchbytitle').onkeyup = this.searchTours
-    document.getElementById('showexpiredtours-chkbox').onchange = this.searchTours
-    document.getElementById('search-tour-btn-cancel').onclick = this.cancelToursSearch
-    document.getElementById('itemstodisplay').onchange = this.changePageSize
-    document.getElementById('current-tours-page-top').onkeyup = this.changeCurrentPageTop
-    document.getElementById('current-tours-page-bottom').onkeyup = this.changeCurrentPageBottom
-    document.getElementById('tours-table-previous-page-top').onclick = this.movetoToursPreviousPage
-    document.getElementById('tours-table-previous-page-bottom').onclick = this.movetoToursPreviousPage
-    document.getElementById('tours-table-next-page-top').onclick = this.movetoToursNextPage
-    document.getElementById('tours-table-next-page-bottom').onclick = this.movetoToursNextPage
+    document.getElementById("all-list-x-btn").onclick =
+      this.closeManageToursModal;
+    document.getElementById("manage-tours-modal-close-btn").onclick =
+      this.closeManageToursModal;
+    document.getElementById("manage-tours-modal-add-tour-btn").onclick =
+      this.showOptions;
+    document.getElementById("option-page-tour").onclick = this.addPageTour;
+    document.getElementById("option-system-announcement").onclick =
+      this.addSystemAnnouncement;
+    document.getElementById("option-smart-tip").onclick = this.addSmartTip;
+    document.getElementById("option-guided-tour").onclick = this.addGuidedTour;
+    document.getElementById("manage-tours-modal-add-tour-div").onmouseleave =
+      this.hideOptions;
+    document.getElementById("option-smart-tip").onblur = this.hideOptions;
+    document.getElementById("manage-tours-sort").onclick = this.sortTours;
+    document.getElementById("searchbytitle").onkeyup = this.searchTours;
+    document.getElementById("showexpiredtours-chkbox").onchange =
+      this.searchTours;
+    document.getElementById("search-tour-btn-cancel").onclick =
+      this.cancelToursSearch;
+    document.getElementById("itemstodisplay").onchange = this.changePageSize;
+    document.getElementById("current-tours-page-top").onkeyup =
+      this.changeCurrentPageTop;
+    document.getElementById("current-tours-page-bottom").onkeyup =
+      this.changeCurrentPageBottom;
+    document.getElementById("tours-table-previous-page-top").onclick =
+      this.movetoToursPreviousPage;
+    document.getElementById("tours-table-previous-page-bottom").onclick =
+      this.movetoToursPreviousPage;
+    document.getElementById("tours-table-next-page-top").onclick =
+      this.movetoToursNextPage;
+    document.getElementById("tours-table-next-page-bottom").onclick =
+      this.movetoToursNextPage;
 
-    let manageTourFormModal = document.getElementById('tour-form')
-    DomUtils.manageTabbing(manageTourFormModal)
-    this.hideOptions()
+    let manageTourFormModal = document.getElementById("tour-form");
+    DomUtils.manageTabbing(manageTourFormModal);
+    this.hideOptions();
 
     try {
       const tours: Tutorial[] = await this.dataStore.GetToursByPageContext(
@@ -362,9 +376,8 @@ class PageTourManager {
 
   // Opens the option
   private showOptions = () => {
-    document.getElementById("add-new-dropdown").style.display = 'inline';
-  }
-
+    document.getElementById("add-new-dropdown").style.display = "inline";
+  };
 
   private hideOptions = () => {
     document.getElementById("add-new-dropdown").style.display = "none";
@@ -620,6 +633,24 @@ class PageTourManager {
       });
     } else {
       tours = tours;
+    }
+
+
+    let searchResultsElement = document.getElementById('searchresultsnumber');
+    if(searchText.length>1){
+      searchResultsElement.style.display="block";  
+      if(tours.length == 0){
+        searchResultsElement.innerHTML = "No results found";
+        searchResultsElement.setAttribute('aria-label', "No results found")
+      }
+      else{
+        searchResultsElement.innerHTML = `${tours.length} results found`;
+        searchResultsElement.setAttribute('aria-label', `${tours.length} results found`);
+      }
+      searchResultsElement.focus();
+    }
+    else{
+      searchResultsElement.style.display="none";
     }
 
     /// updating tours based on Page size selection
@@ -879,7 +910,26 @@ class PageTourManager {
         icon.setAttribute("id", "icon-drop_" + (tour.id ? tour.id : ""));
         button.classList.add("button-44");
         button.setAttribute("title", "Row Collapsed");
+        button.setAttribute("aria-label", "Expand Row");
         button.setAttribute("id", "button-drop_" + (tour.id ? tour.id : ""));
+
+        button.addEventListener("keydown", function(event) {          
+          let iconExpander = button.getElementsByTagName("i")[0] as HTMLElement;
+          if (iconExpander.classList.contains("icon-drop")) {
+            iconExpander.parentElement.setAttribute(
+              "aria-label",
+              "Expan Row Button"
+            );
+          }
+          else
+          {
+            iconExpander.parentElement.setAttribute(
+              "aria-label",
+              "Collapse Row Button"
+            );
+          }        
+        });
+        
         if (
           (tour.description != null && tour.description.length > 50) ||
           (tour.title != null && tour.title.length > 21) ||
@@ -902,6 +952,7 @@ class PageTourManager {
         button.addEventListener("click", (event: Event) =>
           this.openExportPopup(tour.id)
         );
+        button.setAttribute("aria-label","Export tour");
         icon.classList.add("pagetour__icon", "icon-export");
         break;
       case "copy":
@@ -909,9 +960,19 @@ class PageTourManager {
         button.classList.add("button-36");
         button.setAttribute("title", "Copy Tour Url");
         button.setAttribute("id", "button-copy_" + (tour.id ? tour.id : ""));
-        button.addEventListener("click", (event: Event) =>
-          this.copyTourUrl(tour)
-        );
+        button.addEventListener("click", (event: Event) => 
+        {
+          this.copyTourUrl(tour); 
+          this.showToolTip(event.target as HTMLElement);
+        });
+        button.addEventListener("keyup", (event) => {
+          if(event.key === "Enter")
+          {
+            this.copyTourUrl(tour);
+            this.showToolTip(event.target as HTMLElement);
+          }
+        });
+        button.setAttribute("aria-label","Copy Tour Url");
         icon.classList.add("pagetour__icon", "icon-copy");
         break;
       case "edit":
@@ -922,6 +983,7 @@ class PageTourManager {
         button.addEventListener("click", (event: Event) =>
           this.editTour(tour.id)
         );
+        button.setAttribute("aria-label","Edit tour");
         icon.classList.add("pagetour__icon", "icon-pencil");
         break;
       case "delete":
@@ -933,6 +995,7 @@ class PageTourManager {
         button.addEventListener("click", (event: Event) =>
           this.openDeletePopup(tour.id)
         );
+        button.setAttribute("aria-label","Delete tour");
         icon.classList.add("pagetour__icon", "icon-recyclebin");
         break;
       case "play":
@@ -943,6 +1006,7 @@ class PageTourManager {
         button.addEventListener("click", (event: Event) =>
           this.playTour(tour.id, this.configStore.Options.tourStartDelayInMs)
         );
+        button.setAttribute("aria-label","Play tour");
         icon.classList.add("pagetour__icon", "icon-play");
         break;
       case "cancel":
@@ -1053,9 +1117,18 @@ class PageTourManager {
     if (opts.navigator && opts.navigator.getStartPageUrl) {
       startUrl = opts.navigator.getStartPageUrl(startUrl);
     }
-    let url = `${hostName}${startUrl}?tourId=${tour.id}`; 
+    let url = `${hostName}${startUrl}?tourId=${tour.id}`;
     this.copyTextToClipboard(url);
   };
+
+  private showToolTip(targetElement:HTMLElement)
+  {
+    let spanElement = document.getElementById("spanToolTipUrlCopyMsg")     
+    spanElement.style.display = 'block'
+    spanElement.style.left = (DomUtils.offset(targetElement).left - ToolTipConstants.leftMoveInPx)+'px'
+    spanElement.style.top = (DomUtils.offsetBrowserViewPort(targetElement).top - document.getElementById('divTblScroll').scrollTop + ToolTipConstants.topMoveInPx)+'px'
+    setTimeout(function(){spanElement.style.display = 'none'}, ToolTipConstants.timeOutInMs)
+  }
 
   private fallbackCopyTextToClipboard = (text: string) => {
     let textArea = document.createElement("textarea");
@@ -1104,20 +1177,12 @@ class PageTourManager {
 
     if (iconExpander.classList.contains("icon-drop")) {
       iconExpander.parentElement.setAttribute("title", "Row Expanded");
-      iconExpander.parentElement.setAttribute(
-        "aria-label",
-        "Expand Row Button"
-      );
       messageClass = "message-desc-expanded";
       document
         .getElementById("icon-drop_" + tourId)
         .setAttribute("class", "pagetour__icon icon-drop-up");
     } else {
       iconExpander.parentElement.setAttribute("title", "Row Collapsed");
-      iconExpander.parentElement.setAttribute(
-        "aria-label",
-        "Collapse Row Button"
-      );
       document
         .getElementById("icon-drop_" + tourId)
         .setAttribute("class", "pagetour__icon icon-drop");

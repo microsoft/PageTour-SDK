@@ -59,10 +59,16 @@ class PageTourPlay {
   }
 
   private hideSmartTipOnClick() {
+    let objThis = this;
     window.addEventListener("mouseup", function() {
-      Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
-        element.style.display = "none"
-      });
+      objThis.hideSmartTip();
+    });
+  }
+
+  private hideSmartTip()
+  {
+    Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+      element.style.display = "none"
     });
   }
 
@@ -145,11 +151,66 @@ class PageTourPlay {
       if(!smartTipElement) {
         if(selectedElement && !selectedElement.getAttribute('disabled'))
           {
+            if(document.contains(document.getElementById(`${smartTipId}-popup`)))
+            {
+              document.getElementById(`${smartTipId}-popup`).remove();
+            }
             let smartTipPopup =  DomUtils.appendToBody(this.smartTipPopperFn());
             smartTipPopup.id = `${smartTipId}-popup`;
             (smartTipPopup.getElementsByClassName("smarttip-content")[0] as HTMLParagraphElement).innerText = element.message;
             (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('click', () => { this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed'); if (callback != null) callback(objTour.tourtype)});
+            (smartTipPopup.getElementsByClassName("smarttip-dismiss")[0] as HTMLButtonElement).addEventListener('keydown', (event) => 
+            {
+              if(event.key === "Enter")
+              {
+                let smartTipFocasibleElement = (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement);
+                let focusableElementsOutSide = document.body.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                Array.from(focusableElementsOutSide).forEach((element, indexOfElemet) => {
+                  if(element === smartTipFocasibleElement)
+                  {
+                    if(focusableElementsOutSide.length > indexOfElemet + 1)
+                    {
+                      (focusableElementsOutSide[indexOfElemet + 1] as HTMLElement).focus();
+                    }
+                    else
+                    {
+                      (focusableElementsOutSide[0] as HTMLElement).focus();
+                    }
+
+                    return;
+                  }
+                });
+
+                this.dismissSmartTip(smartTipId, objTour, 'Completed', (objTour.steps.length-1).toString(), 'Dismissed');
+
+                if (callback != null) 
+                  callback(objTour.tourtype);
+                
+                event.preventDefault();
+                this.hideSmartTip();
+              }
+              
+              if(event.key === "Escape")
+              {
+                this.hideSmartTip();
+                (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement).focus();
+              }              
+            });
+
             (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('click', () => { smartTipPopup.style.display = 'none'; if (callback != null) callback(objTour.tourtype)});
+            (smartTipPopup.getElementsByClassName("smarttip-close")[0] as HTMLDivElement).addEventListener('keydown', (event) => 
+            {
+              if(event.key === "Enter" || event.key === "Escape")
+              {
+                this.hideSmartTip();              
+                (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement).focus();
+
+                if (event.key === "Enter" && callback != null) 
+                  callback(objTour.tourtype);
+
+                event.preventDefault();
+              }
+            });
   
             let smartTip = DomUtils.appendToBody(this.smartTipFn());
             smartTip.id = smartTipId;
@@ -164,72 +225,77 @@ class PageTourPlay {
             arrowDiv.id = `smarttip_${objTour.id}_${i}-arrow`
             smartTipPopup.appendChild(arrowDiv);
   
+            let objThis = this;
+
             smartTip.addEventListener("mouseover", function() {
-              Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
-                element.style.display = "none"
-              });
-              let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
-              toolTipPopper.style.display = "flex";
-              toolTipPopper.style.zIndex = zIndex;
-              let popperPlacement = element.position as Placement
-              switch (element.position) {
-                case 'top':
-                  arrowDiv.className = 'arrow-pointer arrow-down'
-                  smartTipPopup.style.flexDirection = 'column'
-                  arrowDiv.style.alignSelf = 'center'
-                  arrowDiv.style.margin = '0px 0px'
-                  // todo : apply as per the theme color
-                  arrowDiv.style.borderTopColor = '#0078D4'
-                  arrowDiv.style.borderLeftColor = 'transparent'
-                  arrowDiv.style.borderRightColor = 'transparent'
-                  arrowDiv.style.borderBottomColor = 'transparent'
-                  break
-  
-                case 'bottom':
-                  arrowDiv.className = 'arrow-pointer arrow-up'
-                  smartTipPopup.style.flexDirection = 'column-reverse'
-                  arrowDiv.style.alignSelf = 'center'
-                  arrowDiv.style.margin = '0px 0px'
-                  arrowDiv.style.borderTopColor = 'transparent'
-                  arrowDiv.style.borderLeftColor = 'transparent'
-                  arrowDiv.style.borderRightColor = 'transparent'
-                  arrowDiv.style.borderBottomColor = '#0078D4' // this.tourTheme.primaryColor
-                  break
-  
-                case 'left':
-                  smartTipPopup.style.flexDirection = 'row'
-                  arrowDiv.className = 'arrow-pointer arrow-right'
-                  arrowDiv.style.alignSelf = 'center'
-                  arrowDiv.style.margin = '0px 0px'
-                  arrowDiv.style.borderTopColor = 'transparent'
-                  arrowDiv.style.borderLeftColor = '#0078D4'
-                  arrowDiv.style.borderRightColor = 'transparent'
-                  arrowDiv.style.borderBottomColor = 'transparent'
-                  break
-  
-                case 'right':
-                  smartTipPopup.style.flexDirection = 'row-reverse'
-                  arrowDiv.className = 'arrow-pointer arrow-left'
-                  arrowDiv.style.alignSelf = 'center'
-                  arrowDiv.style.margin = '0px 0px'
-                  arrowDiv.style.borderTopColor = 'transparent'
-                  arrowDiv.style.borderLeftColor = 'transparent'
-                  arrowDiv.style.borderRightColor = '#0078D4'
-                  arrowDiv.style.borderBottomColor = 'transparent'
-                  break
-  
-              }
-  
-              let popperInstance = new Popper(smartTip, toolTipPopper, {
-                placement: popperPlacement,
-                modifiers: {
-                  offset: {
-                    offset: '0, 10'
-                  }
+              objThis.setToolTipPopupArrowPointer(objTour, element, arrowDiv, smartTipPopup, smartTip, i, zIndex);
+            });
+
+            smartTip.addEventListener("keydown", function(event) {
+              let objThisEvnt = event;
+              if(event.key === "Enter")
+              {
+                objThis.setToolTipPopupArrowPointer(objTour, element, arrowDiv, smartTipPopup, smartTip, i, zIndex);
+                
+                let focusableElements = smartTipPopup.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                let firstFocusableElement = focusableElements[0] as HTMLElement;
+                let lastFocusableElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+                let availableSmartPopUps = document.getElementsByClassName('smarttip-container');
+                
+                for(let i = 0; i<availableSmartPopUps.length;i++)
+                {
+                  let currPopupInst = availableSmartPopUps[i] as HTMLElement;
+                  if(currPopupInst.id === smartTipPopup.id && currPopupInst.style.display != 'none')
+                  {
+                    (currPopupInst.getElementsByClassName('smarttip-close')[0] as HTMLElement).focus();
+                    break;
+                  }                 
                 }
-              });
-              popperInstance.enableEventListeners();
-              popperInstance.scheduleUpdate();
+
+                lastFocusableElement.addEventListener("keydown", function(event) {
+                  if(event.key === "Escape")
+                  {
+                    objThis.hideSmartTip();
+                    (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement).focus();
+                  }
+                  else if(event.key === "Tab" && event.target === event.currentTarget && !event.shiftKey)
+                  {
+                    firstFocusableElement.focus();
+                    event.preventDefault();
+                  }
+                });
+
+                firstFocusableElement.addEventListener("keydown", function(event) {
+                  if(event.key === "Escape")
+                  {
+                    objThis.hideSmartTip();
+                    (document.getElementById(smartTipId).getElementsByClassName('smart-tip')[0] as HTMLElement).focus();
+                  }
+                  else if(event.key === "Tab" && event.target === event.currentTarget && event.shiftKey)
+                  {
+                    lastFocusableElement.focus();
+                    event.preventDefault();
+                  }
+                });
+              }
+              else if(event.key === "Escape")
+              {
+                objThis.hideSmartTip();
+                (event.target as HTMLElement).focus();
+              }
+            });
+
+            let smartTipFocusObj = smartTip.getElementsByClassName('smart-tip')[0] as HTMLElement;
+
+            smartTipFocusObj.addEventListener("focusin", function(event) {
+              smartTipFocusObj.setAttribute("role", "application");
+              smartTipFocusObj.setAttribute("aria-label","Smart tip icon for " + objTour.title);
+            });
+
+            smartTipFocusObj.addEventListener("focusout", function(event) {
+              smartTipFocusObj.removeAttribute("role");
+              smartTipFocusObj.removeAttribute("aria-label");
             });
           } else {
             if(opts.navigator.callbackOnTourStepFailure != null) {
@@ -239,6 +305,60 @@ class PageTourPlay {
             return;
           }
       }
+  }
+
+  private setToolTipPopupArrowPointer(objTour: Tutorial, element : any, arrowDiv:HTMLDivElement, smartTipPopup:HTMLElement, smartTip:HTMLElement, i:number, zIndex:string) 
+  {
+    Array.from(document.getElementsByClassName("smarttip-container") as HTMLCollectionOf<HTMLElement>).forEach(element => {
+      element.style.display = "none"
+    });
+    let toolTipPopper = document.getElementById(`smarttip_${objTour.id}_${i}-popup`);
+    toolTipPopper.style.display = "flex";
+    toolTipPopper.style.zIndex = zIndex;
+    let popperPlacement = element.position as Placement
+
+    arrowDiv.style.alignSelf = 'center'
+    arrowDiv.style.margin = '0px 0px'
+    arrowDiv.style.borderColor = 'transparent'
+
+    switch (element.position) {
+      case 'top':
+        arrowDiv.className = 'arrow-pointer arrow-down'
+        smartTipPopup.style.flexDirection = 'column'
+        arrowDiv.style.borderTopColor = '#0078D4'
+        break
+
+      case 'bottom':
+        arrowDiv.className = 'arrow-pointer arrow-up'
+        smartTipPopup.style.flexDirection = 'column-reverse'
+        arrowDiv.style.borderBottomColor = '#0078D4'
+        break
+
+      case 'left':
+        smartTipPopup.style.flexDirection = 'row'
+        arrowDiv.className = 'arrow-pointer arrow-right'
+        arrowDiv.style.borderLeftColor = '#0078D4'
+        break
+
+      case 'right':
+        smartTipPopup.style.flexDirection = 'row-reverse'
+        arrowDiv.className = 'arrow-pointer arrow-left'
+        arrowDiv.style.borderRightColor = '#0078D4'
+        break
+    }
+
+    let popperInstance = new Popper(smartTip, toolTipPopper, {
+      placement: popperPlacement,
+      modifiers: {
+        offset: {
+          offset: '0, 10'
+        }
+      }
+    });
+    popperInstance.enableEventListeners();
+    popperInstance.scheduleUpdate();
+
+    return;
   }
 
   private async dismissSmartTip(id: string, tour: Tutorial, userAction: string, step: string, operation: string) {

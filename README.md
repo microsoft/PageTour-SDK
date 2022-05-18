@@ -67,7 +67,7 @@ Install the repository package as per the requirement:
 
   
 
-    npm install pagetour-sdk.http
+    npm install pagetour-sdk.httprepository
 
 **2. Install the LocalStorageRepository package**: This package is meant for quickly checking out PageTour in your application and doing a POC.
 
@@ -107,7 +107,7 @@ Install the repository package as per the requirement:
 
   
 
-    import { HttpRepository } from 'pagetour-sdk.http';
+    import { HttpRepository } from 'pagetour-sdk.httprepository';
     
     ...
     /**
@@ -116,7 +116,7 @@ Install the repository package as per the requirement:
     Additionlly getEndpoint, putEndpoint, postEndpoint and deleteEnedpoints
     can be provided.
     */
-    import { HttpRepository } from 'pagetour-sdk.http';
+    import { HttpRepository } from 'pagetour-sdk.httprepository';
     ...
     this.repository = new HttpRepository({baseUrl:'https://api-baseUrl.com/'});
 
