@@ -1157,7 +1157,7 @@ class PageTourPlay {
                   if (opts.navigator.callbackOnAnnouncementFeedbackSubmit != null) {
                     opts.navigator.callbackOnAnnouncementFeedbackSubmit(rating, self.tour, self.currentStep);
                   }
-                  
+                  console.log(self.currentStep + ":" +  rating);
                   let feedbackContentElement = document.getElementById('feedbackcontent');
                   let privacyElement = document.getElementById('annofeedbackprivacy');
                   let submitMessageElement = document.getElementById('annothanksmsg');
@@ -1886,14 +1886,14 @@ class PageTourPlay {
           rating = parseFloat(ratingElementGroup[i].value)/5;          
         }
       }
-      
+      console.log('pt rating', rating);
       if (opts.navigator.callbackOnPagetourFeedbackSubmit != null) {
         opts.navigator.callbackOnPagetourFeedbackSubmit(rating, this.tour);
       }
     }
     cancelButton.onclick = this.closeFeedbackModal();
     closeButton.onclick = this.closeFeedbackModal();
-    
+    DomUtils.manageTabbing(document.getElementById('feedbackboxdata'));
 
 
   }

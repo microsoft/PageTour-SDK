@@ -2433,6 +2433,7 @@ $input-text-focus-outline: 1px dotted black;
     justify-content: space-between;
 
     @media only screen and (max-width: 1240px) {
+
       padding: 0.6rem 1.4rem;
     }
 
@@ -3001,6 +3002,7 @@ $input-text-focus-outline: 1px dotted black;
         align-items: flex-start;
         //5star rating
         .pt-feedback_5star-rating {
+
           .rating__label {
             cursor: pointer;
             // padding: 3px;
@@ -3018,18 +3020,32 @@ $input-text-focus-outline: 1px dotted black;
             -moz-osx-font-smoothing: grayscale;
           }         
           .rating__input {
-            display: none
+            // display: none
+            border: 0;
+            padding: 0;
+            margin: 0;
+            position: absolute !important;
+            height: 1px; 
+            width: 1px;
+            overflow: hidden;
+            clip: rect(1px 1px 1px 1px); /* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
+            clip: rect(1px, 1px, 1px, 1px); /*maybe deprecated but we need to support legacy browsers */
+            clip-path: inset(50%); /*modern browsers, clip-path works inwards from each corner*/
+            white-space: nowrap; 
           }         
           .rating__input--none {
-            display: none
+            display:none;
           }
           .rating__input--none:checked .rating__label
+          .rating__input--none:focus .rating__label
           {
             &:before{
               content: '\E734';
             }        
           }
-          .rating__label{
+          .rating__label,
+          .rating__input:focus
+          {
 
             &:before{
               content: "\E735";
@@ -3041,8 +3057,9 @@ $input-text-focus-outline: 1px dotted black;
               content: "\E734";
             }
           }
-          .rating-group:hover .rating__label,
-          .rating-group:focus-visible .rating__label
+
+          .rating-group:focus .rating__label:nth-of-type(1),
+          .rating-group:hover .rating__label         
           {
             &:before{
               content: "\E735"; 
@@ -3165,6 +3182,7 @@ $input-text-focus-outline: 1px dotted black;
   padding-left: 2rem;
   padding-bottom: 1.2rem;
   padding-right: 2rem;
+
   .feedback-content{
     display: inline-flex;
     // height: 24px; --changed
