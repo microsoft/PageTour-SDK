@@ -2273,12 +2273,12 @@ $input-text-focus-outline: 1px dotted black;
 
     @media only screen and (max-width: 1240px) {
       max-width: 336px;
-      max-height: 287px;
+      max-height: 330px;
     }
 
     @media only screen and (max-width: 600px) {
       max-width: 203px;
-      max-height: 181px;
+      max-height: 250px;
     }
   }
   
@@ -3181,6 +3181,21 @@ $input-text-focus-outline: 1px dotted black;
 // ----- announcement feedback
 .anno-feedback{
   // display: flex; --changed
+  @media only screen and (max-width: 1240px) {
+    padding-left: 1.4rem;
+    padding-bottom: 0.6rem;
+    padding-top: 0px;
+    padding-right: 1.4rem;
+    line-height: 11px;
+    max-height: 50px;
+  }
+
+  @media only screen and (max-width: 600px) {
+    line-height: 10px;
+    padding: 0rem 0.7rem 0.3rem 0.7rem;
+    // max-height: 40px;
+  }
+
   display: block;
   justify-content: space-between;
   padding-left: 2rem;
@@ -3191,7 +3206,28 @@ $input-text-focus-outline: 1px dotted black;
     display: inline-flex;
     // height: 24px; --changed
     height: 18px;
+
+    @media only screen and (max-width: 1240px) {
+      height: 10px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      // max-width: 203px;
+      max-height: 6px;
+    }
+
     .anno-feedback-heading{
+      @media only screen and (max-width: 1240px) {
+       font-size: 8px;
+       line-height: 5px;
+        height: 10px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        font-size: 5px;
+        line-height: 5px;
+        //  height: 10px;
+       }
       
       font-size: 12px;
     }
@@ -3213,6 +3249,17 @@ $input-text-focus-outline: 1px dotted black;
         line-height: 1;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        @media only screen and (max-width: 1240px) {
+          font-size: 10px;
+          padding-bottom: 0px;
+          // line-height: 7px;
+          //  height: 10px;
+         }
+         @media only screen and (max-width: 600px) {
+          font-size: 5px;
+          padding-bottom: 0px;
+          //  height: 10px;
+         }
         
       }
       .rating__input {
@@ -3261,6 +3308,17 @@ $input-text-focus-outline: 1px dotted black;
         font-weight: 500;
         color: #0078d1;
         text-decoration: none;
+        @media only screen and (max-width: 1240px) {
+          font-size: 8px;
+          padding-bottom: 0px;
+          // line-height: 7px;
+          //  height: 10px;
+         }
+         @media only screen and (max-width: 600px) {
+          font-size: 5px;
+          padding-bottom: 0px;
+          //  height: 10px;
+         }
       }
       .rating__input{
         display: none;
@@ -3281,13 +3339,40 @@ $input-text-focus-outline: 1px dotted black;
   }
 
   .anno-thanks{
+    @media only screen and (max-width: 1240px) {
+      font-size: 9px;
+      max-height: 14px;
+    }
+    @media only screen and (max-width: 600px) {
+      font-size: 6px;
+     //  line-height: 7px;
+      //  height: 10px;
+     }
     display:none;
     height: 24px;
     font-size: 12px;
   }
 
   .anno-feedback-privacy{
+
+    @media only screen and (max-width: 1240px) {
+      font-size: 8px;
+      // height: 10px;
+    }
+    @media only screen and (max-width: 600px) {
+      font-size: 5px;
+      //  height: 10px;
+     }
     a .anno-privacy-description{
+
+      @media only screen and (max-width: 1240px) {
+        font-size: 8px;
+        // height: 10px;
+      }
+      @media only screen and (max-width: 600px) {
+        font-size: 5px;
+        //  height: 10px;
+       }
       color: #006ee5;
       font-size: 12px;
     }
