@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
         },
         announcementFeedbackOptions: {
           enabled: true,
-          type: 'yes-no',
+          type: 'like-dislike',
           heading: 'Was this announcement helpful?',
           privacyDescription: "Privacy statement",
           privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice',
