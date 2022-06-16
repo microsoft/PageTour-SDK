@@ -768,12 +768,9 @@ $input-text-focus-outline: 1px dotted black;
     }
     &.icon-like::before{
       content: '\E8E1';
-      //filled: F3BF
-      //background: 'rgb(196, 193, 193)';
     }
     &.icon-dislike::before{
       content: '\E8E0';
-      //filled: F3C0
     }
   }
   
@@ -2430,14 +2427,12 @@ $input-text-focus-outline: 1px dotted black;
   .announcement-footer {
     padding-top: 1.5rem;
     padding-right: 2rem;
-    //padding-bottom: 0.5rem;
     padding-left: 2rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 
     @media only screen and (max-width: 1240px) {
-
       padding: 0.6rem 1.4rem;
     }
 
@@ -2889,13 +2884,13 @@ $input-text-focus-outline: 1px dotted black;
 
 /* Annoucement Box Popup end*/
 
-//css variables to change color of star and like
+//CSS variables to change color of star and like rating elements
 :root {
   --star-color: #0063b1;
   --like-dislike-onclick-color: #0063b1;
 }
 
-// feedback page container - start
+// Feedback page for pagetours
 .feedback-container {
   display: flex !important;
   justify-content: center;
@@ -2903,7 +2898,8 @@ $input-text-focus-outline: 1px dotted black;
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.32);
-  // box-sizing: border-box;
+  z-index:10000;
+  box-sizing: border-box;
   color: rgb(51, 51, 51);
   opacity: 1;
   top: 0;
@@ -2915,23 +2911,18 @@ $input-text-focus-outline: 1px dotted black;
   
   .feedback-card{
     background: rgb(255, 255, 255);
-    // width: 380px;
     flex-basis: 20%; 
     transition:0.3s;
     box-shadow: 0px 25.6px 57.6px rgba(0, 0, 0, 0.22), 0px 4.8px 14.4px rgba(0, 0, 0, 0.18);
     word-break: break-all;
     max-width: 576px;
     padding:24px;
-    // color: #000000de;
     outline-color: rgba(0, 0, 0, 0.87);
 
     .feedback-header {
       margin: 0;
       padding: 0;
-     
-      //width: 350px;
       max-width: 576px;
-      //height: 50px;
       max-height: 216px;
       
       .close-button-div {
@@ -2969,21 +2960,14 @@ $input-text-focus-outline: 1px dotted black;
         margin-bottom: 20px;
         font-family: "Segoe UI";
         font-size: 16px;
-        // font-weight: 500;
-        font-weight: bold;
+        font-weight: 600;
       }
-      
     }
     
     .feedback-content {
-      
-      // padding: 1.3rem 2rem;
       align-items: center;
-      //height: 120px;
       max-height: 100%;
       overflow: auto;
-     
-    
       .feedback-description{
         padding-bottom: 8px;
         word-break: break-word;
@@ -2995,21 +2979,16 @@ $input-text-focus-outline: 1px dotted black;
       }
       
       .feedback-type{
-        // display: flex;
-        // justify-content: center;
-        // padding-top:13px;
         padding-left: 4px;
         padding-bottom: 13px;
-        
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        //5star rating
+
         .pt-feedback_5star-rating {
 
           .rating__label {
             cursor: pointer;
-            // padding: 3px;
             font-size: 30px;
             color: var(--star-color);
             margin-bottom: 0px;
@@ -3017,14 +2996,11 @@ $input-text-focus-outline: 1px dotted black;
             font-weight: normal;
             font-style: normal;
             position: relative;
-            // top: 1px;
             display: inline-block;
-            // line-height: 1;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
           }         
           .rating__input {
-            // display: none
             border: 0;
             padding: 0;
             margin: 0;
@@ -3032,9 +3008,9 @@ $input-text-focus-outline: 1px dotted black;
             height: 1px; 
             width: 1px;
             overflow: hidden;
-            clip: rect(1px 1px 1px 1px); /* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-            clip: rect(1px, 1px, 1px, 1px); /*maybe deprecated but we need to support legacy browsers */
-            clip-path: inset(50%); /*modern browsers, clip-path works inwards from each corner*/
+            clip: rect(1px 1px 1px 1px); 
+            clip: rect(1px, 1px, 1px, 1px); 
+            clip-path: inset(50%); 
             white-space: nowrap; 
           }         
           .rating__input--none {
@@ -3070,7 +3046,6 @@ $input-text-focus-outline: 1px dotted black;
             }
           }
         
-          
           .rating__input:hover ~ .rating__label:before,
           .rating__input:focus ~ .rating__label:before
           {
@@ -3080,23 +3055,18 @@ $input-text-focus-outline: 1px dotted black;
           
         }
 
-          //like dislike rating
+         
         .pt-feedback_like-rating {
           .rating__label {
             cursor: pointer;
-            // padding-left: 1px;
-            // padding-right: 6px;
             padding-top: 6px;
             padding-right: 5px;
             font-size: 30px;
-
             font-family: 'Full MDL2 Assets';
             font-weight: normal;
             font-style: normal;
             position: relative;
-            // top: 1px;
             display: inline-block;
-            // line-height: 1;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
           }
@@ -3132,35 +3102,18 @@ $input-text-focus-outline: 1px dotted black;
       }
     }
     .feedback-footer {
-      // padding-top: 5px;
       display: flex;
       gap: 12px;
       flex-direction: row;
       justify-content: flex-start;
       
-      .feedback-cancel-button {
-        background: rgba(0, 0, 0, 0.2);
-        color: #000;
-        outline: inherit;
-        // margin-right: 5px;
-      }
-      .feedback-cancel-button:focus{
-        outline: #000000 dotted 1px;
-      }
-      .feedback-submit-button:focus{
-        outline: #000000 dotted 1px;
-      }
       button {
         outline: inherit;
         width: 110px;
         height: 32px;
-        background-color:#0063b1;
-        color: white;
         border: 0px;
         padding: 0px 12px;
         gap: 10px;
-        // border-radius: 2px;
-        // box-sizing: border-box;
         text-align: center;
         font-family: 'Segoe UI';
         font-size: 14px;
@@ -3168,19 +3121,35 @@ $input-text-focus-outline: 1px dotted black;
         font-weight: 600;
       }
 
-      ;
+      .feedback-cancel-button {
+        background: rgba(0, 0, 0, 0.2);
+        color: #000;
+        outline: inherit;
+      }
+
+      .feedback-submit-button{
+        background-color: #0063b1;
+        color: white;
+        opacity: 0.8;
+      }
+
+      .feedback-cancel-button:focus{
+        outline: #000000 dotted 1px;
+      }
+      .feedback-submit-button:focus{
+        outline: #000000 dotted 1px;
+      }      
     }
   }
   
 }
 
-//FEEDBACK ----END
+//Feedback for pagetours - END
 
 
 
-// ----- announcement feedback
+// Announcement feedback
 .anno-feedback{
-  // display: flex; --changed
   @media only screen and (max-width: 1240px) {
     padding-left: 1.4rem;
     padding-bottom: 0.6rem;
@@ -3193,7 +3162,6 @@ $input-text-focus-outline: 1px dotted black;
   @media only screen and (max-width: 600px) {
     line-height: 10px;
     padding: 0rem 0.7rem 0.3rem 0.7rem;
-    // max-height: 40px;
   }
 
   display: block;
@@ -3204,7 +3172,6 @@ $input-text-focus-outline: 1px dotted black;
 
   .feedback-content{
     display: inline-flex;
-    // height: 24px; --changed
     height: 18px;
 
     @media only screen and (max-width: 1240px) {
@@ -3212,7 +3179,6 @@ $input-text-focus-outline: 1px dotted black;
     }
 
     @media only screen and (max-width: 600px) {
-      // max-width: 203px;
       max-height: 6px;
     }
 
@@ -3226,7 +3192,6 @@ $input-text-focus-outline: 1px dotted black;
       @media only screen and (max-width: 600px) {
         font-size: 5px;
         line-height: 5px;
-        //  height: 10px;
        }
       
       font-size: 12px;
@@ -3239,7 +3204,6 @@ $input-text-focus-outline: 1px dotted black;
         padding-right:2px;
         font-size: 15px;
         vertical-align: top;
-
         font-family: 'Full MDL2 Assets';
         font-weight: normal;
         font-style: normal;
@@ -3249,16 +3213,14 @@ $input-text-focus-outline: 1px dotted black;
         line-height: 1;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+
         @media only screen and (max-width: 1240px) {
           font-size: 10px;
           padding-bottom: 0px;
-          // line-height: 7px;
-          //  height: 10px;
          }
          @media only screen and (max-width: 600px) {
           font-size: 5px;
           padding-bottom: 0px;
-          //  height: 10px;
          }
         
       }
@@ -3311,19 +3273,16 @@ $input-text-focus-outline: 1px dotted black;
         @media only screen and (max-width: 1240px) {
           font-size: 8px;
           padding-bottom: 0px;
-          // line-height: 7px;
-          //  height: 10px;
          }
          @media only screen and (max-width: 600px) {
           font-size: 5px;
           padding-bottom: 0px;
-          //  height: 10px;
          }
       }
       .rating__input{
         display: none;
       }
-      // .rating__input:checked + .rating__label,
+
       .rating__input:hover + .rating__label,
       .rating__label:focus-visible
       {
@@ -3331,7 +3290,6 @@ $input-text-focus-outline: 1px dotted black;
         text-decoration: underline;
         font-weight: 500;
         color: #0056b3;
-        // color: var(--like-dislike-onclick-color);
         
       }
       
@@ -3345,8 +3303,6 @@ $input-text-focus-outline: 1px dotted black;
     }
     @media only screen and (max-width: 600px) {
       font-size: 6px;
-     //  line-height: 7px;
-      //  height: 10px;
      }
     display:none;
     height: 24px;
@@ -3357,21 +3313,17 @@ $input-text-focus-outline: 1px dotted black;
 
     @media only screen and (max-width: 1240px) {
       font-size: 8px;
-      // height: 10px;
     }
     @media only screen and (max-width: 600px) {
       font-size: 5px;
-      //  height: 10px;
      }
-    a .anno-privacy-description{
 
+    a .anno-privacy-description{
       @media only screen and (max-width: 1240px) {
         font-size: 8px;
-        // height: 10px;
       }
       @media only screen and (max-width: 600px) {
         font-size: 5px;
-        //  height: 10px;
        }
       color: #006ee5;
       font-size: 12px;
