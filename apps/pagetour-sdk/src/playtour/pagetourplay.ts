@@ -525,7 +525,6 @@ class PageTourPlay {
       retVal.url = tour.steps[0].pagecontext
       self.navigateToStart(retVal)
 
-      // If autoPlay is enabled
       if (autoPlayTest === true) {
         const opts = self.configStore.Options
         if (opts.navigator.callbackOnTourStart != null) {
@@ -901,7 +900,7 @@ class PageTourPlay {
       if (opts.navigator.callbackOnTourStepFailure != null) {
         if (
           tour.steps != null &&
-          tour.steps.length >= stepCount && 
+          tour.steps.length >= stepCount &&
           tour.steps[stepCount] != null &&
           tour.steps[stepCount].errormessage != null &&
           tour.steps[stepCount].errormessage !== 'undefined' &&
@@ -1012,7 +1011,6 @@ class PageTourPlay {
         stepDescriptionElement.innerText = stepDescription
 
         this.tether = this.getTetherObject(stepCount, elementSelector)
-
         this.addTourOutline(element, tour.tourtype)       
         this.scrollIntoView(element)
         this.ApplyTheme(stepCount)
@@ -1206,7 +1204,6 @@ class PageTourPlay {
                   if (opts.navigator.callbackOnAnnouncementFeedbackSubmit != null) {
                     opts.navigator.callbackOnAnnouncementFeedbackSubmit(rating, self.tour, self.currentStep);
                   }
-                  console.log(self.currentStep + ":" +  rating);
                   let feedbackContentElement = document.getElementById('feedbackcontent');
                   let privacyElement = document.getElementById('annofeedbackprivacy');
                   let submitMessageElement = document.getElementById('annothanksmsg');
@@ -1921,7 +1918,6 @@ class PageTourPlay {
         }
       }
 
-      console.log('pt rating', rating);
       if (opts.navigator.callbackOnPagetourFeedbackSubmit != null) {
         opts.navigator.callbackOnPagetourFeedbackSubmit(rating, this.tour);
         if(this.feedbackModal.parentNode){

@@ -12,7 +12,6 @@
   url('./fonts/fullmdl2/FullMDL2.svg') format('svg');
 }
 
-
 @media screen and (-ms-high-contrast: active) {
   button {
     outline: 1px solid !important;
@@ -79,7 +78,7 @@ p {
   -webkit-margin-start: 0px;
   -webkit-margin-end: 0px;
   margin: 0 0 10px;
-  
+
   input-group {
     margin-bottom: 0px;
     width: 150px;
@@ -130,15 +129,15 @@ $input-text-focus-outline: 1px dotted black;
     width: 5px;
     height: 5px;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     background: #708090;
   }
-  
+
   ::-webkit-scrollbar-track {
     background: #b8c0c8;
   }
-  
+
   ::selection {
     color: #fff;
   }
@@ -162,29 +161,29 @@ $input-text-focus-outline: 1px dotted black;
     background-color: rgba(0, 0, 0, 0); /* Black w/ opacity */
     border-radius: 0 !important;
     font-weight: 400;
-    
+
     @media (min-width: 1200px) {
       .col-lg-3 {
         padding: 0 12px 0 0;
         width: 24%;
       }
-      
+
       .col-lg-2 {
         padding: 0 12px 0 0;
         width: 15%;
       }
     }
-    
+
     .cell-button-action {
       @extend .cell-button;
       @extend .font-caption-alt;
       margin-left: 16px;
     }
-    
+
     .cell-button-action:disabled {
       color: rgba(#000, 0.3) !important;
     }
-    
+
     .date-picker-box,
     .date-picker-box-icon {
       @extend .font-caption-alt;
@@ -194,7 +193,7 @@ $input-text-focus-outline: 1px dotted black;
       height: 44px;
       border-width: 1px;
     }
-    
+
     .date-picker-box-icon {
       color: #0063b1;
       background-color: #fff;

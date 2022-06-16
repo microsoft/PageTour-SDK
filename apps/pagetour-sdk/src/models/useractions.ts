@@ -10,8 +10,6 @@ interface UserActions {
   startedon: Date
 
   completedon: Date
-
- // isFeedbackGiven: boolean
 }
 
 export { UserActions }

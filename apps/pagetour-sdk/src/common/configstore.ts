@@ -1,7 +1,6 @@
 import { PageTourOptions } from '../models/pagetouroptions'
 import { PageContext } from '../models/pagecontext'
 
-//adding default config values
 class ConfigStore {
   private options: PageTourOptions
   private defaultOptions: PageTourOptions = {

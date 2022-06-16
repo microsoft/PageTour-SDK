@@ -199,4 +199,4 @@ class PageTour {
   }
 }
 
-export { PageTour, Tutorial, IPagetourRepository}
+export { PageTour, Tutorial, IPagetourRepository }
