@@ -1,5 +1,7 @@
 import { PageTourOptions } from '../models/pagetouroptions'
 import { PageContext } from '../models/pagecontext'
+import { PagetourFeedbackEnum } from '../models/pagetourfeedbackenum'
+import { AnnouncementFeedbackEnum } from '../models/announcementfeedbackenum'
 
 class ConfigStore {
   private options: PageTourOptions
@@ -69,20 +71,16 @@ class ConfigStore {
     textAreaCharacterLength: 500,
     enableBeacon: false,
     feedback : {
-      pagetourFeedbackOptions: {
+      PagetourFeedbackOptions: {
         enabled: false,
-        type:'5-star',
+        type: PagetourFeedbackEnum.StarRating,
         heading: "Feedback : PageTour",
         description: "Was this tour helpful?",
-        privacyDescription: "Privacy statement",
-        privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
       },
-      announcementFeedbackOptions: {
+      AnnouncementFeedbackOptions: {
         enabled: false,
-        type: 'like-dislike',
+        type: AnnouncementFeedbackEnum.LikeRating,
         heading: 'Was this announcement helpful?',
-        privacyDescription: "Privacy statement",
-        privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice',
         submitMessage: 'Thank you for your feedback!'     
       }
     }

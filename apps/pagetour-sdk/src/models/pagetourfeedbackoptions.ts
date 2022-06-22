@@ -1,11 +1,10 @@
-interface PageTourFeedbackOptions {
-    enabled: boolean
-    type?: string 
-    heading?: string
+
+import { FeedbackOptions } from "./feedbackoptions"
+import { PagetourFeedbackEnum } from "./pagetourfeedbackenum"
+
+interface PageTourFeedbackOptions extends FeedbackOptions{
+    type?: PagetourFeedbackEnum,
     description?: string
-    //isFeedbackGiven?: boolean
-    privacyDescription?: string
-    privacyURL?: string
 }
 
 export {PageTourFeedbackOptions}

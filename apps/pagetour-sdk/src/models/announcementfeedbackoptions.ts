@@ -1,9 +1,9 @@
-interface AnnouncementFeedbackOptions {
-    enabled: boolean
-    type?: string
-    heading?: string
-    privacyDescription?: string
-    privacyURL?: string
+
+import { AnnouncementFeedbackEnum } from "./announcementfeedbackenum"
+import { FeedbackOptions } from "./feedbackoptions"
+
+interface AnnouncementFeedbackOptions extends FeedbackOptions {
+    type?: AnnouncementFeedbackEnum,
     submitMessage?: string
 }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { PageTour, Tutorial, IPagetourRepository } from 'pagetour-sdk'
+import { PageTour, Tutorial, IPagetourRepository,PagetourFeedbackEnum, AnnouncementFeedbackEnum} from 'pagetour-sdk'
 import {LocalStorageRepository } from 'pagetour-sdk.localrepository'
 import { MatSnackBar } from '@angular/material'
 import { Router, NavigationEnd, NavigationStart } from '@angular/router'
@@ -44,17 +44,17 @@ export class AppComponent implements OnInit {
       },
       enableBeacon: true,
       feedback : {
-        pagetourFeedbackOptions: {
+        PagetourFeedbackOptions: {
           enabled: true,
-          type:'5-star',
+          type: PagetourFeedbackEnum.LikeRating,
           heading: "Feedback : PageTour",
           description: "Was this tour helpful?",
           privacyDescription: "Privacy statement",
           privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
         },
-        announcementFeedbackOptions: {
+        AnnouncementFeedbackOptions: {
           enabled: true,
-          type: 'like-dislike',
+          type: AnnouncementFeedbackEnum.YesNoRating,
           heading: 'Was this announcement helpful?',
           privacyDescription: "Privacy statement",
           privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice',
