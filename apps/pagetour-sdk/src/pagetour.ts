@@ -13,7 +13,7 @@ import { IPagetourRepository } from './repository/ipagetourrepository'
 import { DataStore } from './common/datastore'
 import { TourTypeEnum } from './models/tourtypeenum'
 import { PagetourFeedbackEnum } from './models/pagetourfeedbackenum'
-import { AnnouncementFeedbackEnum } from './models/AnnouncementFeedbackEnum'
+import { AnnouncementFeedbackEnum } from './models/announcementfeedbackenum'
 
 
 class PageTour {
