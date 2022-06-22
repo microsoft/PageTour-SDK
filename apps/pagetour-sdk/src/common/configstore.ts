@@ -1,5 +1,7 @@
 import { PageTourOptions } from '../models/pagetouroptions'
 import { PageContext } from '../models/pagecontext'
+import { PagetourFeedbackEnum } from '../models/pagetourfeedbackenum'
+import { AnnouncementFeedbackEnum } from '../models/announcementfeedbackenum'
 
 class ConfigStore {
   private options: PageTourOptions
@@ -67,13 +69,30 @@ class ConfigStore {
     },
     zIndex: "100000",
     textAreaCharacterLength: 500,
-    enableBeacon: false
+    enableBeacon: false,
+    feedback : {
+      PagetourFeedbackOptions: {
+        enabled: false,
+        type: PagetourFeedbackEnum.StarRating,
+        heading: "Feedback : PageTour",
+        description: "Was this tour helpful?",
+      },
+      AnnouncementFeedbackOptions: {
+        enabled: false,
+        type: AnnouncementFeedbackEnum.LikeRating,
+        heading: 'Was this announcement helpful?',
+        submitMessage: 'Thank you for your feedback!'     
+      }
+    }
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)
   }
   public get Options(): PageTourOptions {
-    return this.options
+    return this.options;
+  }
+  public get DefaultOptions(): PageTourOptions {
+    return this.defaultOptions;
   }
   private extendOptions = (inputOptions: PageTourOptions): PageTourOptions => {
     return (this.options = { ...this.defaultOptions, ...inputOptions })

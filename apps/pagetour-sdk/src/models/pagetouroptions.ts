@@ -4,6 +4,7 @@ import { UserInfoOptions } from './userinfooptions'
 import { PageTourTheme } from './pagetourtheme'
 import { Tags } from './tags'
 import { UserActionProvider } from './useractionprovider'
+import { Feedback } from './feedback'
 
 interface PageTourOptions {
   tokenProvider?: TokenProviderOptions
@@ -22,7 +23,8 @@ interface PageTourOptions {
   enableTranscript?: boolean,
   zIndex?: string, 
   textAreaCharacterLength?: number
-  enableBeacon?: boolean
+  enableBeacon?: boolean,
+  feedback?: Feedback
 }
 
 export { PageTourOptions }

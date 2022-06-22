@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { PageTour, Tutorial, IPagetourRepository } from 'pagetour-sdk'
+import { PageTour, Tutorial, IPagetourRepository,PagetourFeedbackEnum, AnnouncementFeedbackEnum} from 'pagetour-sdk'
 import {LocalStorageRepository } from 'pagetour-sdk.localrepository'
 import { MatSnackBar } from '@angular/material'
 import { Router, NavigationEnd, NavigationStart } from '@angular/router'
+
 
 @Component({
   selector: 'app-root',
@@ -20,12 +21,14 @@ export class AppComponent implements OnInit {
 
   constructor(private snackBar: MatSnackBar, private router: Router) {}
   ngOnInit(): void {
+
     this.repository = new LocalStorageRepository()
     this.repository.InitializeRepository()
     this.pageTourInit()
   }
 
   private pageTourInit = () => {
+
     PageTour.init(this.repository, {
       announcementDefaultImage : 'https://fxpsitstoragenew.z13.web.core.windows.net/perfectfit.jpg',
       enableTranscript: true,
@@ -40,6 +43,24 @@ export class AppComponent implements OnInit {
         tagHelpText: 'This is from sample app'
       },
       enableBeacon: true,
+      feedback : {
+        PagetourFeedbackOptions: {
+          enabled: true,
+          type: PagetourFeedbackEnum.LikeRating,
+          heading: "Feedback : PageTour",
+          description: "Was this tour helpful?",
+          privacyDescription: "Privacy statement",
+          privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice'
+        },
+        AnnouncementFeedbackOptions: {
+          enabled: true,
+          type: AnnouncementFeedbackEnum.YesNoRating,
+          heading: 'Was this announcement helpful?',
+          privacyDescription: "Privacy statement",
+          privacyURL: 'https://privacy.microsoft.com/en-US/data-privacy-notice',
+          submitMessage: 'Thank you for your feedback!'          
+        }
+      },
       userInfo: {
         getCurrentUser: () => {
           return "";
