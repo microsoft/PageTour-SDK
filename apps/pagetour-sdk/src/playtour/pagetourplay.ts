@@ -969,7 +969,7 @@ class PageTourPlay {
         this.ApplyTheme(stepCount)
         this.srSpeak(`${this.tour.title} dialog`, 'assertive', 'dialog')
         let tourBoxElement: HTMLElement = document.getElementById('pagetour-tourBox')
-        DomUtils.manageTabbing(tourBoxElement)
+        DomUtils.manageTabbingWithoutFocus(tourBoxElement);
         if (opts.navigator.callbackAfterTourStep != null) {
           opts.navigator.callbackAfterTourStep(this.tour.steps[stepCount], this.isMuted)
         }
@@ -1405,10 +1405,10 @@ class PageTourPlay {
       }
     })
 
-    popperInstance.enableEventListeners()
-    popperInstance.scheduleUpdate()
+    popperInstance.enableEventListeners();
+    popperInstance.scheduleUpdate();
 
-    return popperInstance
+    return popperInstance;
   }
 
   scrollIntoView(element: any) {
