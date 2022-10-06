@@ -1,19 +1,17 @@
-<div class="container">
-  <mat-toolbar color="primary">
-    <mat-toolbar-row>
-      <button id="PageTourTitleBtn" mat-button routerLink="/">PageTour</button>
-      <span class="m-r-10"></span>
-      <span class="m-r-10"></span>
-      <button mat-button routerLink="/forms">Forms</button>
-      <span class="m-r-10"></span>
-      <button mat-button routerLink="/list">Lists</button>
-      <span class="m-r-10"></span>
-      <span class="example-spacer"></span>
-      <button (click)="openAuthorTourDialog()" mat-button>Author Tour</button>
-      <span class="m-r-10"></span>
-      <button (click)="openManageTourDialog()" mat-button>Manage Page Tours</button>
-      <span class="m-r-10"></span>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <router-outlet></router-outlet>
-</div>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button id="PageTourTitleBtn" mat-button routerLink="/">PageTour</button>
+    <span class="m-r-10"></span>
+    <span class="m-r-10"></span>
+    <button mat-button routerLink="/forms">Forms</button>
+    <span class="m-r-10"></span>
+    <button mat-button routerLink="/list">Lists</button>
+    <span class="m-r-10"></span>
+    <span class="example-spacer"></span>
+    <button (click)="openAuthorTourDialog()" mat-button>Author Tour</button>
+    <span class="m-r-10"></span>
+    <button (click)="openManageTourDialog()" mat-button>Manage Page Tours</button>
+    <span class="m-r-10"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<router-outlet></router-outlet>

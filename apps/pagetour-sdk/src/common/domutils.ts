@@ -157,6 +157,15 @@ class DomUtils {
     firstTabStop.focus()
     DomUtils.trapTabKey(firstTabStop, lastTabStop)
   }
+
+  public static manageTabbingWithoutFocus(htmlElement: HTMLElement): void {
+    // Get all focusable elements within the htmlElement
+    let focusableElements = DomUtils.getAllFocusableElements(htmlElement)
+    // Get first and last focusable elements
+    let firstTabStop: HTMLElement = focusableElements[0] as HTMLElement
+    let lastTabStop: HTMLElement = focusableElements[focusableElements.length - 1] as HTMLElement
+    DomUtils.trapTabKey(firstTabStop, lastTabStop)
+  }
 }
 
 export { DomUtils }
