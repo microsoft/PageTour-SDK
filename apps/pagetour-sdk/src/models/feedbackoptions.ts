@@ -4,6 +4,7 @@ interface FeedbackOptions {
     heading?: string
     privacyDescription?: string
     privacyURL?: string
+    type?: string
 }
 
 export {FeedbackOptions}

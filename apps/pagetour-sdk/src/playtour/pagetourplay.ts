@@ -17,10 +17,9 @@ import { PageTourTheme } from '../models/pagetourtheme'
 import { DataStore } from '../common/datastore'
 import { TourTypeEnum } from '../models/tourtypeenum'
 import { querySelectorDeep } from 'query-selector-shadow-dom'
-import { PageTourOptions } from '../models/pagetouroptions'
-import { isUndefined } from 'util'
-import { type } from 'os'
 import { AnnouncementFeedbackStep } from '../models/announcementfeedbackstep'
+import {AnnouncementFeedbackEnum} from '../models/announcementfeedbackenum'
+import {PagetourFeedbackEnum} from '../models/pagetourfeedbackenum'
 
 declare const $: any
 class PageTourPlay {
@@ -853,7 +852,7 @@ class PageTourPlay {
     }
     else{
       let annoFooterElement = document.getElementById('announcementfooter');
-      annoFooterElement.style.paddingBottom = '1.5rem';
+      annoFooterElement.style.paddingBottom = '5%';
     }
   }
 
@@ -1180,14 +1179,16 @@ class PageTourPlay {
           var ratingElement: NodeListOf<HTMLInputElement>;
           if(this.announcementFeedbackObj[this.currentStep].submitted == false){
             this.updateAnnouncementFeedbackElement();
-            if(annoFeedbackType == 'like-dislike'){
+            if(annoFeedbackType == AnnouncementFeedbackEnum.LikeRating){
               let likeratingRadioButtons = document.querySelector('input[name="likerating"]:checked') as HTMLInputElement;
-              if(likeratingRadioButtons) likeratingRadioButtons.checked = false;
+              if(likeratingRadioButtons) 
+                likeratingRadioButtons.checked = false;
               ratingElement = document.getElementsByName('likerating') as NodeListOf<HTMLInputElement>;
             }
-            else if(annoFeedbackType == 'yes-no'){
+            else if(annoFeedbackType == AnnouncementFeedbackEnum.YesNoRating){
               let yesratingRadio = document.querySelector('input[name="yesnorating"]:checked') as HTMLInputElement;
-              if(yesratingRadio) yesratingRadio.checked = false;
+              if(yesratingRadio) 
+                yesratingRadio.checked = false;
               ratingElement = document.getElementsByName('yesnorating') as NodeListOf<HTMLInputElement>;
             }
 
@@ -1198,16 +1199,16 @@ class PageTourPlay {
               ratingElement[i].addEventListener('click', function(e){     
                    
                 if(this.checked &&  self.announcementFeedbackObj[self.currentStep].submitted==false){
-                  rating = parseFloat(this.value)/5;
+                  rating = parseFloat(this.value);
                   self.announcementFeedbackObj[self.currentStep].submitted = true;
                   self.announcementFeedbackObj[self.currentStep].rating = rating;
                   self.announcementFeedbackObj[self.currentStep].ratingElement = this;
-                  if (opts.navigator.callbackOnAnnouncementFeedbackSubmit != null) {
-                    opts.navigator.callbackOnAnnouncementFeedbackSubmit(rating, self.tour, self.currentStep);
+                  if (opts.navigator.callbackOnFeedbackSubmit != null) {
+                    opts.navigator.callbackOnFeedbackSubmit(rating, self.tour, self.currentStep);
                   }
-                  let feedbackContentElement = document.getElementById('feedbackcontent');
-                  let privacyElement = document.getElementById('annofeedbackprivacy');
-                  let submitMessageElement = document.getElementById('annothanksmsg');
+                  let feedbackContentElement = document.getElementById('feedbackContent');
+                  let privacyElement = document.getElementById('annoFeedbackPrivacy');
+                  let submitMessageElement = document.getElementById('annoThanksMsg');
                   DomUtils.hide(feedbackContentElement);
                   DomUtils.hide(privacyElement);
                   DomUtils.show(submitMessageElement);
@@ -1217,9 +1218,9 @@ class PageTourPlay {
 
           }
           else if(this.announcementFeedbackObj[this.currentStep].submitted == true){
-            let feedbackContentElement = document.getElementById('feedbackcontent');
-            let privacyElement = document.getElementById('annofeedbackprivacy');
-            let submitMessageElement = document.getElementById('annothanksmsg');
+            let feedbackContentElement = document.getElementById('feedbackContent');
+            let privacyElement = document.getElementById('annoFeedbackPrivacy');
+            let submitMessageElement = document.getElementById('annoThanksMsg');
             DomUtils.hide(feedbackContentElement);
             DomUtils.hide(privacyElement);
             DomUtils.show(submitMessageElement);
@@ -1846,8 +1847,8 @@ class PageTourPlay {
     let pagetourFeedbackOpts = this.configStore.Options.feedback.PagetourFeedbackOptions;
     let defaultFeedbackOpts = this.configStore.DefaultOptions.feedback.PagetourFeedbackOptions;
 
-    let feedbackHeadingElement= document.getElementById("feedbackheading");
-    let feedbackDescriptionElement = document.getElementById("feedbackdescription");
+    let feedbackHeadingElement= document.getElementById("feedbackHeading");
+    let feedbackDescriptionElement = document.getElementById("feedbackDescription");
 
     let feedbackHeading = pagetourFeedbackOpts.heading === undefined ? defaultFeedbackOpts.heading: pagetourFeedbackOpts.heading;
     let feedbackDescription = pagetourFeedbackOpts.description === undefined ? defaultFeedbackOpts.description: pagetourFeedbackOpts.description;
@@ -1858,15 +1859,15 @@ class PageTourPlay {
     let feedbackType = pagetourFeedbackOpts.type === undefined ? defaultFeedbackOpts.type: pagetourFeedbackOpts.type;
     let feedback5starElement = document.getElementById("5star-rating");
     let feedbackLikeElement = document.getElementById("like-rating")
-    if(feedbackType.toLocaleLowerCase() == "5-star"){
+    if(feedbackType.toLocaleLowerCase() == PagetourFeedbackEnum.StarRating){
       feedbackLikeElement.style.display = "none";
     }
-    else if(feedbackType.toLocaleLowerCase() == "like-dislike"){
+    else if(feedbackType.toLocaleLowerCase() == PagetourFeedbackEnum.LikeRating){
       feedback5starElement.style.display = "none";
     }
     
-    let feedbackPrivacyDescriptionElement = document.getElementById('privacydescription');
-    let feedbackPrivacyURLElement = document.getElementById('privacyurl');
+    let feedbackPrivacyDescriptionElement = document.getElementById('privacyDescription');
+    let feedbackPrivacyURLElement = document.getElementById('privacyUrl');
 
     let feedbackPrivacyDescription = pagetourFeedbackOpts.privacyDescription;
     let feedbackPrivacyURL = pagetourFeedbackOpts.privacyURL;
@@ -1876,13 +1877,13 @@ class PageTourPlay {
       feedbackPrivacyURLElement.setAttribute('href', feedbackPrivacyURL);
     }
     else{
-      DomUtils.hide(document.getElementById('feedbackprivacy'));
+      DomUtils.hide(document.getElementById('feedbackPrivacy'));
     }
     
-    let cancelButton = document.getElementById('feedback-cancel');
-    let submitButton = document.getElementById('feedback-submit');
-    let closeButton = document.getElementById('feedbackclosebtn');
-    let feedbackBoxDataElement = document.getElementById('feedbackboxdata');
+    let cancelButton = document.getElementById('feedbackCancel');
+    let submitButton = document.getElementById('feedbackSubmit');
+    let closeButton = document.getElementById('feedbackCloseBtn');
+    let feedbackBoxDataElement = document.getElementById('feedbackBoxData');
 
     submitButton.style.background = this.tourTheme.primaryColor;
 
@@ -1893,10 +1894,10 @@ class PageTourPlay {
 
     var rating = 0.0;
     var ratingElementGroup: NodeListOf<HTMLInputElement>;
-    if(feedbackType.toLocaleLowerCase() == "5-star"){
+    if(feedbackType.toLocaleLowerCase() == PagetourFeedbackEnum.StarRating){
       ratingElementGroup = document.getElementsByName('5starrating') as NodeListOf<HTMLInputElement>;
     }
-    else if(feedbackType.toLocaleLowerCase() == "like-dislike"){
+    else if(feedbackType.toLocaleLowerCase() == PagetourFeedbackEnum.LikeRating){
       ratingElementGroup = document.getElementsByName('likerating') as NodeListOf<HTMLInputElement>;
     }
    
@@ -1915,12 +1916,12 @@ class PageTourPlay {
       event.preventDefault();
       for (var i=0; i<ratingElementGroup.length; i++){
         if(ratingElementGroup[i].checked){
-          rating = parseFloat(ratingElementGroup[i].value)/5;          
+          rating = parseFloat(ratingElementGroup[i].value);  
         }
       }
 
-      if (opts.navigator.callbackOnPagetourFeedbackSubmit != null) {
-        opts.navigator.callbackOnPagetourFeedbackSubmit(rating, this.tour);
+      if (opts.navigator.callbackOnFeedbackSubmit != null) {
+        opts.navigator.callbackOnFeedbackSubmit(rating, this.tour);
         if(this.feedbackModal.parentNode){
           this.feedbackModal.parentNode.removeChild(this.feedbackModal);
         }
@@ -1931,7 +1932,7 @@ class PageTourPlay {
     }
     cancelButton.onclick = this.closeFeedbackModal();
     closeButton.onclick = this.closeFeedbackModal();
-    DomUtils.manageTabbing(document.getElementById('feedbackboxdata'));
+    DomUtils.manageTabbing(document.getElementById('feedbackBoxData'));
   }
 
   private closeFeedbackModal = () => {
@@ -1945,11 +1946,11 @@ class PageTourPlay {
   private updateAnnouncementFeedbackElement = () => {
     let annoFeedbackOpts = this.configStore.Options.feedback.AnnouncementFeedbackOptions;
     let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.AnnouncementFeedbackOptions;
-    let annoFeedbackHeadingElement = document.getElementById('annofeedbackheading');
-    let annoPrivacyURLElement = document.getElementById('annoprivacyurl');
-    let annoPrivacyDescElement = document.getElementById('annoprivacydescription');
-    let submitMessageElement = document.getElementById('annothanksmsg');
-    let privacyElement = document.getElementById('annofeedbackprivacy');
+    let annoFeedbackHeadingElement = document.getElementById('annoFeedbackHeading');
+    let annoPrivacyURLElement = document.getElementById('annoPrivacyUrl');
+    let annoPrivacyDescElement = document.getElementById('annoPrivacyDescription');
+    let submitMessageElement = document.getElementById('annoThanksMsg');
+    let privacyElement = document.getElementById('annoFeedbackPrivacy');
 
     let annoFeedbackHeading = annoFeedbackOpts.heading === undefined ? defaultAnnoFeedbackOpts.heading : annoFeedbackOpts.heading;
     let annoPrivacyURL= annoFeedbackOpts.privacyURL 
@@ -1973,14 +1974,14 @@ class PageTourPlay {
     
     iconColor.style.setProperty('--like-dislike-onclick-color', this.tourTheme.primaryColor);
 
-    if(annoFeedbackType == 'like-dislike'){
-      DomUtils.hide(document.getElementById('yes-no-rating'));
+    if(annoFeedbackType == AnnouncementFeedbackEnum.LikeRating){
+      DomUtils.hide(document.getElementById('yesNoRating'));
     }
-    else if(annoFeedbackType=='yes-no'){
-      DomUtils.hide(document.getElementById('anno-like-rating'));
+    else if(annoFeedbackType==AnnouncementFeedbackEnum.YesNoRating){
+      DomUtils.hide(document.getElementById('annoLikeRating'));
       
     }
-    let feedbackContentElement = document.getElementById('feedbackcontent');
+    let feedbackContentElement = document.getElementById('feedbackContent');
     
     feedbackContentElement.style.display = 'inline-flex';
     

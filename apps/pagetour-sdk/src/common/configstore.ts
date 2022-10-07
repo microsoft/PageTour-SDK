@@ -1,7 +1,5 @@
 import { PageTourOptions } from '../models/pagetouroptions'
 import { PageContext } from '../models/pagecontext'
-import { PagetourFeedbackEnum } from '../models/pagetourfeedbackenum'
-import { AnnouncementFeedbackEnum } from '../models/announcementfeedbackenum'
 
 class ConfigStore {
   private options: PageTourOptions
@@ -73,14 +71,14 @@ class ConfigStore {
     feedback : {
       PagetourFeedbackOptions: {
         enabled: false,
-        type: PagetourFeedbackEnum.StarRating,
+        type: '5-star',
         heading: "Feedback : PageTour",
-        description: "Was this tour helpful?",
+        description: "Was this Tour helpful?",
       },
       AnnouncementFeedbackOptions: {
         enabled: false,
-        type: AnnouncementFeedbackEnum.LikeRating,
-        heading: 'Was this announcement helpful?',
+        type: 'like-dislike',
+        heading: 'Was this Announcement helpful?',
         submitMessage: 'Thank you for your feedback!'     
       }
     }
