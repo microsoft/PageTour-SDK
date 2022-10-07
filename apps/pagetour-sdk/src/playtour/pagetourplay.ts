@@ -1181,14 +1181,16 @@ class PageTourPlay {
             this.updateAnnouncementFeedbackElement();
             if(annoFeedbackType == AnnouncementFeedbackEnum.LikeRating){
               let likeratingRadioButtons = document.querySelector('input[name="likerating"]:checked') as HTMLInputElement;
-              if(likeratingRadioButtons) 
+              if(likeratingRadioButtons) {
                 likeratingRadioButtons.checked = false;
+              }               
               ratingElement = document.getElementsByName('likerating') as NodeListOf<HTMLInputElement>;
             }
             else if(annoFeedbackType == AnnouncementFeedbackEnum.YesNoRating){
               let yesratingRadio = document.querySelector('input[name="yesnorating"]:checked') as HTMLInputElement;
-              if(yesratingRadio) 
+              if(yesratingRadio) {
                 yesratingRadio.checked = false;
+              }              
               ratingElement = document.getElementsByName('yesnorating') as NodeListOf<HTMLInputElement>;
             }
 
