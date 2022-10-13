@@ -2870,3 +2870,41 @@ $input-text-focus-outline: 1px dotted black;
   padding: 5px;
   font-size: 13px !important;
 }
+
+/* Tooltip CSS */
+.custom-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-tooltip .tooltiptext {
+  visibility: hidden;
+  width: 15em;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 150%;
+  left: 20%;
+  margin-left: -60px;
+  font-weight: 400;
+}
+
+.custom-tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+
+.custom-tooltip:hover .tooltiptext {
+  visibility: visible;
+  // opacity: 1;
+}

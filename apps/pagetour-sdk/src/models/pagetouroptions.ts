@@ -22,7 +22,8 @@ interface PageTourOptions {
   enableTranscript?: boolean,
   zIndex?: string, 
   textAreaCharacterLength?: number
-  enableBeacon?: boolean
+  enableBeacon?: boolean,
+  enableAnnouncement?: boolean
 }
 
 export { PageTourOptions }

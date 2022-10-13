@@ -67,7 +67,8 @@ class ConfigStore {
     },
     zIndex: "100000",
     textAreaCharacterLength: 500,
-    enableBeacon: false
+    enableBeacon: false,
+    enableAnnouncement: false
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)
