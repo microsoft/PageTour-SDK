@@ -534,10 +534,10 @@ class PageTourPlay {
         let tourEndsWithCoverPage = tour.coverPage && tour.coverPage.location.toLowerCase() === 'end'
 
         self.executeNextStep(tour, action, 0, 0, tourEndsWithCoverPage, callback, startInterval)
-        setInterval(() => {
+        var intervalId = setInterval(() => {
           self.goToNextStep(StepAction.Next, tour, action, callback, startInterval)
           if (self.currentStep === self.totalSteps - 1) {
-            clearInterval()
+            clearInterval(intervalId);
           }
         }, startInterval);
       } else {
@@ -629,7 +629,7 @@ class PageTourPlay {
         if (tourEndsWithCoverPage) {
           self.showCoverPageModal(tour, action, callback, startInterval);
         } else {
-          if(opts.feedback.PagetourFeedbackOptions.enabled && action != RunTourAction.Preview){
+          if(opts.feedback.PagetourFeedbackOptions && opts.feedback.PagetourFeedbackOptions.enabled && action != RunTourAction.Preview){
             self.showFeedbackModal();
           }
           if (callback != null) callback()
@@ -808,9 +808,8 @@ class PageTourPlay {
     this.totalSteps = tour.steps.length
     this.currentStep = 0
     this.isMuted = false;
-    // initialize the feedback object
     let annoFeedbackOpts = this.configStore.Options.feedback.AnnouncementFeedbackOptions;
-    if(annoFeedbackOpts.enabled == true && action != RunTourAction.Preview){
+    if(annoFeedbackOpts && annoFeedbackOpts.enabled == true && action != RunTourAction.Preview){
       var jsonFeedbackObj: AnnouncementFeedbackStep[]=[];
       var ratingStep : AnnouncementFeedbackStep = {submitted: false, rating: 0.0, ratingElement:null}; 
       for(var i=0; i<this.totalSteps; i++){
@@ -846,7 +845,7 @@ class PageTourPlay {
     this.tourBox = DomUtils.appendToBody(this.announcementBoxFn())
     this.tourBox.style.zIndex = '200000';
     let annoFeedbackOpts = this.configStore.Options.feedback.AnnouncementFeedbackOptions;
-    if(annoFeedbackOpts.enabled && action != RunTourAction.Preview){
+    if(annoFeedbackOpts && annoFeedbackOpts.enabled && action != RunTourAction.Preview){
       let announcementFeedbackDivElement = document.getElementById('feedbackelement') as HTMLElement;
       announcementFeedbackDivElement = DomUtils.appendTo(announcementFeedbackDivElement, this.announcementFeedbackPageFn());
     }
@@ -981,7 +980,7 @@ class PageTourPlay {
 
         if (stepCount === this.totalSteps - 1 && !tourEndsWithCoverPage) {
 
-          if(opts.feedback.PagetourFeedbackOptions.enabled) {
+          if(opts.feedback.PagetourFeedbackOptions && opts.feedback.PagetourFeedbackOptions.enabled) {
             nextButton.hidden = false;
             nextButton.disabled = false;
           } else {
@@ -1174,7 +1173,7 @@ class PageTourPlay {
         let annoFeedbackOpts = opts.feedback.AnnouncementFeedbackOptions;
         let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.AnnouncementFeedbackOptions;
         
-        if(annoFeedbackOpts.enabled && action != RunTourAction.Preview){
+        if(annoFeedbackOpts && annoFeedbackOpts.enabled && action != RunTourAction.Preview){
           let annoFeedbackType = annoFeedbackOpts.type === undefined ? defaultAnnoFeedbackOpts.type : annoFeedbackOpts.type;
           var ratingElement: NodeListOf<HTMLInputElement>;
           if(this.announcementFeedbackObj[this.currentStep].submitted == false){
@@ -1766,7 +1765,7 @@ class PageTourPlay {
 
       let opts = this.configStore.Options;
       let coverPageLocation = this.tour.coverPage.location;
-      if(opts.feedback.PagetourFeedbackOptions.enabled && coverPageLocation.toLocaleLowerCase() == "end" && action != RunTourAction.Preview){
+      if(opts.feedback.PagetourFeedbackOptions && opts.feedback.PagetourFeedbackOptions.enabled && coverPageLocation.toLocaleLowerCase() == "end" && action != RunTourAction.Preview){
         this.showFeedbackModal();
       }
       // this.disablePageInspector(true);
