@@ -137,6 +137,7 @@ class PageTourManager {
     this.isAuthorizedToDeleteTour =
       await this.authorizationService.isAuthorizedToDeleteTour();
     let isBeaconEnabled = this.configStore.Options.enableBeacon;
+    let isAnnouncementEnabled = this.configStore.Options.enableAnnouncement;
 
     if (!this.isAuthorizedToAddTour) {
       document.getElementById("manage-tours-modal-add-tour-btn").style.display =
@@ -148,6 +149,10 @@ class PageTourManager {
     }
     if (!this.isAuthorizedToDeleteTour) {
       document.getElementById("delete_button_header").style.display = "none";
+    }
+
+    if(!isAnnouncementEnabled){
+      document.getElementById("option-system-announcement").style.display = "none";
     }
 
     if (!isBeaconEnabled) {

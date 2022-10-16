@@ -158,10 +158,10 @@ class PageTourAuthor {
     this.tourTypeChanged();
     this.resetIsTourPlaying();
     if (!this.configStore.Options.enableBeacon) {
-      let tourtypeElement = document.getElementById(
-        "tour-type"
-      ) as HTMLSelectElement;
-      tourtypeElement.remove(tourtypeElement.length - 1);
+      document.getElementById("option-smart-tip").style.display = "none";
+    }
+    if(!this.configStore.Options.enableAnnouncement) {
+      document.getElementById("option-announcement").style.display = "none";
     }
   };
 

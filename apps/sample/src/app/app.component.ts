@@ -40,6 +40,7 @@ export class AppComponent implements OnInit {
         tagHelpText: 'This is from sample app'
       },
       enableBeacon: true,
+      enableAnnouncement: true,
       userInfo: {
         getCurrentUser: () => {
           return "";
