@@ -3348,6 +3348,7 @@ $input-text-focus-outline: 1px dotted black;
 }
 
 .custom-tooltip .tooltiptext {
+  font-size: 12px;
   visibility: hidden;
   width: 15em;
   background-color: #555;
@@ -3359,7 +3360,7 @@ $input-text-focus-outline: 1px dotted black;
   z-index: 1;
   top: 150%;
   left: 20%;
-  margin-left: -60px;
+  margin-left: -45px;
   font-weight: 400;
 }
 
