@@ -1,6 +1,6 @@
 {
   "name": "pagetour-sdk",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "license": "MIT",
   "description": "Lightweight Typescript SDK for designing tours in Web Apps",
   "main": "dist/umd/pagetour.umd.js",

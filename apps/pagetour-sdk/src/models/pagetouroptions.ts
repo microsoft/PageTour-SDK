@@ -24,7 +24,8 @@ interface PageTourOptions {
   zIndex?: string, 
   textAreaCharacterLength?: number
   enableBeacon?: boolean,
-  feedback?: Feedback
+  enableAnnouncement?: boolean,
+  feedback?: Feedback 
 }
 
 export { PageTourOptions }

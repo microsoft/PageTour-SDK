@@ -43,6 +43,7 @@ export class AppComponent implements OnInit {
         tagHelpText: 'This is from sample app'
       },
       enableBeacon: true,
+      enableAnnouncement: true,
       feedback : {
         PagetourFeedbackOptions: {
           enabled: true,
@@ -61,6 +62,7 @@ export class AppComponent implements OnInit {
           submitMessage: 'Thank you for your feedback!'          
         }
       },
+      
       userInfo: {
         getCurrentUser: () => {
           return "";

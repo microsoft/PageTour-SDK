@@ -29,10 +29,10 @@
                   style="height: 44px;"
                   required
                 >
-                  <option value="Pagetour" selected="selected">Page Tour</option>
-                  <option value="InteractiveGuide">Interactive Guide</option>
-                  <option value="Announcement">Announcement</option>
-                  <option value="SmartTip">SmartTip</option>
+                  <option value="Pagetour" selected="selected" id="option-page-tour">Page Tour</option>
+                  <option value="InteractiveGuide" id="option-interactive-guide">Interactive Guide</option>
+                  <option value="Announcement" id="option-announcement">Announcement</option>
+                  <option value="SmartTip" id="option-smart-tip">SmartTip</option>
                 </select>
             </div>
             <div class="col-lg-2 col-sm-6">
@@ -118,8 +118,13 @@
           <div class="row margin-bottom-24">
             <div class="col-lg-12 col-sm-12 button-col">
               <label class="autoPlayLabel">
-                <input type="checkbox" id="isAutoPlayEnabled" />
-                Auto play enabled
+                <div class="custom-tooltip">
+                  <input type="checkbox" id="isAutoPlayEnabled" />
+                    Auto play enabled
+                  <span class="tooltiptext">
+                    This option will auto play the tour once page is fully loaded.
+                  </span>
+                </div>
               </label>
               <button class="cell-button-action" id="add-announcement-btn" title="Add Announcement Step" type="button">
                 <i class="pagetour__icon icon-plus icon-inline"></i>

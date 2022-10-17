@@ -68,6 +68,7 @@ class ConfigStore {
     zIndex: "100000",
     textAreaCharacterLength: 500,
     enableBeacon: false,
+    enableAnnouncement: false,
     feedback : {
       PagetourFeedbackOptions: {
         enabled: false,
@@ -82,6 +83,7 @@ class ConfigStore {
         submitMessage: 'Thank you for your feedback!'     
       }
     }
+    
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)
