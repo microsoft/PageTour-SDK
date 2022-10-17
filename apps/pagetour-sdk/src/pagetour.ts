@@ -12,6 +12,10 @@ import { PageContext } from './models/pagecontext'
 import { IPagetourRepository } from './repository/ipagetourrepository'
 import { DataStore } from './common/datastore'
 import { TourTypeEnum } from './models/tourtypeenum'
+import { PagetourFeedbackEnum } from './models/pagetourfeedbackenum'
+import { AnnouncementFeedbackEnum } from './models/announcementfeedbackenum'
+
+
 class PageTour {
   public static ContextChangeEvent = 'PageTour:ContextChangeEvent'
 
@@ -198,4 +202,4 @@ class PageTour {
   }
 }
 
-export { PageTour, Tutorial, IPagetourRepository }
+export { PageTour, Tutorial, IPagetourRepository, PagetourFeedbackEnum, AnnouncementFeedbackEnum}

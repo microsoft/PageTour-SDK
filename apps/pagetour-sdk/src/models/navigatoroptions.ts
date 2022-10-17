@@ -21,6 +21,7 @@ interface NavigatorOptions {
   callbackForTags?: () => Promise<Tags>
   callbackOnVolumeMute?: () => void
   callbackOnVolumeUnmute?: (transcript: string) => void
+  callbackOnFeedbackSubmit?: (rating: number, tour: Tutorial, step?: number) => void
 }
 
 export { NavigatorOptions }

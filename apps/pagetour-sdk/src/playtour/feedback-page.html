@@ -1,0 +1,56 @@
+<div class="feedback-container" id="feedbackBox">
+  <div class="feedback-card" id="feedbackBoxData">
+
+    <div class="feedback-header" id="feedbackHeader">
+      <div class="close-button-div" id="feedbackCloseBtn">
+        <button class="close-button" id="feedback-exit-step" aria-label="Close feedback" title="Close">
+          <i class="pagetour__icon close-button-icon" id="playtourBoxCloseIcon"></i>
+        </button>
+      </div>
+      <h4 id="feedbackHeading" class="feedback-heading">Your feedback is important!</h4>
+    </div>
+
+    <div class="feedback-content"  id="feedbackBodyBox">
+      <div id="feedbackDescription" class="feedback-description">
+      </div>
+      <div id="feedbackType" class="feedback-type">
+        <div class="pt-feedback_5star-rating" id="5star-rating">
+          <div class="rating-group" role="radiogroup">
+            <input disabled checked class="rating__input rating__input--none" name="5starrating" id="rating3-none" value="0" type="radio">
+
+            <label class="rating__label" aria-label="1 star" for="rating1"></label>
+            <input class="rating__input" name="5starrating" id="rating1" value="0.2" type="radio" tabindex="1"/>
+            <label class="rating__label" aria-label="2 stars" for="rating2"></label>
+            <input class="rating__input" name="5starrating" id="rating2" value="0.4" type="radio" tabindex="2"/>
+            <label class="rating__label" aria-label="3 stars" for="rating3"></label>
+            <input class="rating__input" name="5starrating" id="rating3" value="0.6" type="radio" tabindex="3"/>
+            <label class="rating__label" aria-label="4 stars"  for="rating4"></label>
+            <input class="rating__input" name="5starrating" id="rating4" value="0.8" type="radio" tabindex="4"/>
+            <label class="rating__label" aria-label="5 stars" for="rating5"></label>
+            <input class="rating__input" name="5starrating" id="rating5" value="1" type="radio" tabindex="5"/>
+          </div>
+        </div>
+        
+        <div class="pt-feedback_like-rating" id="like-rating">
+          <input class="rating__input" name="likerating" id="like" value="1" type="radio">
+          <label aria-label="like" class="rating__label pagetour__icon icon-like" for="like"></label>
+          <input class="rating__input" name="likerating" id="dislike" value="0.2" type="radio">
+          <label aria-label="dislike" class="rating__label pagetour__icon icon-dislike" for="dislike"></label>
+        </div>
+      </div>
+    </div>
+    <div class="feedback-privacy" id="feedbackPrivacy">
+      <a id="privacyUrl" target="_blank"><div class="privacy-description" id="privacyDescription"></div></a>
+    </div>
+    <div class="feedback-footer" id="feedbackFooter">
+      <button disabled class="feedback-submit-button" id="feedbackSubmit" aria-label="Submit" title="Submit">
+        Submit
+      </button>
+      <button class="feedback-cancel-button" id="feedbackCancel" aria-label="Cancel" title="Cancel">
+        Cancel
+      </button>
+
+    </div>
+    
+  </div>
+</div>

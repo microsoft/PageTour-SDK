@@ -68,13 +68,31 @@ class ConfigStore {
     zIndex: "100000",
     textAreaCharacterLength: 500,
     enableBeacon: false,
-    enableAnnouncement: false
+    enableAnnouncement: false,
+    feedback : {
+      PagetourFeedbackOptions: {
+        enabled: false,
+        type: '5-star',
+        heading: "Feedback : PageTour",
+        description: "Was this Tour helpful?",
+      },
+      AnnouncementFeedbackOptions: {
+        enabled: false,
+        type: 'like-dislike',
+        heading: 'Was this Announcement helpful?',
+        submitMessage: 'Thank you for your feedback!'     
+      }
+    }
+    
   }
   constructor(options: PageTourOptions) {
     this.extendOptions(options)
   }
   public get Options(): PageTourOptions {
-    return this.options
+    return this.options;
+  }
+  public get DefaultOptions(): PageTourOptions {
+    return this.defaultOptions;
   }
   private extendOptions = (inputOptions: PageTourOptions): PageTourOptions => {
     return (this.options = { ...this.defaultOptions, ...inputOptions })
