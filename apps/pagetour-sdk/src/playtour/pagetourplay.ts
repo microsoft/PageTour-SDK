@@ -1348,8 +1348,10 @@ class PageTourPlay {
 
         if (this.tour.title !== undefined && this.tour.title !== "") {
           stepHeadingElement.innerText = this.tour.title;
-          ptExistStepElement.ariaLabel =
-            this.tour.title + " step" + (stepCount + 1) + " close tour";
+          ptExistStepElement.setAttribute(
+            "aria-label",
+            this.tour.title + " step" + (stepCount + 1) + " close tour"
+          );
         } else {
           stepHeadingElement.innerText = "";
         }
@@ -1361,6 +1363,7 @@ class PageTourPlay {
         this.tether = this.getTetherObject(stepCount, elementSelector);
         this.addTourOutline(element, tour.tourtype);
         this.scrollIntoView(element);
+        document.getElementById("pagetour-exit-step").focus();
         this.ApplyTheme(stepCount);
         this.srSpeak(`${this.tour.title} dialog`, "assertive", "dialog");
         let tourBoxElement: HTMLElement =
