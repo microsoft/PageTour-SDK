@@ -14,7 +14,10 @@
 
 @media screen and (-ms-high-contrast: active) {
   button {
-    outline: 1px solid !important;
+    & button:focus {
+      outline: 2px solid transparent;
+      box-shadow: 0 0 0px 2px rgba(0, 0, 0, .8);
+    }
   }
 }
 
