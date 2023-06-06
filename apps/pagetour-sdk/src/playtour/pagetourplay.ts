@@ -998,9 +998,17 @@ class PageTourPlay {
         let stepHeadingElement = document.getElementById('usermessageboxtitle')
         let stepDescriptionElement = document.getElementById('usermessageboxdescription')
         let stepCounter = document.getElementById('usermessageboxcounter')
+        let ptExistStepElement = document.getElementById("pagetour-exit-step");
+        let ptPreviousStepElement = document.getElementById("pagetour-previous-step");
+        let ptNextStepElement = document.getElementById("pagetour-next-step");
 
         if (this.tour.title !== undefined && this.tour.title !== '') {
-          stepHeadingElement.innerText = this.tour.title
+            stepHeadingElement.innerText = this.tour.title
+            let counterMsg = this.tour.title + " step" + (stepCount + 1);
+            let stepMsg = stepCount + 1 + "/" + this.tour.steps.length;
+            ptExistStepElement.setAttribute("aria-label", counterMsg + " close tour");
+            ptNextStepElement.setAttribute("aria-label", stepMsg + " next step");
+            ptPreviousStepElement.setAttribute("aria-label", stepMsg + " previous step");
         } else {
           stepHeadingElement.innerText = ''
         }
@@ -1012,6 +1020,7 @@ class PageTourPlay {
         this.tether = this.getTetherObject(stepCount, elementSelector)
         this.addTourOutline(element, tour.tourtype)       
         this.scrollIntoView(element)
+        document.getElementById("pagetour-exit-step").focus();
         this.ApplyTheme(stepCount)
         this.srSpeak(`${this.tour.title} dialog`, 'assertive', 'dialog')
         let tourBoxElement: HTMLElement = document.getElementById('pagetour-tourBox')
