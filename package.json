@@ -10,6 +10,7 @@
     "build": "lerna run build",
     "build:prod": "npm run build:prod",
     "build:prod:aot": "npm run build:prod:aot",
+    "preinstall": "npx npm-force-resolutions",
     "postinstall": "npm run bootstrap",
     "test": "echo \"Error: no test specified\" && exit 0",
     "watch": "lerna run --parallel watch",
