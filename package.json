@@ -24,5 +24,19 @@
   },
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "resolutions": {
+    "ssri": "^8.0.1",
+    "socket.io-parser": "3.3.3",
+    "lodash": "^4.17.21",
+    "parse-url": "8.1.0",
+    "xmlhttprequest-ssl": "1.6.1",
+    "minimist": "^1.2.6",
+    "loader-utils": "1.4.1",
+    "babel-traverse": "7.23.2",
+    "eventsource": "2.0.2",
+    "json-schema": "0.4.0",
+    "d3-color": "3.1.0",
+    "moment": "2.29.4"
   }
 }
