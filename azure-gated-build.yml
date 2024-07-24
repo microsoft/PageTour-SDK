@@ -1,26 +1,48 @@
-trigger:
-- main
+trigger: none
 
-jobs:
-  - job: BuildSDK
-    displayName: Build SDK
-    pool:
-      vmImage: ubuntu-latest
+variables:
+  - name: skipComponentGovernanceDetection
+    value: true
+  - name: vmImageName
+    value: ubuntu-latest
+  - name: LinuxContainerImage
+    value: 'onebranch.azurecr.io/linux/ubuntu-2004:latest'
+name: '$(date:yyyyMMdd)$(rev:.r)'
 
-    steps:
-    - task: NodeTool@0
-      displayName: Use Node Version 12.x
-      inputs:
-        versionSpec: '12.x'
-        checkLatest: true
+resources:
+  repositories:
+    - repository: onebranchTemplates
+      type: git
+      name: OneBranch.Pipelines/GovernedTemplates
+      ref: refs/heads/main
 
-    - task: Npm@1
-      displayName: Install Dependencies
-      inputs:
-        command: 'install'
-
-    - task: Npm@1
-      displayName: Build Project
-      inputs:
-        command: 'custom'
-        customCommand: 'run build'
+extends:
+  template: v2/OneBranch.NonOfficial.CrossPlat.yml@onebranchTemplates
+  parameters:
+    customTags: ES365AIMigrationTooling
+    stages:
+      - stage: stage
+        jobs:
+          - job: Phase_1
+            displayName: Build
+            cancelTimeoutInMinutes: 1
+            pool:
+              type: linux
+            variables:
+              - name: ob_outputDirectory
+                value: $(Build.ArtifactStagingDirectory)/ONEBRANCH_ARTIFACT
+            steps:
+              - task: NodeTool@0
+                displayName: Use Node Version 12.x
+                inputs:
+                  versionSpec: 12.x
+                  checkLatest: true
+              - task: Npm@1
+                displayName: Install Dependencies
+                inputs:
+                  command: install
+              - task: Npm@1
+                displayName: Build Project
+                inputs:
+                  command: custom
+                  customCommand: run build
