@@ -6,6 +6,7 @@ import * as AnnouncementBoxHtml from './announcement-page.html'
 import * as SmartTipBoxHtml from './smarttip.html'
 import * as SmartTipPopperHtml from './smarttip-popper.html'
 import { DomUtils } from '../common/domutils'
+import { HtmlSanitizer } from '../common/htmlsanitizer'
 import * as viewCoverPageModalTemplate from './view-cover-page-modal.html'
 import { RunTourAction } from '../models/runtouraction'
 import { StepAction } from '../models/stepaction'
@@ -1177,7 +1178,7 @@ class PageTourPlay {
 
         stepCounter.innerText = stepCount + 1 + ' of ' + this.tour.steps.length
         stepHeadingElement.innerText = this.tour.steps[stepCount].headerText
-        stepDescriptionElement.innerHTML = stepDescription
+        stepDescriptionElement.innerHTML = HtmlSanitizer.sanitize(stepDescription)
 
         let annoFeedbackOpts = opts.feedback.AnnouncementFeedbackOptions;
         let defaultAnnoFeedbackOpts = this.configStore.DefaultOptions.feedback.AnnouncementFeedbackOptions;

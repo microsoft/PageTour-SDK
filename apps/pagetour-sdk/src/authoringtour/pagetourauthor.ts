@@ -6,6 +6,7 @@ import * as smartTipDetailModal from "./smart-tip-detail-modal.html";
 import * as createCoverPageModalTemplate from "./create-cover-page-modal.html";
 import * as createAnnouncementModalTemplate from "./add-announcement-page-modal.html";
 import { DomUtils } from "../common/domutils";
+import { HtmlSanitizer } from "../common/htmlsanitizer";
 import { ConfigStore } from "../common/configstore";
 import { debounce } from "debounce";
 import { PageContext } from "../models/pagecontext";
@@ -886,9 +887,10 @@ class PageTourAuthor {
       const editingStep = this.stepList[this.editStepIndex];
       document.getElementById("input-announcement-header-text").innerText =
         editingStep.headerText;
+      const sanitizedMessage = HtmlSanitizer.sanitize(editingStep.message);
       document.getElementById("announcementboxdescription").innerHTML =
         document.getElementById("anno-message-editor").innerHTML =
-          editingStep.message;
+          sanitizedMessage;
       this.announcementHeaderChange();
       if (editingStep.mediaUrl)
         document.getElementById("input-announcement-image-video").innerText =

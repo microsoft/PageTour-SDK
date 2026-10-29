@@ -43,6 +43,7 @@
     "@ckeditor/ckeditor5-word-count": "^31.0.0",
     "css-selector-generator": "3.5.2",
     "debounce": "1.2.0",
+    "dompurify": "2.5.9",
     "popper.js": "1.14.7",
     "query-selector-shadow-dom": "1.0.0",
     "unique-selector": "0.4.1"
