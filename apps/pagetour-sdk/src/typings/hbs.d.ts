@@ -17,3 +17,8 @@ declare module 'unique-selector' {
   const value: any
   export default value
 }
+
+declare module 'dompurify' {
+  const value: any
+  export default value
+}
