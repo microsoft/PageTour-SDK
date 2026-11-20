@@ -33,10 +33,10 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "pagetour-sdk": "^2.3.0",
+    "pagetour-sdk": "2.3.0",
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "pagetour-sdk": "^2.3.0"
+    "pagetour-sdk": "2.3.0"
   }
 }
