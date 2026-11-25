@@ -169,7 +169,12 @@ const sassBuildModules = (env: any): webpack.Module => {
           'css-loader',
           'postcss-loader',
           'resolve-url-loader',
-          'sass-loader'
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass')
+            }
+          }
         ]
       }
     ]
